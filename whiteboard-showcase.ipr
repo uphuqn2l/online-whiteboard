@@ -26,6 +26,34 @@
         </element>
       </root>
     </artifact>
+    <artifact type="war" name="whiteboard-showcase:war">
+      <output-path>$PROJECT_DIR$/target</output-path>
+      <root id="archive" name="whiteboard-showcase-0.1-SNAPSHOT.war">
+        <element id="artifact" artifact-name="whiteboard-showcase:war exploded" />
+      </root>
+    </artifact>
+    <artifact type="exploded-war" name="whiteboard-showcase:war exploded">
+      <output-path>$PROJECT_DIR$/target/whiteboard-showcase-0.1-SNAPSHOT</output-path>
+      <root id="root">
+        <element id="javaee-facet-resources" facet="whiteboard-showcase/web/whiteboard-showcase" />
+        <element id="directory" name="WEB-INF">
+          <element id="directory" name="classes">
+            <element id="module-output" name="whiteboard-showcase" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.5" />
+            <element id="library" level="project" name="Maven: com.sun.faces:jsf-api:2.1.1-b04" />
+            <element id="library" level="project" name="Maven: com.sun.faces:jsf-impl:2.1.1-b04" />
+            <element id="library" level="project" name="Maven: org.primefaces:primefaces:3.0.M1" />
+            <element id="library" level="project" name="Maven: org.primefaces.themes:cupertino:1.0.1" />
+            <element id="library" level="project" name="Maven: org.glassfish.web:el-impl:2.2" />
+            <element id="library" level="project" name="Maven: javax.annotation:jsr250-api:1.0" />
+            <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
+            <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
+          </element>
+        </element>
+      </root>
+    </artifact>
   </component>
   <component name="CodeStyleManager">
     <option name="USE_DEFAULT_CODE_STYLE_SCHEME" value="true" />
@@ -53,6 +81,15 @@
     <option name="PRINT_LINE_NUMBERS" value="false" />
     <option name="OPEN_IN_BROWSER" value="false" />
     <option name="OUTPUT_DIRECTORY" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="web">
+        <modules>
+          <module name="whiteboard-showcase" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="D0788AC5D35291EF82D0093E20A4AF6A" />
   <component name="ImportConfiguration">
@@ -103,6 +140,13 @@
   <component name="JsfProjectComponent">
     <option name="faceletsSupport" value="ENABLED" />
   </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/whiteboard-showcase.iml" filepath="$PROJECT_DIR$/whiteboard-showcase.iml" />
@@ -116,5 +160,117 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="libraryTable">
+    <library name="Maven: commons-lang:commons-lang:2.5">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.5/commons-lang-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.5/commons-lang-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/commons-lang/commons-lang/2.5/commons-lang-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.faces:jsf-api:2.1.1-b04">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-api/2.1.1-b04/jsf-api-2.1.1-b04.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-api/2.1.1-b04/jsf-api-2.1.1-b04-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-api/2.1.1-b04/jsf-api-2.1.1-b04-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.sun.faces:jsf-impl:2.1.1-b04">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-impl/2.1.1-b04/jsf-impl-2.1.1-b04.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-impl/2.1.1-b04/jsf-impl-2.1.1-b04-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-impl/2.1.1-b04/jsf-impl-2.1.1-b04-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.primefaces:primefaces:3.0.M1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.primefaces.themes:cupertino:1.0.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/themes/cupertino/1.0.1/cupertino-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/themes/cupertino/1.0.1/cupertino-1.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/themes/cupertino/1.0.1/cupertino-1.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.el:el-api:2.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/el/el-api/2.2/el-api-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/el/el-api/2.2/el-api-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/el/el-api/2.2/el-api-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.glassfish.web:el-impl:2.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/web/el-impl/2.2/el-impl-2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/web/el-impl/2.2/el-impl-2.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/web/el-impl/2.2/el-impl-2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.annotation:jsr250-api:1.0">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/annotation/jsr250-api/1.0/jsr250-api-1.0-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/annotation/jsr250-api/1.0/jsr250-api-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:servlet-api:2.5">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: javax.servlet:jstl:1.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.2/jstl-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.2/jstl-1.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.2/jstl-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
 </project>
 
