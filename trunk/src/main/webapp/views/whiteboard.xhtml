@@ -7,14 +7,20 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition template="/templates/masterLayout.xhtml">
     <ui:define name="body">
+        <p:messages showSummary="true" showDetail="true" autoUpdate="true"/>
         <h:form id="mainForm" prependId="false">
-            <p:panel header="Hello Whiteboard"/>
+            <p:panel header="Hello Whiteboard">
+                <h:outputText value="#{displayWhiteboard.title}"/>
+                <br/>
+                <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.userName}"/>
+            </p:panel>
         </h:form>
     </ui:define>
     <ui:define name="resources">
         <h:outputStylesheet library="css" name="primefaces.css"/>
         <h:outputStylesheet library="css" name="whiteboard.css"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
+        <h:outputScript library="js" name="json2-min.js" target="head"/>
         <h:outputScript library="js" name="whiteboard.js" target="head"/>
     </ui:define>
 </ui:composition>
