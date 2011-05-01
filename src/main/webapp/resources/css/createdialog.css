@@ -35,3 +35,25 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+#newWhiteboardPanel {
+    margin-top: 5px;
+}
+
+.newWhiteboardCol1 {
+    text-align: right !important;
+    padding: 2px 5px 2px 5px;
+}
+
+.newWhiteboardCol2 {
+    text-align: left !important;
+    padding: 2px 5px 2px 5px;
+}
+
+.newWhiteboardCol2 input {
+    width: 200px;
+}
+
+.newWhiteboardFooter {
+    padding: 10px 10px 5px 10px;
+}

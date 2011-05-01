@@ -45,3 +45,7 @@ button,
 input.ui-button {
 	padding: .3em 1em;
 }
+
+.ui-fieldset-legend {
+    text-align: left;
+}

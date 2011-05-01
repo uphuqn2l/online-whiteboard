@@ -7,27 +7,9 @@
     <namespace>http://com.googlecode/whiteboard/</namespace>
 
     <tag>
-		<tag-name>dataTypeConverter</tag-name>
+		<tag-name>PixelConverter</tag-name>
 		<converter>
-        	<converter-id>ip.client.jsftoolkit.DataTypeConverter</converter-id>
-		</converter>
-	</tag>
-	<tag>
-		<tag-name>templateFieldConverter</tag-name>
-		<converter>
-        	<converter-id>ip.client.jsftoolkit.TemplateFieldConverter</converter-id>
-		</converter>
-	</tag>
-	<tag>
-		<tag-name>localeConverter</tag-name>
-		<converter>
-        	<converter-id>ip.client.jsftoolkit.LocaleConverter</converter-id>
-		</converter>
-	</tag>
-	<tag>
-		<tag-name>timeZoneConverter</tag-name>
-		<converter>
-        	<converter-id>ip.client.jsftoolkit.TimeZoneConverter</converter-id>
+        	<converter-id>com.googlecode.whiteboard.converter.PixelConverter</converter-id>
 		</converter>
 	</tag>
 
