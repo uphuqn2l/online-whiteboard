@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+<ui:composition template="/templates/masterLayout.xhtml">
+    <ui:define name="body">
+        <h:panelGroup layout="block" styleClass="centredLayout">
+            <h:panelGrid styleClass="outer" columns="1">
+                <h:panelGroup layout="block" styleClass="inside">
+                    <p:fieldset legend="New Whiteboard">
+                        <h:form id="mainForm" prependId="false">
+                            Settings
+                        </h:form>
+                    </p:fieldset>
+                </h:panelGroup>
+            </h:panelGrid>
+        </h:panelGroup>
+    </ui:define>
+    <ui:define name="resources">
+        <h:outputStylesheet library="css" name="primefaces.css"/>
+        <h:outputStylesheet library="css" name="createdialog.css"/>
+    </ui:define>
+</ui:composition>
+</html>
