@@ -3,7 +3,7 @@
     <!-- $Id$ -->
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fractalsoft.whiteboard</groupId>
+    <groupId>com.googlecode.online-whiteboard</groupId>
     <artifactId>whiteboard-showcase</artifactId>
     <packaging>war</packaging>
     <version>0.1-SNAPSHOT</version>

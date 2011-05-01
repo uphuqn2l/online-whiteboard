@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<facelet-taglib version="2.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd">
+
+    <namespace>http://com.googlecode/whiteboard/</namespace>
+
+    <tag>
+		<tag-name>dataTypeConverter</tag-name>
+		<converter>
+        	<converter-id>ip.client.jsftoolkit.DataTypeConverter</converter-id>
+		</converter>
+	</tag>
+	<tag>
+		<tag-name>templateFieldConverter</tag-name>
+		<converter>
+        	<converter-id>ip.client.jsftoolkit.TemplateFieldConverter</converter-id>
+		</converter>
+	</tag>
+	<tag>
+		<tag-name>localeConverter</tag-name>
+		<converter>
+        	<converter-id>ip.client.jsftoolkit.LocaleConverter</converter-id>
+		</converter>
+	</tag>
+	<tag>
+		<tag-name>timeZoneConverter</tag-name>
+		<converter>
+        	<converter-id>ip.client.jsftoolkit.TimeZoneConverter</converter-id>
+		</converter>
+	</tag>
+
+</facelet-taglib>
