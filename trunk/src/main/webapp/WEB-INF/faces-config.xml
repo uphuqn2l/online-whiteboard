@@ -18,12 +18,22 @@
     </managed-bean>
 
     <managed-bean>
+        <managed-bean-name>whiteboardUuidData</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.WhiteboardUuidData</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
         <managed-bean-name>createWhiteboard</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.CreateWhiteboard</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
         <managed-property>
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>whiteboardUuidData</property-name>
+            <value>#{whiteboardUuidData}</value>
         </managed-property>
     </managed-bean>
 
@@ -34,6 +44,10 @@
         <managed-property>
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>whiteboardUuidData</property-name>
+            <value>#{whiteboardUuidData}</value>
         </managed-property>
     </managed-bean>
 

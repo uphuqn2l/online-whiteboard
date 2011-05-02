@@ -14,7 +14,7 @@
     <artifact type="exploded-war" name="whiteboard-showcase:war exploded">
       <output-path>$PROJECT_DIR$/target/whiteboard-showcase-0.1-SNAPSHOT</output-path>
       <root id="root">
-        <element id="javaee-facet-resources" facet="whiteboard-showcase/web/whiteboard-showcase" />
+        <element id="javaee-facet-resources" facet="whiteboard-showcase/web/Web" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="whiteboard-showcase" />

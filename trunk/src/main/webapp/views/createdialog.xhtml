@@ -12,7 +12,7 @@
             <h:panelGrid styleClass="outer" columns="1">
                 <h:panelGroup layout="block" styleClass="inside">
                     <p:fieldset legend="New Whiteboard">
-                        <p:messages showSummary="true" showDetail="true"/>
+                        <p:messages/>
                         <h:form id="mainForm" prependId="false">
                             <h:panelGrid columns="2" id="newWhiteboardPanel"
                                          columnClasses="newWhiteboardCol1,newWhiteboardCol2"
@@ -23,8 +23,6 @@
                                 <cc:requiredLabel for="" value="User name"/>
                                 <p:inputText value="#{createWhiteboard.userName}" required="true"
                                              label="User name"/>
-
-                                <p:inputText value="#{createWhiteboard.width}"/>
                                 <f:facet name="footer">
                                     <p:commandButton value="Create" ajax="false" action="#{createWhiteboard.create}"/>
                                 </f:facet>

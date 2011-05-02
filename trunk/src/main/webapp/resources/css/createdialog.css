@@ -34,6 +34,7 @@ body {
 .centredLayout div.inside {
     margin-left: auto;
     margin-right: auto;
+    text-align: left;
 }
 
 #newWhiteboardPanel {
@@ -51,7 +52,7 @@ body {
 }
 
 .newWhiteboardCol2 input {
-    width: 200px;
+    width: 220px;
 }
 
 .newWhiteboardFooter {
