@@ -23,8 +23,19 @@
                                 <cc:requiredLabel for="" value="User name"/>
                                 <p:inputText value="#{createWhiteboard.userName}" required="true"
                                              label="User name"/>
+                                <h:outputLabel value="Whiteboard width" for="wbWidth"/>
+                                <h:panelGroup>
+                                    <p:spinner id="wbWidth" min="200" suffix="px" value="#{createWhiteboard.width}"
+                                               label="Whiteboard width"/>
+                                    <h:outputLabel value="Whiteboard height" for="wbHeight"
+                                                   style="margin-left: 10px; margin-right: 10px;"/>
+                                    <p:spinner id="wbHeight" min="200" suffix="px" value="#{createWhiteboard.height}"
+                                               label="Whiteboard height"/>
+                                </h:panelGroup>
                                 <f:facet name="footer">
-                                    <p:commandButton value="Create" ajax="false" action="#{createWhiteboard.create}"/>
+                                    <p:captcha label="Captcha"/>
+                                    <p:commandButton id="createWbButton" value="Create" ajax="false"
+                                                     action="#{createWhiteboard.create}"/>
                                 </f:facet>
                             </h:panelGrid>
                         </h:form>
