@@ -50,6 +50,14 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>cupertino</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>6Lfv_8MSAAAAAJ0yrzf5Mrptw9e087UVO22ogL2Z</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>6Lfv_8MSAAAAALOkRtGdug19bk9-2jybMg8zUi8o</param-value>
+    </context-param>
 
     <!-- Faces Servlet -->
     <servlet>

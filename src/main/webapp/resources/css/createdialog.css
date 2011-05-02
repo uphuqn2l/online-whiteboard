@@ -43,7 +43,7 @@ body {
 
 .newWhiteboardCol1 {
     text-align: right !important;
-    padding: 2px 5px 2px 5px;
+    padding: 2px 5px 2px 0;
 }
 
 .newWhiteboardCol2 {
@@ -52,9 +52,25 @@ body {
 }
 
 .newWhiteboardCol2 input {
-    width: 220px;
+    width: 100%;
+}
+
+.ui-spinner {
+    text-align: right !important;
+}
+
+.ui-spinner-input {
+    width: 50px !important;
 }
 
 .newWhiteboardFooter {
     padding: 10px 10px 5px 10px;
+}
+
+#recaptcha_area, #recaptcha_table {
+    margin: auto;
+}
+
+#createWbButton {
+    margin-top: 12px;
 }
