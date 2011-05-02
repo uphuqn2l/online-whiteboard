@@ -14,7 +14,7 @@
     <artifact type="exploded-war" name="whiteboard-showcase:war exploded">
       <output-path>$PROJECT_DIR$/target/whiteboard-showcase-0.1-SNAPSHOT</output-path>
       <root id="root">
-        <element id="javaee-facet-resources" facet="whiteboard-showcase/web/Web" />
+        <element id="javaee-facet-resources" facet="whiteboard-showcase/web/whiteboard-showcase" />
         <element id="directory" name="WEB-INF">
           <element id="directory" name="classes">
             <element id="module-output" name="whiteboard-showcase" />
@@ -23,7 +23,7 @@
             <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.5" />
             <element id="library" level="project" name="Maven: com.sun.faces:jsf-api:2.1.1-b04" />
             <element id="library" level="project" name="Maven: com.sun.faces:jsf-impl:2.1.1-b04" />
-            <element id="library" level="project" name="Maven: org.primefaces:primefaces:3.0.M1" />
+            <element id="library" level="project" name="Maven: org.primefaces:primefaces:2.2.1" />
             <element id="library" level="project" name="Maven: org.primefaces.themes:cupertino:1.0.1" />
             <element id="library" level="project" name="Maven: org.glassfish.web:el-impl:2.2" />
             <element id="library" level="project" name="Maven: javax.annotation:jsr250-api:1.0" />
@@ -234,17 +234,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/sun/faces/jsf-impl/2.1.1-b04/jsf-impl-2.1.1-b04-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.primefaces:primefaces:3.0.M1">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/3.0.M1/primefaces-3.0.M1-sources.jar!/" />
-      </SOURCES>
-    </library>
     <library name="Maven: org.primefaces.themes:cupertino:1.0.1">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/themes/cupertino/1.0.1/cupertino-1.0.1.jar!/" />
@@ -309,6 +298,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/javax/servlet/jstl/1.2/jstl-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.primefaces:primefaces:2.2.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/2.2.1/primefaces-2.2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/2.2.1/primefaces-2.2.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/primefaces/primefaces/2.2.1/primefaces-2.2.1-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

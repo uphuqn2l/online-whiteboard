@@ -4,10 +4,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd">
 
-    <namespace>http://com.googlecode/whiteboard/</namespace>
+    <namespace>http://com.googlecode/whiteboard</namespace>
 
     <tag>
-		<tag-name>PixelConverter</tag-name>
+		<tag-name>pixelConverter</tag-name>
 		<converter>
         	<converter-id>com.googlecode.whiteboard.converter.PixelConverter</converter-id>
 		</converter>

@@ -43,24 +43,21 @@ body {
 
 .newWhiteboardCol1 {
     text-align: right !important;
-    padding: 2px 5px 2px 0;
+    padding: 2px 2px 2px 0;
 }
 
 .newWhiteboardCol2 {
     text-align: left !important;
-    padding: 2px 5px 2px 5px;
+    padding: 2px 10px 2px 10px;
 }
 
 .newWhiteboardCol2 input {
-    width: 100%;
+   width: 100%;
 }
 
-.ui-spinner {
-    text-align: right !important;
-}
-
-.ui-spinner-input {
-    width: 50px !important;
+#wbWidth,
+#wbHeight {
+    width: 80px !important;
 }
 
 .newWhiteboardFooter {

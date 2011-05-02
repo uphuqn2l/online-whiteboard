@@ -58,6 +58,10 @@
         <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
         <param-value>6Lfv_8MSAAAAALOkRtGdug19bk9-2jybMg8zUi8o</param-value>
     </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/facelet.taglib.xml</param-value>
+    </context-param>
 
     <!-- Faces Servlet -->
     <servlet>
