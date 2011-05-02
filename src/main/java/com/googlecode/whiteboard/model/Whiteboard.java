@@ -14,12 +14,21 @@ public class Whiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
 
+    private String uuid;
     private String title;
     private String userName;
     private int width = 800;
     private int height = 600;
     private Date creationDate;
     private Map<String, AbstractElement> elements = new HashMap<String, AbstractElement>();
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getTitle() {
         return title;

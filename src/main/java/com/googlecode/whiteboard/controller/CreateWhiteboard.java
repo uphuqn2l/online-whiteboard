@@ -8,20 +8,25 @@ package com.googlecode.whiteboard.controller;
 import com.googlecode.whiteboard.model.Whiteboard;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+@ManagedBean
+@ViewScoped
 public class CreateWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
+    private WhiteboardUuidData whiteboardUuidData;
 
     @PostConstruct
     protected void initialize() {
-        // create an empty whiteboard
+        // create an empty whiteboard and uuid container of the current whiteboard 
         whiteboard = new Whiteboard();
     }
 
@@ -61,11 +66,18 @@ public class CreateWhiteboard implements Serializable
         this.whiteboardsManager = whiteboardsManager;
     }
 
+    public void setWhiteboardUuidData(WhiteboardUuidData whiteboardUuidData) {
+        this.whiteboardUuidData = whiteboardUuidData;
+    }
+
     public String create() {
         String uuid = UUID.randomUUID().toString();
+        whiteboard.setUuid(uuid);
         whiteboard.setCreationDate(new Date());
         whiteboardsManager.addWhiteboard(uuid, whiteboard);
 
-        return "/views/whiteboard?uuid=" + uuid;
+        whiteboardUuidData.setUuid(uuid);
+
+        return "/views/whiteboard";
     }
 }

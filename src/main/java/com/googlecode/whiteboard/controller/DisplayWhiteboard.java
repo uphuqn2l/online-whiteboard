@@ -8,6 +8,8 @@ package com.googlecode.whiteboard.controller;
 import com.googlecode.whiteboard.model.Whiteboard;
 
 import javax.annotation.PostConstruct;
+import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,22 +20,32 @@ public class DisplayWhiteboard implements Serializable
     private static final long serialVersionUID = 20110501L;
 
     private Whiteboard whiteboard;
-    private String uuid;
     private WhiteboardsManager whiteboardsManager;
+    private WhiteboardUuidData whiteboardUuidData;
 
     @PostConstruct
     protected void initialize() {
-        if (uuid == null) {
-           // TODO error
-           System.out.println("uuid is null!");
+        String uuid = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uuid");
+
+        if (uuid != null) {
+            // we are coming from invite link
+            whiteboard = whiteboardsManager.getWhiteboard(uuid);
+        } else {
+            // we are coming from create dialog
+            whiteboard = whiteboardsManager.getWhiteboard(whiteboardUuidData.getUuid());
         }
 
-        // get whiteboard
-        whiteboard = whiteboardsManager.getWhiteboard(uuid);
+        if (whiteboard == null) {
+            throw new FacesException("Whiteboard object could not be found!");
+        }
     }
 
     public void setWhiteboardsManager(WhiteboardsManager whiteboardsManager) {
         this.whiteboardsManager = whiteboardsManager;
+    }
+
+    public void setWhiteboardUuidData(WhiteboardUuidData whiteboardUuidData) {
+        this.whiteboardUuidData = whiteboardUuidData;
     }
 
     public String getTitle() {
