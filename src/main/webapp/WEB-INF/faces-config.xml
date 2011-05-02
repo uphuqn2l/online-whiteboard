@@ -11,6 +11,11 @@
         </locale-config>
     </application>
 
+    <converter>
+        <converter-id>com.googlecode.whiteboard.converter.PixelConverter</converter-id>
+        <converter-class>com.googlecode.whiteboard.converter.PixelConverter</converter-class>
+    </converter>
+
     <managed-bean eager="true">
         <managed-bean-name>whiteboardsManager</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.WhiteboardsManager</managed-bean-class>

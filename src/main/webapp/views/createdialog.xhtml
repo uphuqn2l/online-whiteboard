@@ -5,7 +5,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:cc="http://java.sun.com/jsf/composite/composite">
+      xmlns:cc="http://java.sun.com/jsf/composite/composite"
+      xmlns:w="http://com.googlecode/whiteboard">
 <ui:composition template="/templates/masterLayout.xhtml">
     <ui:define name="body">
         <h:panelGroup layout="block" styleClass="centredLayout">
@@ -25,12 +26,16 @@
                                              label="User name"/>
                                 <h:outputLabel value="Whiteboard width" for="wbWidth"/>
                                 <h:panelGroup>
-                                    <p:spinner id="wbWidth" min="200" suffix="px" value="#{createWhiteboard.width}"
-                                               label="Whiteboard width"/>
+                                    <p:spinner id="wbWidth" min="0" max="9999" suffix="px" value="#{createWhiteboard.width}"
+                                               label="Whiteboard width">
+                                        <w:pixelConverter/>
+                                    </p:spinner>
                                     <h:outputLabel value="Whiteboard height" for="wbHeight"
                                                    style="margin-left: 10px; margin-right: 10px;"/>
-                                    <p:spinner id="wbHeight" min="200" suffix="px" value="#{createWhiteboard.height}"
-                                               label="Whiteboard height"/>
+                                    <p:spinner id="wbHeight" min="0" max="9999" suffix="px" value="#{createWhiteboard.height}"
+                                               label="Whiteboard height">
+                                        <w:pixelConverter/>
+                                    </p:spinner>
                                 </h:panelGroup>
                                 <f:facet name="footer">
                                     <p:captcha label="Captcha"/>
