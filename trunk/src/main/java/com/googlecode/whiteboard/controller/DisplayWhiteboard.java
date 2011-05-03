@@ -5,10 +5,10 @@
 
 package com.googlecode.whiteboard.controller;
 
+import com.googlecode.whiteboard.errorhandler.DefaultExceptionHandler;
 import com.googlecode.whiteboard.model.Whiteboard;
 
 import javax.annotation.PostConstruct;
-import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -21,31 +21,25 @@ public class DisplayWhiteboard implements Serializable
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
-    private WhiteboardUuidData whiteboardUuidData;
 
     @PostConstruct
     protected void initialize() {
-        String uuid = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uuid");
+        String uuid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uuid");
 
         if (uuid != null) {
-            // we are coming from invite link
             whiteboard = whiteboardsManager.getWhiteboard(uuid);
         } else {
-            // we are coming from create dialog
-            whiteboard = whiteboardsManager.getWhiteboard(whiteboardUuidData.getUuid());
+            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=601");
+            return;
         }
 
         if (whiteboard == null) {
-            throw new FacesException("Whiteboard object could not be found!");
+            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=602");
         }
     }
 
     public void setWhiteboardsManager(WhiteboardsManager whiteboardsManager) {
         this.whiteboardsManager = whiteboardsManager;
-    }
-
-    public void setWhiteboardUuidData(WhiteboardUuidData whiteboardUuidData) {
-        this.whiteboardUuidData = whiteboardUuidData;
     }
 
     public String getTitle() {
@@ -61,5 +55,18 @@ public class DisplayWhiteboard implements Serializable
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return dateFormatGmt.format(new Date()) + " (GMT)";
+    }
+
+    public int getWidth() {
+        return whiteboard.getWidth();
+    }
+
+    public int getHeight() {
+        return whiteboard.getHeight();
+    }
+
+    public int getActiveUsers() {
+        // TODO
+        return 1;
     }
 }

@@ -1,11 +1,48 @@
-html {
-    overflow: auto !important;
+html, body {
+    width: auto !important;
+    height: auto !important;
 }
 
-body {
-    font-family: Trebuchet MS, Verdana, Helvetica, sans-serif;
-    padding: 0px !important;
-    margin: 0px;
-    font-size: 12px;
+#headline {
+    margin: 10px 10px 10px 10px;
 }
 
+td.colTitle {
+    font-size: 22px;
+    font-weight: bold;
+    color: #D35D2A;
+    vertical-align: middle;
+    padding-right: 80px;
+    white-space: nowrap;
+}
+
+td.colImg {
+    vertical-align: middle;
+    padding: 0 5px 0 5px;
+}
+
+td.colImg img {
+    border: none;
+}
+
+td.colInvite {
+    vertical-align: middle;
+    padding-right: 15px;
+    white-space: nowrap;
+}
+
+td.colCreated {
+    vertical-align: middle;
+    padding-right: 15px;
+    white-space: nowrap;
+}
+
+td.colUsers {
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+#whiteboard {
+    border: 1px solid #AED0EA;
+    margin: 5px 10px 10px 10px;
+}

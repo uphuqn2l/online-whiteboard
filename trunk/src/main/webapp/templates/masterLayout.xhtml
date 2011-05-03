@@ -6,6 +6,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <f:view contentType="text/html" locale="en">
+    <ui:insert name="metadata"/>
     <h:head>
         <meta http-equiv="X-UA-Compatible" content="IE=8"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -15,6 +16,8 @@
     </h:head>
     <h:body>
         <ui:insert name="body"/>
+        <h:outputStylesheet library="css" name="primefaces.css"/>
+        <h:outputStylesheet library="css" name="layout.css"/>
         <ui:insert name="resources"/>
     </h:body>
 </f:view>

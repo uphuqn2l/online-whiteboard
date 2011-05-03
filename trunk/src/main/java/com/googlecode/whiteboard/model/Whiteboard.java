@@ -18,7 +18,7 @@ public class Whiteboard implements Serializable
     private String title;
     private String userName;
     private int width = 800;
-    private int height = 600;
+    private int height = 500;
     private Date creationDate;
     private Map<String, AbstractElement> elements = new HashMap<String, AbstractElement>();
 

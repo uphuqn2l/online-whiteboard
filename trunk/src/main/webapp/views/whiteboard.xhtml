@@ -9,19 +9,34 @@
     <ui:define name="body">
         <p:messages autoUpdate="true"/>
         <h:form id="mainForm" prependId="false">
-            <p:panel header="Hello Whiteboard">
+            <h:panelGrid id="headline" columns="7" cellpadding="0" cellspacing="0"
+                         columnClasses="colTitle,colImg,colInvite,colImg,colCreated,colImg,colUsers">
                 <h:outputText value="#{displayWhiteboard.title}"/>
-                <br/>
+                <h:graphicImage library="img" name="sendLink.png"/>
+                <p:commandLink value="Invite people" ajax="false" style="margin-bottom: 3px; display: block;"
+                               onclick="inviteWidget.show(); return false;"/>
+                <h:graphicImage library="img" name="calendar.png"/>
                 <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.userName}"/>
-            </p:panel>
+                <h:graphicImage library="img" name="userInfo.png"/>
+                <h:outputText value="Active users: #{displayWhiteboard.activeUsers}"/>
+            </h:panelGrid>
+
+            <h:panelGroup id="whiteboard" layout="block"/>
+
+            <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
     </ui:define>
     <ui:define name="resources">
-        <h:outputStylesheet library="css" name="primefaces.css"/>
         <h:outputStylesheet library="css" name="whiteboard.css"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
         <h:outputScript library="js" name="json2-min.js" target="head"/>
-        <h:outputScript library="js" name="whiteboard.js" target="head"/>
+        <h:outputScript library="js" name="whiteboard.js" target="body"/>
+
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            jQuery('#whiteboard').css({width: '#{displayWhiteboard.width}px', height: '#{displayWhiteboard.height}px'});
+            /* ]]> */
+        </script>
     </ui:define>
 </ui:composition>
 </html>

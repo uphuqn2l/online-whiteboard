@@ -22,7 +22,6 @@ public class CreateWhiteboard implements Serializable
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
-    private WhiteboardUuidData whiteboardUuidData;
 
     @PostConstruct
     protected void initialize() {
@@ -66,18 +65,12 @@ public class CreateWhiteboard implements Serializable
         this.whiteboardsManager = whiteboardsManager;
     }
 
-    public void setWhiteboardUuidData(WhiteboardUuidData whiteboardUuidData) {
-        this.whiteboardUuidData = whiteboardUuidData;
-    }
-
     public String create() {
         String uuid = UUID.randomUUID().toString();
         whiteboard.setUuid(uuid);
         whiteboard.setCreationDate(new Date());
         whiteboardsManager.addWhiteboard(uuid, whiteboard);
 
-        whiteboardUuidData.setUuid(uuid);
-
-        return "/views/whiteboard";
+        return "/views/whiteboard?faces-redirect=true&uuid=" + uuid;
     }
 }
