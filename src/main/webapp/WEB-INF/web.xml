@@ -8,7 +8,7 @@
     <!-- Context parameters -->
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
+        <param-value>Production</param-value>
     </context-param>
     <context-param>
         <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
@@ -85,19 +85,17 @@
     </welcome-file-list>
 
     <!-- Error pages -->
-    <!--
 	<error-page>
 		<error-code>403</error-code>
-		<location>/views/error.jsf?statusCode=jsftoolkit.exception.403</location>
+		<location>/views/error.jsf?statusCode=403</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/views/error.jsf?statusCode=jsftoolkit.exception.404</location>
+		<location>/views/error.jsf?statusCode=404</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/views/error.jsf?statusCode=jsftoolkit.exception.500</location>
+		<location>/views/error.jsf?statusCode=500</location>
 	</error-page>
-	-->
 
 </web-app>

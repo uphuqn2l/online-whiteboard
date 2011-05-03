@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+<ui:composition>
+    <p:dialog id="toolboxDialog" header="Toolbox" draggable="true" resizable="true" closable="false" visible="true"
+              position="'right',10" widgetVar="toolboxWidget" width="300">
+        Toolbox
+    </p:dialog>
+
+    <p:dialog id="propertiesDialog" header="Edit Properties" draggable="true" resizable="true" closable="false"
+              visible="true" position="'right','bottom'" widgetVar="propertiesWidget" width="300">
+        Edit
+    </p:dialog>
+
+    <p:dialog id="monitoringDialog" header="Event Monitoring" draggable="true" resizable="true" closable="true"
+              visible="true" position="10,'bottom'" widgetVar="monitoringWidget" width="500">
+        Monitoring
+    </p:dialog>
+
+    <p:dialog id="inviteDialog" header="Invite people" draggable="false" resizable="false" closable="true"
+              modal="true" widgetVar="inviteWidget">
+        Invite people
+    </p:dialog>
+</ui:composition>
+</html>

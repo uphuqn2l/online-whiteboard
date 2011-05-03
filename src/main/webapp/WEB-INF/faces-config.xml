@@ -11,6 +11,12 @@
         </locale-config>
     </application>
 
+    <factory>
+        <exception-handler-factory>
+            com.googlecode.whiteboard.errorhandler.DefaultExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+
     <converter>
         <converter-id>com.googlecode.whiteboard.converter.PixelConverter</converter-id>
         <converter-class>com.googlecode.whiteboard.converter.PixelConverter</converter-class>
@@ -23,9 +29,9 @@
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>whiteboardUuidData</managed-bean-name>
-        <managed-bean-class>com.googlecode.whiteboard.controller.WhiteboardUuidData</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-bean-name>errorMessagePreparer</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.ErrorMessagePreparer</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
@@ -36,10 +42,6 @@
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>
         </managed-property>
-        <managed-property>
-            <property-name>whiteboardUuidData</property-name>
-            <value>#{whiteboardUuidData}</value>
-        </managed-property>
     </managed-bean>
 
     <managed-bean>
@@ -49,10 +51,6 @@
         <managed-property>
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>
-        </managed-property>
-        <managed-property>
-            <property-name>whiteboardUuidData</property-name>
-            <value>#{whiteboardUuidData}</value>
         </managed-property>
     </managed-bean>
 
