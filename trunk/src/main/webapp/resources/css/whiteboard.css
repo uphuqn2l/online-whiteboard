@@ -53,7 +53,7 @@ td.colUsers {
     padding: 0;
 }
 
-.initialPanel {
+.editPanel {
     vertical-align: middle;
     text-align: left;
     padding: 8px;
@@ -100,6 +100,10 @@ td.colUsers {
     background-image: url("#{resource['img:selectElement.png']}") !important;
 }
 
+.btn-moveElement {
+    background-image: url("#{resource['img:moveElement.png']}") !important;
+}
+
 .btn-inputText {
     background-image: url("#{resource['img:inputText.png']}") !important;
 }
@@ -110,4 +114,40 @@ td.colUsers {
 
 .btn-drawStraightLine {
     background-image: url("#{resource['img:drawStraightLine.png']}") !important;
+}
+
+.btn-drawRectangle {
+    background-image: url("#{resource['img:drawRectangle.png']}") !important;
+}
+
+.btn-drawCircle {
+    background-image: url("#{resource['img:drawCircle.png']}") !important;
+}
+
+.btn-drawEllipse {
+    background-image: url("#{resource['img:drawEllipse.png']}") !important;
+}
+
+.btn-pasteImage {
+    background-image: url("#{resource['img:pasteImage.png']}") !important;
+}
+
+.btn-pasteIcon {
+    background-image: url("#{resource['img:pasteIcon.png']}") !important;
+}
+
+.btn-cloneElement {
+    background-image: url("#{resource['img:cloneElement.png']}") !important;
+}
+
+.btn-removeElement {
+    background-image: url("#{resource['img:removeElement.png']}") !important;
+}
+
+.btn-clearWhiteboard {
+    background-image: url("#{resource['img:clearWhiteboard.png']}") !important;
+}
+
+.btn-resizeWhiteboard {
+    background-image: url("#{resource['img:resizeWhiteboard.png']}") !important;
 }
