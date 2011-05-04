@@ -7,23 +7,23 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition>
     <p:dialog id="toolboxDialog" header="Toolbox" draggable="true" resizable="true" closable="false" visible="true"
-              position="'right',10" widgetVar="toolboxWidget" width="300">
-        Toolbox
+              position="'right',10" widgetVar="toolboxWidget" width="200">
+        <ui:include src="/sections/toolbox.xhtml"/>
     </p:dialog>
 
     <p:dialog id="propertiesDialog" header="Edit Properties" draggable="true" resizable="true" closable="false"
-              visible="true" position="'right','bottom'" widgetVar="propertiesWidget" width="300">
-        Edit
+              visible="true" position="'right',10" widgetVar="propertiesWidget" width="300">
+        <ui:include src="/sections/properties.xhtml"/>
     </p:dialog>
 
     <p:dialog id="monitoringDialog" header="Event Monitoring" draggable="true" resizable="true" closable="true"
               visible="true" position="10,'bottom'" widgetVar="monitoringWidget" width="500">
-        Monitoring
+        <ui:include src="/sections/monitoring.xhtml"/>
     </p:dialog>
 
     <p:dialog id="inviteDialog" header="Invite people" draggable="false" resizable="false" closable="true"
               modal="true" widgetVar="inviteWidget">
-        Invite people
+        <ui:include src="/sections/invitation.xhtml"/>
     </p:dialog>
 </ui:composition>
 </html>
