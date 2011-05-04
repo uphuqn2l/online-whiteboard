@@ -23,6 +23,20 @@
 
             <h:panelGroup id="whiteboard" layout="block"/>
 
+            <p:dialog id="toolboxDialog" header="Toolbox" draggable="true" resizable="true" closable="false"
+                      visible="true"
+                      position="'right',10" widgetVar="toolboxWidget" width="200">
+                <ui:include src="/sections/toolbox.xhtml"/>
+            </p:dialog>
+            <p:dialog id="propertiesDialog" header="Edit Properties" draggable="true" resizable="true" closable="false"
+                      visible="true" position="'right',10" widgetVar="propertiesWidget" width="300">
+                <ui:include src="/sections/properties.xhtml"/>
+            </p:dialog>
+            <p:dialog id="monitoringDialog" header="Event Monitoring" draggable="true" resizable="true" closable="true"
+                      visible="true" position="10,'bottom'" widgetVar="monitoringWidget" width="800">
+                <ui:include src="/sections/monitoring.xhtml"/>
+            </p:dialog>
+
             <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
     </ui:define>
@@ -35,6 +49,7 @@
         <script type="text/javascript">
             /* <![CDATA[ */
             jQuery('#whiteboard').css({width: '#{displayWhiteboard.width}px', height: '#{displayWhiteboard.height}px'});
+            paper = Raphael("whiteboard", #{displayWhiteboard.width}, #{displayWhiteboard.height});
             /* ]]> */
         </script>
     </ui:define>
