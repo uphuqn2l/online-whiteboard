@@ -28,7 +28,12 @@ public class ErrorMessagePreparer
         } else if ("500".equals(messageKey)) {
             message = "500 Internal Server Error: Server has encountered an error.";
         } else if ("600".equals(messageKey)) {
-            message = "View '" + detail + "' is expired (probably session timeout). Try again please.";
+            String view = (String) fc.getExternalContext().getSessionMap().get(DefaultExceptionHandler.MESSAGE_DETAIL_KEY);
+            if (view != null) {
+                message = "View '" + detail + "' is expired (probably session timeout). Try again please.";
+            } else {
+                message = "View is expired (probably session timeout). Try again please.";
+            }
         } else if ("601".equals(messageKey)) {
             message = "Whiteboard object could not be found (URL is wrong)!";
         } else if ("602".equals(messageKey)) {

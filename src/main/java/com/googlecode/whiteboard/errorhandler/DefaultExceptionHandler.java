@@ -52,10 +52,14 @@ public class DefaultExceptionHandler extends ExceptionHandlerWrapper
                     }
 
                     redirectPage = "/views/error.jsf?statusCode=600";
-                    fc.getExternalContext().getSessionMap().put(DefaultExceptionHandler.MESSAGE_DETAIL_KEY, ((ViewExpiredException) t).getViewId());
+                    if (!fc.getExternalContext().isResponseCommitted()) {
+                        fc.getExternalContext().getSessionMap().put(DefaultExceptionHandler.MESSAGE_DETAIL_KEY, ((ViewExpiredException) t).getViewId());
+                    }
                 } else {
                     redirectPage = "/views/error.jsf?statusCode=699";
-                    fc.getExternalContext().getSessionMap().put(DefaultExceptionHandler.MESSAGE_DETAIL_KEY, t.getLocalizedMessage());
+                    if (!fc.getExternalContext().isResponseCommitted()) {
+                        fc.getExternalContext().getSessionMap().put(DefaultExceptionHandler.MESSAGE_DETAIL_KEY, t.getLocalizedMessage());
+                    }
                 }
             } finally {
                 i.remove();
