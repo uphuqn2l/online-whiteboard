@@ -14,8 +14,7 @@
         <h:outputText value=" Please click the link below to open your email client."/>
     </h:panelGroup>
     <h:panelGroup layout="block" style="text-align: center; padding: 12px 10px;">
-        <h:outputLink style="color: blue !important; outline: 0;"
-                      value="mailto:?subject=Invitation%20to%20Whiteboard&amp;body=Hello,%0A%0AI%20invite%20you%20to%20join%20my%20whiteboard.%0A%0AFollow%20this%20link%20please%20#{displayWhiteboard.invitationLink}%0A%0ARegards.%20#{displayWhiteboard.userName}.">
+        <h:outputLink style="color: blue !important; outline: 0;" value="#{displayWhiteboard.mailto}">
             <h:outputText value="Click to open your email client"/>
         </h:outputLink>
     </h:panelGroup>

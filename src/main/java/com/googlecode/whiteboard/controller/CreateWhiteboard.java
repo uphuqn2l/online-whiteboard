@@ -6,16 +6,13 @@
 package com.googlecode.whiteboard.controller;
 
 import com.googlecode.whiteboard.model.Whiteboard;
+import com.googlecode.whiteboard.utils.FacesAccessor;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-@ManagedBean
-@ViewScoped
 public class CreateWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
@@ -37,12 +34,12 @@ public class CreateWhiteboard implements Serializable
         whiteboard.setTitle(title);
     }
 
-    public String getUserName() {
-        return whiteboard.getUserName();
+    public String getCreator() {
+        return whiteboard.getCreator();
     }
 
-    public void setUserName(String userName) {
-        whiteboard.setUserName(userName);
+    public void setCreator(String userName) {
+        whiteboard.setCreator(userName);
     }
 
     public int getWidth() {
@@ -69,8 +66,12 @@ public class CreateWhiteboard implements Serializable
         String uuid = UUID.randomUUID().toString();
         whiteboard.setUuid(uuid);
         whiteboard.setCreationDate(new Date());
-        whiteboardsManager.addWhiteboard(uuid, whiteboard);
+        whiteboard.addUser(getCreator());
+        whiteboardsManager.addWhiteboard(whiteboard);
 
-        return "/views/whiteboard?faces-redirect=true&uuid=" + uuid;
+        DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
+        displayWhiteboard.init(whiteboard);
+
+        return "/views/whiteboard?faces-redirect=true";
     }
 }

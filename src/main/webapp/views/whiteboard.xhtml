@@ -16,9 +16,9 @@
                 <p:commandLink value="Invite people" ajax="false" style="margin-bottom: 3px; display: block;"
                                onclick="inviteWidget.show(); return false;"/>
                 <h:graphicImage library="img" name="calendar.png"/>
-                <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.userName}"/>
+                <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.creator}"/>
                 <h:graphicImage library="img" name="userInfo.png"/>
-                <h:outputText value="Active users: #{displayWhiteboard.activeUsers}"/>
+                <h:outputText id="activeUsers" value="Active users: #{displayWhiteboard.usersCount}"/>
             </h:panelGrid>
 
             <h:panelGroup id="whiteboard" layout="block"/>

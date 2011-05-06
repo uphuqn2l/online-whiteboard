@@ -45,13 +45,19 @@
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>displayWhiteboard</managed-bean-name>
-        <managed-bean-class>com.googlecode.whiteboard.controller.DisplayWhiteboard</managed-bean-class>
+        <managed-bean-name>joinWhiteboard</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.JoinWhiteboard</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
         <managed-property>
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>
         </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>displayWhiteboard</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.DisplayWhiteboard</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
 </faces-config>

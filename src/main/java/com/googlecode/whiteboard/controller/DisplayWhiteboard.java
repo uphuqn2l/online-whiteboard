@@ -5,17 +5,16 @@
 
 package com.googlecode.whiteboard.controller;
 
-import com.googlecode.whiteboard.errorhandler.DefaultExceptionHandler;
 import com.googlecode.whiteboard.model.AbstractElement;
 import com.googlecode.whiteboard.model.Whiteboard;
 
-import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class DisplayWhiteboard implements Serializable
@@ -23,36 +22,21 @@ public class DisplayWhiteboard implements Serializable
     private static final long serialVersionUID = 20110501L;
 
     private Whiteboard whiteboard;
-    private WhiteboardsManager whiteboardsManager;
     private String toolboxButtonId = "btnNo";
     private AbstractElement selectedElement;
 
-    @PostConstruct
-    protected void initialize() {
-        String uuid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uuid");
-
-        if (uuid != null) {
-            whiteboard = whiteboardsManager.getWhiteboard(uuid);
-        } else {
-            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=601");
-            return;
-        }
-
-        if (whiteboard == null) {
-            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=602");
-        }
-    }
-
-    public void setWhiteboardsManager(WhiteboardsManager whiteboardsManager) {
-        this.whiteboardsManager = whiteboardsManager;
+    public void init(Whiteboard whiteboard) {
+        this.whiteboard = whiteboard;
+        toolboxButtonId = "btnNo";
+        selectedElement = null;
     }
 
     public String getTitle() {
         return whiteboard.getTitle();
     }
 
-    public String getUserName() {
-        return whiteboard.getUserName();
+    public String getCreator() {
+        return whiteboard.getCreator();
     }
 
     public String getCreationDate() {
@@ -70,9 +54,12 @@ public class DisplayWhiteboard implements Serializable
         return whiteboard.getHeight();
     }
 
-    public int getActiveUsers() {
-        // TODO
-        return 1;
+    public int getUsersCount() {
+        return whiteboard.getUsers().size();
+    }
+
+    public String getMailto() {
+        return "mailto:?subject=Invitation%20to%20Whiteboard&amp;body=Hello,%0A%0AI%20would%20like%20to%20invite%20you%20to%20join%20my%20collaborative%20whiteboard.%0A%0AFollow%20this%20link%20please%20" + getInvitationLink() + "%0A%0ARegards.%20" + getCreator() + ".";
     }
 
     public String getInvitationLink() {
@@ -87,7 +74,16 @@ public class DisplayWhiteboard implements Serializable
             serverPort = "";
         }
 
-        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/views/whiteboard.jsf?uuid=" + whiteboard.getUuid());
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/views/joindialog.jsf?uuid=" + whiteboard.getUuid());
+    }
+
+    public String getMonitoringMessage() {
+        List<String> users = whiteboard.getUsers();
+        if (users.size() < 2) {
+            return "User " + getCreator() + " has created this whiteboard.";
+        } else {
+            return "User " + users.get(users.size() - 1) + " has joined this whiteboard.";
+        }
     }
 
     public AbstractElement getSelectedElement() {
