@@ -12,14 +12,13 @@
         <p:fieldset legend="New Whiteboard">
             <p:messages/>
             <h:form id="mainForm" prependId="false">
-                <h:panelGrid columns="2" id="newWhiteboardPanel"
-                             columnClasses="newWhiteboardCol1,newWhiteboardCol2"
-                             footerClass="newWhiteboardFooter">
+                <h:panelGrid columns="2" id="whiteboardPanel" columnClasses="whiteboardCol1,whiteboardCol2"
+                             footerClass="whiteboardFooter">
                     <cc:requiredLabel for="wbTitle" value="Whiteboard title"/>
                     <p:inputText id="wbTitle" value="#{createWhiteboard.title}" required="true"
                                  label="Whiteboard title"/>
                     <cc:requiredLabel for="wbUserName" value="User name"/>
-                    <p:inputText id="wbUserName" value="#{createWhiteboard.userName}" required="true"
+                    <p:inputText id="wbUserName" value="#{createWhiteboard.creator}" required="true"
                                  label="User name"/>
                     <h:outputLabel value="Whiteboard width" for="wbWidth"/>
                     <h:panelGroup>
@@ -36,7 +35,7 @@
                     </h:panelGroup>
                     <f:facet name="footer">
                         <p:captcha label="Captcha"/>
-                        <p:commandButton id="createWbButton" value="Create" ajax="false"
+                        <p:commandButton id="dialogButton" value="Create and Start Drawing!" ajax="false"
                                          action="#{createWhiteboard.create}"/>
                     </f:facet>
                 </h:panelGrid>
@@ -45,7 +44,7 @@
         </p:fieldset>
     </ui:define>
     <ui:define name="resources">
-        <h:outputStylesheet library="css" name="createdialog.css"/>
+        <h:outputStylesheet library="css" name="startdialog.css"/>
     </ui:define>
 </ui:composition>
 </html>

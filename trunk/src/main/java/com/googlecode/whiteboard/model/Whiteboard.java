@@ -6,20 +6,19 @@
 package com.googlecode.whiteboard.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Whiteboard implements Serializable
 {
-    private static final long serialVersionUID = 20110501L;
+    private static final long serialVersionUID = 20110506L;
 
     private String uuid;
     private String title;
-    private String userName;
+    private String creator;
     private int width = 800;
     private int height = 500;
     private Date creationDate;
+    private List<String> users = new ArrayList<String>();
     private Map<String, AbstractElement> elements = new HashMap<String, AbstractElement>();
 
     public String getUuid() {
@@ -38,12 +37,12 @@ public class Whiteboard implements Serializable
         this.title = title;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public int getWidth() {
@@ -68,6 +67,14 @@ public class Whiteboard implements Serializable
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void addUser(String user) {
+        users.add(user);
+    }
+
+    public List<String> getUsers() {
+        return users;
     }
 
     public void addElement(String uuid, AbstractElement element) {
