@@ -5,6 +5,8 @@
 
 package com.googlecode.whiteboard.model;
 
+import com.googlecode.whiteboard.model.enums.ElementType;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -19,7 +21,42 @@ public class Whiteboard implements Serializable
     private int height = 500;
     private Date creationDate;
     private List<String> users = new ArrayList<String>();
-    private Map<String, AbstractElement> elements = new HashMap<String, AbstractElement>();
+    private Map<String, AbstractElement> elements = new LinkedHashMap<String, AbstractElement>();
+    private Map<ElementType, AbstractElement> defaultProperties = new HashMap<ElementType, AbstractElement>();
+
+    public Whiteboard() {
+        AbstractElement ae = new Text(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Text, ae);
+
+        ae = new FreeLine(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.FreeLine, ae);
+
+        ae = new StraightLine(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.StraightLine, ae);
+
+        ae = new Circle(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Circle, ae);
+
+        ae = new Ellipse(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Ellipse, ae);
+
+        ae = new Rectangle(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Rectangle, ae);
+
+        ae = new Image(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Image, ae);
+
+        ae = new Icon(null);
+        ae.setDefaults();
+        defaultProperties.put(ElementType.Icon, ae);
+    }
 
     public String getUuid() {
         return uuid;
@@ -83,5 +120,13 @@ public class Whiteboard implements Serializable
 
     public AbstractElement getElement(String uuid) {
         return elements.get(uuid);
+    }
+
+    public Map<ElementType, AbstractElement> getDefaultProperties() {
+        return defaultProperties;
+    }
+
+    public void updateDefaultProperty(ElementType elementType, AbstractElement element) {
+        defaultProperties.put(elementType, element);
     }
 }
