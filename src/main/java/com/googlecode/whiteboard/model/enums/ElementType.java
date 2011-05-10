@@ -28,4 +28,8 @@ public enum ElementType
 
         return null;
     }
+
+    public String toString() {
+        return getType();
+    }
 }
