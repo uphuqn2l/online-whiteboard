@@ -28,7 +28,7 @@ public class Circle extends AbstractElement implements Serializable
     private double scaleFactor;
 
     public Circle(String uuid) {
-        super(uuid, ElementType.Circle);
+        super(uuid, ElementType.Circle.getType());
     }
 
     public int getX() {
@@ -144,11 +144,11 @@ public class Circle extends AbstractElement implements Serializable
         borderColor = Color.Black.getColor();
         borderWidth = 1;
         borderStyle = StrokeStyle.No.getStyle();
-        double backgroundOpacity = 1;
-        double borderOpacity = 1;
+        double backgroundOpacity = 1.0;
+        double borderOpacity = 1.0;
         boolean movedToFront = false;
         boolean movedToBack = false;
         int rotationDegree = 0;
-        double scaleFactor = 1;
+        double scaleFactor = 1.0;
     }
 }

@@ -6,7 +6,6 @@
 package com.googlecode.whiteboard.model;
 
 import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.ElementType;
 import com.googlecode.whiteboard.model.enums.StrokeStyle;
 
 public abstract class Line extends AbstractElement
@@ -20,7 +19,7 @@ public abstract class Line extends AbstractElement
     private int rotationDegree;
     private double scaleFactor;
 
-    public Line(String uuid, ElementType elementType) {
+    public Line(String uuid, String elementType) {
         super(uuid, elementType);
     }
 
@@ -93,10 +92,10 @@ public abstract class Line extends AbstractElement
         color = Color.Black.getColor();
         lineWidth = 1;
         lineStyle = StrokeStyle.No.getStyle();
-        double opacity = 1;
+        double opacity = 1.0;
         boolean movedToFront = false;
         boolean movedToBack = false;
         int rotationDegree = 0;
-        double scaleFactor = 1;
+        double scaleFactor = 1.0;
     }
 }

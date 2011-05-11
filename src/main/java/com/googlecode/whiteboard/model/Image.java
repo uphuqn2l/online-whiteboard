@@ -17,7 +17,7 @@ public class Image extends AbstractElement implements Serializable
     private int rotationDegree;
 
     public Image(String uuid) {
-        super(uuid, ElementType.Image);
+        super(uuid, ElementType.Image.getType());
     }
 
     public String getUrl() {

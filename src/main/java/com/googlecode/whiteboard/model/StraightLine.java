@@ -12,6 +12,6 @@ import java.io.Serializable;
 public class StraightLine extends Line implements Serializable
 {
     public StraightLine(String uuid) {
-        super(uuid, ElementType.StraightLine);
+        super(uuid, ElementType.StraightLine.getType());
     }
 }

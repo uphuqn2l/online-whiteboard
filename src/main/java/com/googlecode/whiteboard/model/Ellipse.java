@@ -29,7 +29,7 @@ public class Ellipse extends AbstractElement implements Serializable
     private double scaleFactor;
 
     public Ellipse(String uuid) {
-        super(uuid, ElementType.Ellipse);
+        super(uuid, ElementType.Ellipse.getType());
     }
 
     public int getX() {
@@ -154,11 +154,11 @@ public class Ellipse extends AbstractElement implements Serializable
         borderColor = Color.Black.getColor();
         borderWidth = 1;
         borderStyle = StrokeStyle.No.getStyle();
-        double backgroundOpacity = 1;
-        double borderOpacity = 1;
+        double backgroundOpacity = 1.0;
+        double borderOpacity = 1.0;
         boolean movedToFront = false;
         boolean movedToBack = false;
         int rotationDegree = 0;
-        double scaleFactor = 1;
+        double scaleFactor = 1.0;
     }
 }

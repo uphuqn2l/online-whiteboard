@@ -12,6 +12,6 @@ import java.io.Serializable;
 public class FreeLine extends Line implements Serializable
 {
     public FreeLine(String uuid) {
-        super(uuid, ElementType.FreeLine);
+        super(uuid, ElementType.FreeLine.getType());
     }
 }

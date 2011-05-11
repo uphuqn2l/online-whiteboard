@@ -5,6 +5,8 @@
 
 package com.googlecode.whiteboard.utils;
 
+import com.google.gson.Gson;
+import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
 
 public class WhiteboardUtils
@@ -18,9 +20,7 @@ public class WhiteboardUtils
     }
 
     public static String convertToJson(Whiteboard whiteboard) {
-        // TODO
-        // iterate over all elements and call convertToJson()
-
-        return null;
+        Gson gson = JsonConverter.getInstance().getGson();
+        return gson.toJson(whiteboard);
     }
 }

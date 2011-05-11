@@ -24,7 +24,7 @@ public class Text extends AbstractElement implements Serializable
     private int rotationDegree;
 
     public Text(String uuid) {
-        super(uuid, ElementType.Text);
+        super(uuid, ElementType.Text.getType());
     }
 
     public String getFontFamily() {
