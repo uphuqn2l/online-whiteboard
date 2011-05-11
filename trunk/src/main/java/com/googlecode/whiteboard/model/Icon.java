@@ -17,7 +17,7 @@ public class Icon extends AbstractElement implements Serializable
     private int rotationDegree;
 
     public Icon(String uuid) {
-        super(uuid, ElementType.Icon);
+        super(uuid, ElementType.Icon.getType());
     }
 
     public String getName() {

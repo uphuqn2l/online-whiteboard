@@ -5,14 +5,12 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.ElementType;
-
 public abstract class AbstractElement
 {
     private String uuid;
-    private ElementType elementType;
+    private String elementType;
 
-    public AbstractElement(String uuid, ElementType elementType) {
+    public AbstractElement(String uuid, String elementType) {
         this.uuid = uuid;
         this.elementType = elementType;
     }
@@ -35,7 +33,7 @@ public abstract class AbstractElement
         return uuid;
     }
 
-    public ElementType getElementType() {
+    public String getElementType() {
         return elementType;
     }
 }
