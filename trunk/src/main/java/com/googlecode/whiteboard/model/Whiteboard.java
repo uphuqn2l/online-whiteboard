@@ -5,6 +5,8 @@
 
 package com.googlecode.whiteboard.model;
 
+import com.googlecode.whiteboard.model.base.AbstractElement;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -20,42 +22,9 @@ public class Whiteboard implements Serializable
     private Date creationDate = new Date();
     private List<String> users = new ArrayList<String>();
     private Map<String, AbstractElement> elements = new LinkedHashMap<String, AbstractElement>();
-    private List<AbstractElement> defaultProperties = new ArrayList<AbstractElement>();
 
     public Whiteboard() {
         uuid = UUID.randomUUID().toString();
-
-        AbstractElement ae = new Text();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new FreeLine();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new StraightLine();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new Circle();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new Ellipse();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new Rectangle();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new Image();
-        ae.setDefaults();
-        defaultProperties.add(ae);
-
-        ae = new Icon();
-        ae.setDefaults();
-        defaultProperties.add(ae);
     }
 
     public String getUuid() {
@@ -120,14 +89,5 @@ public class Whiteboard implements Serializable
 
     public AbstractElement getElement(String uuid) {
         return elements.get(uuid);
-    }
-
-    public List<AbstractElement> getDefaultProperties() {
-        return defaultProperties;
-    }
-
-    public void updateDefaultProperty(AbstractElement element) {
-        defaultProperties.remove(element);
-        defaultProperties.add(element);
     }
 }

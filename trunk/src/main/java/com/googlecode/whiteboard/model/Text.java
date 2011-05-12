@@ -5,13 +5,11 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.FontStyle;
-import com.googlecode.whiteboard.model.enums.FontWeight;
+import com.googlecode.whiteboard.model.base.Positionable;
 
 import java.io.Serializable;
 
-public class Text extends AbstractElement implements Serializable
+public class Text extends Positionable implements Serializable
 {
     private String fontFamily;
     private int fontSize;
@@ -21,10 +19,6 @@ public class Text extends AbstractElement implements Serializable
     private boolean movedToFront;
     private boolean movedToBack;
     private int rotationDegree;
-
-    public Text() {
-        super();
-    }
 
     public String getFontFamily() {
         return fontFamily;
@@ -88,17 +82,5 @@ public class Text extends AbstractElement implements Serializable
 
     public void setRotationDegree(int rotationDegree) {
         this.rotationDegree = rotationDegree;
-    }
-
-    @Override
-    public void setDefaults() {
-        fontFamily = "Verdana";
-        fontSize = 18;
-        fontWeight = FontWeight.Normal.getWeight();
-        fontStyle = FontStyle.Normal.getStyle();
-        color = Color.Black.getColor();
-        boolean movedToFront = false;
-        boolean movedToBack = false;
-        int rotationDegree = 0;
     }
 }

@@ -5,8 +5,8 @@
 
 package com.googlecode.whiteboard.controller;
 
-import com.googlecode.whiteboard.model.AbstractElement;
 import com.googlecode.whiteboard.model.Whiteboard;
+import com.googlecode.whiteboard.model.base.AbstractElement;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;

@@ -3,13 +3,11 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model;
-
-import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.StrokeStyle;
+package com.googlecode.whiteboard.model.base;
 
 public abstract class Line extends AbstractElement
 {
+    private String path;
     private String color;
     private int lineWidth;
     private String lineStyle;
@@ -19,8 +17,12 @@ public abstract class Line extends AbstractElement
     private int rotationDegree;
     private double scaleFactor;
 
-    public Line() {
-        super();
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getColor() {
@@ -85,17 +87,5 @@ public abstract class Line extends AbstractElement
 
     public void setScaleFactor(double scaleFactor) {
         this.scaleFactor = scaleFactor;
-    }
-
-    @Override
-    public void setDefaults() {
-        color = Color.Black.getColor();
-        lineWidth = 1;
-        lineStyle = StrokeStyle.No.getStyle();
-        double opacity = 1.0;
-        boolean movedToFront = false;
-        boolean movedToBack = false;
-        int rotationDegree = 0;
-        double scaleFactor = 1.0;
     }
 }

@@ -6,7 +6,7 @@
 package com.googlecode.whiteboard.json;
 
 import com.google.gson.*;
-import com.googlecode.whiteboard.model.AbstractElement;
+import com.googlecode.whiteboard.model.base.AbstractElement;
 
 import java.lang.reflect.Type;
 
