@@ -14,12 +14,12 @@ public class WhiteboardsManager
 {
     private Map<String, Whiteboard> whiteboards = new HashMap<String, Whiteboard>();
 
-    public void addWhiteboard(Whiteboard data) {
-        whiteboards.put(data.getUuid(), data);
+    public void addWhiteboard(Whiteboard whiteboard) {
+        whiteboards.put(whiteboard.getUuid(), whiteboard);
     }
 
-    public void updateWhiteboard(Whiteboard data) {
-        whiteboards.put(data.getUuid(), data);
+    public void updateWhiteboard(Whiteboard whiteboard) {
+        whiteboards.put(whiteboard.getUuid(), whiteboard);
     }
 
     public Whiteboard getWhiteboard(String uuid) {

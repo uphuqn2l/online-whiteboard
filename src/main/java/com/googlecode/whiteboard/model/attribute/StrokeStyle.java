@@ -3,7 +3,7 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model.enums;
+package com.googlecode.whiteboard.model.attribute;
 
 public enum StrokeStyle
 {

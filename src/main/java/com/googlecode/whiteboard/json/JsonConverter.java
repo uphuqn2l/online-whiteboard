@@ -7,7 +7,7 @@ package com.googlecode.whiteboard.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.googlecode.whiteboard.model.AbstractElement;
+import com.googlecode.whiteboard.model.base.AbstractElement;
 
 /*
 * Singleton instance of Gson {@link http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/Gson.html}.

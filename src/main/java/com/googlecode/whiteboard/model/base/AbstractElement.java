@@ -3,7 +3,7 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model;
+package com.googlecode.whiteboard.model.base;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -11,9 +11,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public abstract class AbstractElement
 {
     private String uuid;
-
-    public AbstractElement() {
-    }
 
     public AbstractElement updateFromJson(String jsonString) {
         // TODO
@@ -27,7 +24,9 @@ public abstract class AbstractElement
         return null;
     }
 
-    public abstract void setDefaults();
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getUuid() {
         return uuid;

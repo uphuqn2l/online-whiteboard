@@ -3,7 +3,7 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model.enums;
+package com.googlecode.whiteboard.model.attribute;
 
 /**
  * Enum for font styles "normal" and "italic".

@@ -5,15 +5,12 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.StrokeStyle;
+import com.googlecode.whiteboard.model.base.Positionable;
 
 import java.io.Serializable;
 
-public class Circle extends AbstractElement implements Serializable
+public class Circle extends Positionable implements Serializable
 {
-    private int x;
-    private int y;
     private int radius;
     private String backgroundColor;
     private String borderColor;
@@ -25,26 +22,6 @@ public class Circle extends AbstractElement implements Serializable
     private boolean movedToBack;
     private int rotationDegree;
     private double scaleFactor;
-
-    public Circle() {
-        super();
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 
     public int getRadius() {
         return radius;
@@ -132,22 +109,5 @@ public class Circle extends AbstractElement implements Serializable
 
     public void setScaleFactor(double scaleFactor) {
         this.scaleFactor = scaleFactor;
-    }
-
-    @Override
-    public void setDefaults() {
-        x = 0;
-        y = 0;
-        radius = 80;
-        backgroundColor = Color.Red.getColor();
-        borderColor = Color.Black.getColor();
-        borderWidth = 1;
-        borderStyle = StrokeStyle.No.getStyle();
-        double backgroundOpacity = 1.0;
-        double borderOpacity = 1.0;
-        boolean movedToFront = false;
-        boolean movedToBack = false;
-        int rotationDegree = 0;
-        double scaleFactor = 1.0;
     }
 }
