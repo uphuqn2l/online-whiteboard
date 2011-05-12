@@ -20,7 +20,7 @@ public class WhiteboardUtils
     }
 
     public static String convertToJson(Whiteboard whiteboard) {
-        Gson gson = JsonConverter.getInstance().getGson();
+        Gson gson = JsonConverter.getGson();
         return gson.toJson(whiteboard);
     }
 }

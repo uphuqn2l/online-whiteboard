@@ -6,7 +6,6 @@
 package com.googlecode.whiteboard.model;
 
 import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.ElementType;
 import com.googlecode.whiteboard.model.enums.StrokeStyle;
 
 import java.io.Serializable;
@@ -29,8 +28,8 @@ public class Rectangle extends AbstractElement implements Serializable
     private int rotationDegree;
     private double scaleFactor;
 
-    public Rectangle(String uuid) {
-        super(uuid, ElementType.Rectangle.getType());
+    public Rectangle() {
+        super();
     }
 
     public int getX() {

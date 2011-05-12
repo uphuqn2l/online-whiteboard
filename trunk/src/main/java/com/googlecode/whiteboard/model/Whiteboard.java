@@ -5,8 +5,6 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.ElementType;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -22,40 +20,42 @@ public class Whiteboard implements Serializable
     private Date creationDate = new Date();
     private List<String> users = new ArrayList<String>();
     private Map<String, AbstractElement> elements = new LinkedHashMap<String, AbstractElement>();
-    private Map<ElementType, AbstractElement> defaultProperties = new HashMap<ElementType, AbstractElement>();
+    private List<AbstractElement> defaultProperties = new ArrayList<AbstractElement>();
 
     public Whiteboard() {
-        AbstractElement ae = new Text(null);
-        ae.setDefaults();
-        defaultProperties.put(ElementType.Text, ae);
+        uuid = UUID.randomUUID().toString();
 
-        ae = new FreeLine(null);
+        AbstractElement ae = new Text();
         ae.setDefaults();
-        defaultProperties.put(ElementType.FreeLine, ae);
+        defaultProperties.add(ae);
 
-        ae = new StraightLine(null);
+        ae = new FreeLine();
         ae.setDefaults();
-        defaultProperties.put(ElementType.StraightLine, ae);
+        defaultProperties.add(ae);
 
-        ae = new Circle(null);
+        ae = new StraightLine();
         ae.setDefaults();
-        defaultProperties.put(ElementType.Circle, ae);
+        defaultProperties.add(ae);
 
-        ae = new Ellipse(null);
+        ae = new Circle();
         ae.setDefaults();
-        defaultProperties.put(ElementType.Ellipse, ae);
+        defaultProperties.add(ae);
 
-        ae = new Rectangle(null);
+        ae = new Ellipse();
         ae.setDefaults();
-        defaultProperties.put(ElementType.Rectangle, ae);
+        defaultProperties.add(ae);
 
-        ae = new Image(null);
+        ae = new Rectangle();
         ae.setDefaults();
-        defaultProperties.put(ElementType.Image, ae);
+        defaultProperties.add(ae);
 
-        ae = new Icon(null);
+        ae = new Image();
         ae.setDefaults();
-        defaultProperties.put(ElementType.Icon, ae);
+        defaultProperties.add(ae);
+
+        ae = new Icon();
+        ae.setDefaults();
+        defaultProperties.add(ae);
     }
 
     public String getUuid() {
@@ -114,19 +114,20 @@ public class Whiteboard implements Serializable
         return users;
     }
 
-    public void addElement(String uuid, AbstractElement element) {
-        elements.put(uuid, element);
+    public void addElement(AbstractElement element) {
+        elements.put(element.getUuid(), element);
     }
 
     public AbstractElement getElement(String uuid) {
         return elements.get(uuid);
     }
 
-    public Map<ElementType, AbstractElement> getDefaultProperties() {
+    public List<AbstractElement> getDefaultProperties() {
         return defaultProperties;
     }
 
-    public void updateDefaultProperty(ElementType elementType, AbstractElement element) {
-        defaultProperties.put(elementType, element);
+    public void updateDefaultProperty(AbstractElement element) {
+        defaultProperties.remove(element);
+        defaultProperties.add(element);
     }
 }

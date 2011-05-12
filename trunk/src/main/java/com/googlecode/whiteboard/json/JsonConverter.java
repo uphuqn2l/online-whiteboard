@@ -8,8 +8,10 @@ package com.googlecode.whiteboard.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.googlecode.whiteboard.model.AbstractElement;
-import com.googlecode.whiteboard.model.enums.ElementType;
 
+/*
+* Singleton instance of Gson {@link http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/Gson.html}.
+*/
 public class JsonConverter
 {
     private static final JsonConverter INSTANCE = new JsonConverter();
@@ -17,22 +19,12 @@ public class JsonConverter
 
     private JsonConverter() {
         GsonBuilder gsonBilder = new GsonBuilder();
-        gsonBilder.registerTypeAdapter(ElementType.class, new ElementTypeAdapter());
-        gsonBilder.registerTypeAdapter(AbstractElement.class, new AbstractElementDeserializer());
-        gsonBilder.serializeNulls();
+        gsonBilder.registerTypeAdapter(AbstractElement.class, new AbstractElementAdapter());
+        gsonBilder.serializeNulls().setPrettyPrinting();
         gson = gsonBilder.create();
     }
 
-    /**
-     * Returns singleton instance.
-     *
-     * @return JsonConverter
-     */
-    public static JsonConverter getInstance() {
-        return INSTANCE;
-    }
-
-    public Gson getGson() {
-        return gson;
+    public static Gson getGson() {
+        return INSTANCE.gson;
     }
 }

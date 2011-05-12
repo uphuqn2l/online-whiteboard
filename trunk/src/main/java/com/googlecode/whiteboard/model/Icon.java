@@ -5,8 +5,6 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.ElementType;
-
 import java.io.Serializable;
 
 public class Icon extends AbstractElement implements Serializable
@@ -16,8 +14,8 @@ public class Icon extends AbstractElement implements Serializable
     private boolean movedToBack;
     private int rotationDegree;
 
-    public Icon(String uuid) {
-        super(uuid, ElementType.Icon.getType());
+    public Icon() {
+        super();
     }
 
     public String getName() {

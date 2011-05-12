@@ -5,14 +5,14 @@
 
 package com.googlecode.whiteboard.model;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public abstract class AbstractElement
 {
     private String uuid;
-    private String elementType;
 
-    public AbstractElement(String uuid, String elementType) {
-        this.uuid = uuid;
-        this.elementType = elementType;
+    public AbstractElement() {
     }
 
     public AbstractElement updateFromJson(String jsonString) {
@@ -33,7 +33,31 @@ public abstract class AbstractElement
         return uuid;
     }
 
-    public String getElementType() {
-        return elementType;
+    public boolean equals(Object obj) {
+        //return EqualsBuilder.reflectionEquals(this, obj);
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+
+        return this.uuid.equals(((AbstractElement) obj).getUuid());
+    }
+
+    public int hashCode() {
+        //return HashCodeBuilder.reflectionHashCode(this);
+
+        return new HashCodeBuilder(17, 37).append(uuid).toHashCode();
+    }
+
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

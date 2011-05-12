@@ -11,7 +11,6 @@ import com.googlecode.whiteboard.utils.FacesAccessor;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
 
 public class CreateWhiteboard implements Serializable
 {
@@ -63,8 +62,6 @@ public class CreateWhiteboard implements Serializable
     }
 
     public String create() {
-        String uuid = UUID.randomUUID().toString();
-        whiteboard.setUuid(uuid);
         whiteboard.setCreationDate(new Date());
         whiteboard.addUser(getCreator());
         whiteboardsManager.addWhiteboard(whiteboard);
