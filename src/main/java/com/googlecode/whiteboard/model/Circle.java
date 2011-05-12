@@ -6,7 +6,6 @@
 package com.googlecode.whiteboard.model;
 
 import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.ElementType;
 import com.googlecode.whiteboard.model.enums.StrokeStyle;
 
 import java.io.Serializable;
@@ -27,8 +26,8 @@ public class Circle extends AbstractElement implements Serializable
     private int rotationDegree;
     private double scaleFactor;
 
-    public Circle(String uuid) {
-        super(uuid, ElementType.Circle.getType());
+    public Circle() {
+        super();
     }
 
     public int getX() {

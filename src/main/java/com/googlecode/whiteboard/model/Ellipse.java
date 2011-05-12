@@ -6,7 +6,6 @@
 package com.googlecode.whiteboard.model;
 
 import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.ElementType;
 import com.googlecode.whiteboard.model.enums.StrokeStyle;
 
 import java.io.Serializable;
@@ -28,8 +27,8 @@ public class Ellipse extends AbstractElement implements Serializable
     private int rotationDegree;
     private double scaleFactor;
 
-    public Ellipse(String uuid) {
-        super(uuid, ElementType.Ellipse.getType());
+    public Ellipse() {
+        super();
     }
 
     public int getX() {

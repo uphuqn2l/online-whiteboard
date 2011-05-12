@@ -5,8 +5,6 @@
 
 package com.googlecode.whiteboard.model;
 
-import com.googlecode.whiteboard.model.enums.ElementType;
-
 import java.io.Serializable;
 
 public class Image extends AbstractElement implements Serializable
@@ -16,8 +14,8 @@ public class Image extends AbstractElement implements Serializable
     private boolean movedToBack;
     private int rotationDegree;
 
-    public Image(String uuid) {
-        super(uuid, ElementType.Image.getType());
+    public Image() {
+        super();
     }
 
     public String getUrl() {

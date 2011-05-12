@@ -19,8 +19,8 @@ public abstract class Line extends AbstractElement
     private int rotationDegree;
     private double scaleFactor;
 
-    public Line(String uuid, String elementType) {
-        super(uuid, elementType);
+    public Line() {
+        super();
     }
 
     public String getColor() {

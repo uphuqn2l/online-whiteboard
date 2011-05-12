@@ -6,7 +6,6 @@
 package com.googlecode.whiteboard.model;
 
 import com.googlecode.whiteboard.model.enums.Color;
-import com.googlecode.whiteboard.model.enums.ElementType;
 import com.googlecode.whiteboard.model.enums.FontStyle;
 import com.googlecode.whiteboard.model.enums.FontWeight;
 
@@ -23,8 +22,8 @@ public class Text extends AbstractElement implements Serializable
     private boolean movedToBack;
     private int rotationDegree;
 
-    public Text(String uuid) {
-        super(uuid, ElementType.Text.getType());
+    public Text() {
+        super();
     }
 
     public String getFontFamily() {

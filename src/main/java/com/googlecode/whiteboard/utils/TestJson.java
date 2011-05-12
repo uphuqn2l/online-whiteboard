@@ -13,8 +13,9 @@ public class TestJson
 {
     public static void main(String[] args) throws Exception {
         Whiteboard wb = new Whiteboard();
+        wb.addUser("Oleg");
         String json = WhiteboardUtils.convertToJson(wb);
-        Gson gson = JsonConverter.getInstance().getGson();
+        Gson gson = JsonConverter.getGson();
         Whiteboard wbClone = gson.fromJson(json, Whiteboard.class);
 
 
