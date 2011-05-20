@@ -22,6 +22,11 @@
             </h:panelGrid>
 
             <h:panelGroup id="whiteboard" layout="block"/>
+            <script type="text/javascript">
+                /* <![CDATA[ */
+                jQuery("#whiteboard").css({width: '#{displayWhiteboard.width}px', height: '#{displayWhiteboard.height}px'});
+                /* ]]> */
+            </script>
 
             <p:dialog id="toolboxDialog" header="Toolbox" draggable="true" resizable="true" closable="false"
                       visible="true"
@@ -42,17 +47,11 @@
     </ui:define>
     <ui:define name="resources">
         <h:outputStylesheet library="css" name="whiteboard.css"/>
-        <h:outputScript library="js" name="raphael-min.js" target="head"/>
         <h:outputScript library="js" name="json2-min.js" target="head"/>
         <h:outputScript library="js" name="uuid.js" target="head"/>
+        <h:outputScript library="js" name="raphael-min.js" target="head"/>
+        <h:outputScript library="js" name="icons.js" target="head"/>
         <h:outputScript library="js" name="whiteboard.js" target="body"/>
-
-        <script type="text/javascript">
-            /* <![CDATA[ */
-            jQuery('#whiteboard').css({width: '#{displayWhiteboard.width}px', height: '#{displayWhiteboard.height}px'});
-            paper = Raphael("whiteboard", #{displayWhiteboard.width}, #{displayWhiteboard.height});
-            /* ]]> */
-        </script>
     </ui:define>
 </ui:composition>
 </html>

@@ -6,11 +6,9 @@
 package com.googlecode.whiteboard.controller;
 
 import com.googlecode.whiteboard.model.Whiteboard;
-import com.googlecode.whiteboard.model.base.AbstractElement;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,13 +20,9 @@ public class DisplayWhiteboard implements Serializable
     private static final long serialVersionUID = 20110501L;
 
     private Whiteboard whiteboard;
-    private String toolboxButtonId = "btnNo";
-    private AbstractElement selectedElement;
 
     public void init(Whiteboard whiteboard) {
         this.whiteboard = whiteboard;
-        toolboxButtonId = "btnNo";
-        selectedElement = null;
     }
 
     public String getTitle() {
@@ -84,35 +78,5 @@ public class DisplayWhiteboard implements Serializable
         } else {
             return "User " + users.get(users.size() - 1) + " has joined this whiteboard.";
         }
-    }
-
-    public AbstractElement getSelectedElement() {
-        return selectedElement;
-    }
-
-    public void setSelectedElement(AbstractElement selectedElement) {
-        this.selectedElement = selectedElement;
-    }
-
-    public void selectToolboxItem(ActionEvent ae) {
-        toolboxButtonId = ae.getComponent().getId();
-
-        if (toolboxButtonId.equals("btnClone")) {
-            // clone selected element if any exists and show it in edit or show 'no element selected'
-            // TODO
-        } else if (toolboxButtonId.equals("btnRemove")) {
-            // remove selected element and show 'no selection' if any exists or 'no element selected'
-            // TODO
-        } else if (toolboxButtonId.equals("btnClearWb")) {
-            // clear whiteboard and show 'no selection'
-            // TODO
-        } else if (toolboxButtonId.equals("btnResizeWb")) {
-            // resize whiteboard
-            // TODO
-        }
-    }
-
-    public boolean isToolboxItemSelected(String itemId) {
-        return toolboxButtonId.equals(itemId);
     }
 }

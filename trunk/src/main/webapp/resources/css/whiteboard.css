@@ -43,7 +43,7 @@ td.colUsers {
 }
 
 #whiteboard {
-    border: 1px solid #AED0EA;
+    border: 2px solid #3E9AE4;
     margin: 5px 10px 10px 10px;
 }
 
@@ -57,6 +57,13 @@ td.colUsers {
     vertical-align: middle;
     text-align: left;
     padding: 8px;
+    display: none;
+}
+
+#editNoSelection {
+    padding: 30px;
+    text-align: center;
+    display: block;
 }
 
 .toolboxItem {
@@ -67,6 +74,14 @@ td.colUsers {
     border: none !important;
     width: 100% !important;
     text-align: left !important;
+}
+
+#monitoringGroup {
+    height: 85px;
+    vertical-align: middle;
+    text-align: left;
+    padding: 8px;
+    overflow: auto;
 }
 
 #toolboxDialog .ui-state-default,
@@ -150,4 +165,14 @@ td.colUsers {
 
 .btn-resizeWhiteboard {
     background-image: url("#{resource['img:resizeWhiteboard.png']}") !important;
+}
+
+#iconsArea {
+    margin: 10px 0px 0px 0px;
+}
+
+#textArea {
+    margin: 10px 0px 0px 0px;
+    width: 400px !important;
+    height: 150px !important;
 }

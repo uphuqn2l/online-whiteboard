@@ -7,60 +7,46 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition>
     <p:commandButton id="btnSelect" value="Select Element" image="btn-icon btn-selectElement"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnSelect') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="@none" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('selectMode', 'default')"/>
     <p:commandButton id="btnMove" value="Move Element" image="btn-icon btn-moveElement"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnMove') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="@none" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('moveMode', 'default')"/>
     <p:commandButton id="btnText" value="Input Text" image="btn-icon btn-inputText"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnText') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('textMode', 'text')"/>
     <p:commandButton id="btnFreeLine" value="Draw Free Line" image="btn-icon btn-drawFreeLine"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnFreeLine') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('freeLineMode', 'pointer')"/>
     <p:commandButton id="btnStraightLine" value="Draw Straight Line" image="btn-icon btn-drawStraightLine"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnStraightLine') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('straightLineMode', 'pointer')"/>
     <p:commandButton id="btnRectangle" value="Draw Rectangle" image="btn-icon btn-drawRectangle"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnRectangle') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('rectangleMode', 'crosshair')"/>
     <p:commandButton id="btnCircle" value="Draw Circle" image="btn-icon btn-drawCircle"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnCircle') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('circleMode', 'crosshair')"/>
     <p:commandButton id="btnEllipse" value="Draw Ellipse" image="btn-icon btn-drawEllipse"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnEllipse') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('ellipseMode', 'crosshair')"/>
     <p:commandButton id="btnImage" value="Paste Image" image="btn-icon btn-pasteImage"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnImage') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick=""/>
     <p:commandButton id="btnIcon" value="Paste Icon" image="btn-icon btn-pasteIcon"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnIcon') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('iconMode', 'crosshair')"/>
     <p:commandButton id="btnClone" value="Clone Element" image="btn-icon btn-cloneElement"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnClone') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick=""/>
     <p:commandButton id="btnRemove" value="Remove Element" image="btn-icon btn-removeElement"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnRemove') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('removeMode', 'crosshair')"/>
     <p:commandButton id="btnClearWb" value="Clear Whiteboard" image="btn-icon btn-clearWhiteboard"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnClearWb') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="propertiesContainer" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick="whiteboardDesigner.switchToMode('clearMode', 'default'); whiteboardDesigner.clearWhiteboard()"/>
     <p:commandButton id="btnResizeWb" value="Resize Whiteboard" image="btn-icon btn-resizeWhiteboard"
-                     styleClass="#{displayWhiteboard.isToolboxItemSelected('btnResizeWb') ? 'toolboxItem ui-state-selected' : 'toolboxItem'}"
-                     process="@this" update="@none" immediate="true"
-                     actionListener="#{displayWhiteboard.selectToolboxItem}"/>
+                     styleClass="toolboxItem" type="button"
+                     onclick=""/>
 </ui:composition>
 </html>

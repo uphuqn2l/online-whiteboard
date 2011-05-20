@@ -19,9 +19,6 @@ public class Ellipse extends Positionable implements Serializable
     private String borderStyle;
     private double backgroundOpacity;
     private double borderOpacity;
-    private boolean movedToFront;
-    private boolean movedToBack;
-    private int rotationDegree;
     private double scaleFactor;
 
     public int getHRadius() {
@@ -86,30 +83,6 @@ public class Ellipse extends Positionable implements Serializable
 
     public void setBorderOpacity(double borderOpacity) {
         this.borderOpacity = borderOpacity;
-    }
-
-    public boolean isMovedToFront() {
-        return movedToFront;
-    }
-
-    public void setMovedToFront(boolean movedToFront) {
-        this.movedToFront = movedToFront;
-    }
-
-    public boolean isMovedToBack() {
-        return movedToBack;
-    }
-
-    public void setMovedToBack(boolean movedToBack) {
-        this.movedToBack = movedToBack;
-    }
-
-    public int getRotationDegree() {
-        return rotationDegree;
-    }
-
-    public void setRotationDegree(int rotationDegree) {
-        this.rotationDegree = rotationDegree;
     }
 
     public double getScaleFactor() {

@@ -11,6 +11,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public abstract class AbstractElement
 {
     private String uuid;
+    private boolean movedToFront;
+    private boolean movedToBack;
+    private int rotationDegree;
 
     public AbstractElement updateFromJson(String jsonString) {
         // TODO
@@ -30,6 +33,30 @@ public abstract class AbstractElement
 
     public String getUuid() {
         return uuid;
+    }
+
+    public boolean isMovedToFront() {
+        return movedToFront;
+    }
+
+    public void setMovedToFront(boolean movedToFront) {
+        this.movedToFront = movedToFront;
+    }
+
+    public boolean isMovedToBack() {
+        return movedToBack;
+    }
+
+    public void setMovedToBack(boolean movedToBack) {
+        this.movedToBack = movedToBack;
+    }
+
+    public int getRotationDegree() {
+        return rotationDegree;
+    }
+
+    public void setRotationDegree(int rotationDegree) {
+        this.rotationDegree = rotationDegree;
     }
 
     public boolean equals(Object obj) {
