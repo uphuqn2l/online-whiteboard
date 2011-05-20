@@ -10,5 +10,49 @@
               modal="true" width="700" widgetVar="inviteWidget">
         <ui:include src="/sections/invitation.xhtml"/>
     </p:dialog>
+
+    <p:dialog id="dialogIcons" header="Choose icon" resizable="false" closable="true" modal="true" width="617">
+        <h:panelGroup id="iconsArea" layout="block"/>
+    </p:dialog>
+    <p:dialog id="dialogInputText" header="Input text" resizable="false" closable="true" modal="true" width="433">
+        <p:inputTextarea id="textArea"/>
+    </p:dialog>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        jQuery(function() {
+            jQuery("#dialogIcons").dialog("option", "buttons", {
+                "Close": function() {
+                    jQuery(this).dialog("close");
+                }
+            }).bind("dialogopen", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'hidden');
+                jQuery('.ui-widget-overlay').css('width', '100%');
+            }).bind("dialogclose", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'auto');
+            });
+
+            jQuery("#dialogInputText").dialog("option", "buttons", {
+                "Accept": function() {
+                    var inputText = jQuery(this).find("#textArea").val();
+                    jQuery(this).dialog("close");
+                    whiteboardDesigner.drawText(inputText);
+                },
+                "Close": function() {
+                    jQuery(this).dialog("close");
+                }
+            }).bind("dialogopen", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'hidden');
+                jQuery('.ui-widget-overlay').css('width', '100%');
+            }).bind("dialogclose", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'auto');
+                jQuery(this).find("#textArea").val('');
+            });
+        });
+        /* ]]> */
+    </script>
 </ui:composition>
 </html>

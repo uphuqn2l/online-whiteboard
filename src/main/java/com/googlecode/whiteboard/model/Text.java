@@ -16,9 +16,6 @@ public class Text extends Positionable implements Serializable
     private String fontWeight;
     private String fontStyle;
     private String color;
-    private boolean movedToFront;
-    private boolean movedToBack;
-    private int rotationDegree;
 
     public String getFontFamily() {
         return fontFamily;
@@ -58,29 +55,5 @@ public class Text extends Positionable implements Serializable
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public boolean isMovedToFront() {
-        return movedToFront;
-    }
-
-    public void setMovedToFront(boolean movedToFront) {
-        this.movedToFront = movedToFront;
-    }
-
-    public boolean isMovedToBack() {
-        return movedToBack;
-    }
-
-    public void setMovedToBack(boolean movedToBack) {
-        this.movedToBack = movedToBack;
-    }
-
-    public int getRotationDegree() {
-        return rotationDegree;
-    }
-
-    public void setRotationDegree(int rotationDegree) {
-        this.rotationDegree = rotationDegree;
     }
 }

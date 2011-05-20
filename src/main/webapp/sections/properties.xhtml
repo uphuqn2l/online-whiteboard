@@ -6,55 +6,32 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition>
-    <h:panelGroup id="propertiesContainer">
-        <h:panelGroup layout="block" styleClass="editPanel" style="padding: 30px; text-align: center;"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnNo')}">
-            <h:outputText value="No selection"/>
-        </h:panelGroup>
-        <h:panelGroup id="editText" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnText')}">
-            <h:outputText value="Edit Text"/>
-        </h:panelGroup>
-        <h:panelGroup id="editFreeLine" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnFreeLine')}">
-            <h:outputText value="Edit Free Text"/>
-        </h:panelGroup>
-        <h:panelGroup id="editStraightLine" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnStraightLine')}">
-            <h:outputText value="Edit Straight Text"/>
-        </h:panelGroup>
-        <h:panelGroup id="editRectangle" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnRectangle')}">
-            <h:outputText value="Edit Rectangle"/>
-        </h:panelGroup>
-        <h:panelGroup id="editCircle" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnCircle')}">
-            <h:outputText value="Edit Circle"/>
-        </h:panelGroup>
-        <h:panelGroup id="editEllipse" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnEllipse')}">
-            <h:outputText value="Edit Ellipse"/>
-        </h:panelGroup>
-        <h:panelGroup id="editImage" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnImage')}">
-            <h:outputText value="Edit Image"/>
-        </h:panelGroup>
-        <h:panelGroup id="editIcon" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnIcon')}">
-            <h:outputText value="Edit Icon"/>
-        </h:panelGroup>
-        <h:panelGroup id="editClone" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnClone')}">
-            <h:outputText value="Cloned element or no selection"/>
-        </h:panelGroup>
-        <h:panelGroup id="editRemove" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnRemove')}">
-            <h:outputText value="No selection after removing"/>
-        </h:panelGroup>
-        <h:panelGroup id="editClearWb" layout="block" styleClass="editPanel"
-                      rendered="#{displayWhiteboard.isToolboxItemSelected('btnClearWb')}">
-            <h:outputText value="No selection after clearing"/>
-        </h:panelGroup>
+    <h:panelGroup id="editNoSelection" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/noSelection.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editText" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/text.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editFreeLine" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/freeLine.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editStraightLine" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/straightLine.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editRectangle" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/rectangle.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editCircle" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/circle.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editEllipse" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/ellipse.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editImage" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/image.xhtml"/>
+    </h:panelGroup>
+    <h:panelGroup id="editIcon" layout="block" styleClass="editPanel">
+        <ui:include src="/sections/properties/icon.xhtml"/>
     </h:panelGroup>
 </ui:composition>
 </html>

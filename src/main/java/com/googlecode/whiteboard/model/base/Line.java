@@ -12,9 +12,6 @@ public abstract class Line extends AbstractElement
     private int lineWidth;
     private String lineStyle;
     private double opacity;
-    private boolean movedToFront;
-    private boolean movedToBack;
-    private int rotationDegree;
     private double scaleFactor;
 
     public String getPath() {
@@ -55,30 +52,6 @@ public abstract class Line extends AbstractElement
 
     public void setOpacity(double opacity) {
         this.opacity = opacity;
-    }
-
-    public boolean isMovedToFront() {
-        return movedToFront;
-    }
-
-    public void setMovedToFront(boolean movedToFront) {
-        this.movedToFront = movedToFront;
-    }
-
-    public boolean isMovedToBack() {
-        return movedToBack;
-    }
-
-    public void setMovedToBack(boolean movedToBack) {
-        this.movedToBack = movedToBack;
-    }
-
-    public int getRotationDegree() {
-        return rotationDegree;
-    }
-
-    public void setRotationDegree(int rotationDegree) {
-        this.rotationDegree = rotationDegree;
     }
 
     public double getScaleFactor() {
