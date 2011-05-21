@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition template="/templates/masterLayout.xhtml">
     <ui:define name="body">
-        <p:messages autoUpdate="true"/>
+        <p:messages id="wbMessages"/>
         <h:form id="mainForm" prependId="false">
             <h:panelGrid id="headline" columns="7" cellpadding="0" cellspacing="0"
                          columnClasses="colTitle,colImg,colInvite,colImg,colCreated,colImg,colUsers">
@@ -44,14 +44,38 @@
 
             <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            jQuery(function() {
+                var parentT = jQuery('#toolboxDialog').parent();
+                parentT.css('left', parentT.offset().left - 325 + 'px');
+
+                var parentP = jQuery('#propertiesDialog').parent();
+                parentP.css('left', parentP.offset().left - 10 + 'px');
+
+                var parentM = jQuery('#monitoringDialog').parent();
+                parentM.css('top', parentM.offset().top - 10 + 'px');
+
+                var toolboxItems = jQuery('.toolboxItem');
+                toolboxItems.click(function() {
+                    toolboxItems.removeClass('ui-state-selected');
+                    jQuery(this).addClass('ui-state-selected');
+                });
+
+                // create a global whiteboard designer instance
+                whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
+            });
+            /* ]]> */
+        </script>
     </ui:define>
     <ui:define name="resources">
         <h:outputStylesheet library="css" name="whiteboard.css"/>
         <h:outputScript library="js" name="json2-min.js" target="head"/>
         <h:outputScript library="js" name="uuid.js" target="head"/>
+        <h:outputScript library="js" name="jquery.validate.min.js" target="head"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
-        <h:outputScript library="js" name="icons.js" target="head"/>
-        <h:outputScript library="js" name="whiteboard.js" target="body"/>
+        <h:outputScript library="js" name="wboard-config.js" target="head"/>
+        <h:outputScript library="js" name="wboard-drawing.js" target="body"/>
     </ui:define>
 </ui:composition>
 </html>
