@@ -176,3 +176,27 @@ td.colUsers {
     width: 400px !important;
     height: 150px !important;
 }
+
+.dlgImageCol1 {
+    text-align: right !important;
+    padding: 3px 3px 3px 0;
+    white-space: nowrap;
+}
+
+.dlgImageCol2 {
+    text-align: left !important;
+    padding: 3px 10px 3px 10px;
+}
+
+#inputUrl {
+    width: 340px !important;
+}
+
+#imgWidth,
+#imgHeight {
+    width: 80px !important;
+}
+
+#errorImageUl li label {
+    color: red;
+}

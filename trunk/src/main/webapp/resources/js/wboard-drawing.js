@@ -1,74 +1,55 @@
-jQuery(function() {
-    var parentT = jQuery('#toolboxDialog').parent();
-    parentT.css('left', parentT.offset().left - 325 + 'px');
-
-    var parentP = jQuery('#propertiesDialog').parent();
-    parentP.css('left', parentP.offset().left - 10 + 'px');
-
-    var parentM = jQuery('#monitoringDialog').parent();
-    parentM.css('top', parentM.offset().top - 10 + 'px');
-
-    var toolboxItems = jQuery('.toolboxItem');
-    toolboxItems.click(function() {
-        toolboxItems.removeClass('ui-state-selected');
-        jQuery(this).addClass('ui-state-selected');
-    });
-
-    // create global variable for whiteboard designer instance
-    whiteboardDesigner = new WhiteboardDesigner('whiteboard', 'dialogIcons', 'dialogInputText', svgIconSet);
-});
-
 /**
  * Whiteboard designer class for element drawing.
- *
- * @param whiteboardId escaped id of whiteboard container
- * @param dialogIconsId escaped id of "choose icon" dialog
- * @param dialogInputTextId escaped id of "input text" dialog
- * @param svgIconSet icon set in SVG format for using in whiteboard
  */
-WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, svgIconSet) {
-    // create jQuery objects for whiteboard container and dialogs
-    var whiteboard = jQuery("#" + whiteboardId);
-    var dialogIcons = jQuery("#" + dialogIconsId);
-    var dialogInputText = jQuery("#" + dialogInputTextId);
-    var whiteboardIcons = svgIconSet;
+WhiteboardDesigner = function(witeboardConfig) {
+    var config = witeboardConfig;
 
-    // create raphael canvas
-    var paper = Raphael(whiteboardId, whiteboard.width(), whiteboard.height());
+    // create jQuery objects for whiteboard container and dialogs
+    var whiteboard = jQuery("#" + config.ids.whiteboard);
+    var dialogInputText = jQuery("#" + config.ids.dialogInputText);
+    var dialogInputImage = jQuery("#" + config.ids.dialogInputImage);
+    var dialogIcons = jQuery("#" + config.ids.dialogIcons);
 
     var offsetLeft = whiteboard.offset().left;
     var offsetTop = whiteboard.offset().top;
 
     jQuery.extend(whiteboard, {
         "lineEl": {"path": null, "pathArray": null},
+        "imageEl": {"cx": 0, "cy": 0},
         "iconEl": {"cx": 0, "cy": 0},
         "textEl": {"cx": 0, "cy": 0}
     });
 
     var modeSwitcher = {
-        "selectMode": false,
-        "textMode": false,
-        "freeLineMode": false,
-        "straightLineMode": false,
-        "rectangleMode": false,
-        "circleMode": false,
-        "ellipseMode": false,
-        "iconMode": false,
-        "moveMode": false,
-        "removeMode": false,
-        "clearMode": false
+        "selectMode": [false, null],
+        "moveMode": [false, null],
+        "textMode": [false, "Text"],
+        "freeLineMode": [false, "FreeLine"],
+        "straightLineMode": [false, "StraightLine"],
+        "rectangleMode": [false, "Rectangle"],
+        "circleMode": [false, "Circle"],
+        "ellipseMode": [false, "Ellipse"],
+        "imageMode": [false, "Image"],
+        "iconMode": [false, "Icon"],
+        "cloneMode": [false, null],
+        "removeMode": [false, null],
+        "clearMode": [false, null],
+        "resizeMode": [false, null]
     };
 
     var selectedObj = null;
     var _self = this;
 
+    // create raphael canvas
+    var paper = Raphael(config.ids.whiteboard, whiteboard.width(), whiteboard.height());
+
     // public access =======================
 
     this.switchToMode = function(mode, cursor) {
         for (var name in modeSwitcher) {
-            modeSwitcher[name] = false;
+            modeSwitcher[name][0] = false;
         }
-        modeSwitcher[mode] = true;
+        modeSwitcher[mode][0] = true;
         whiteboard.css("cursor", cursor);
     }
 
@@ -92,39 +73,52 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
             textElement.attr("font-size", "18");
-            drawHelperBox(textElement.getBBox(), textElement);
+            drawHelperBox(textElement);
+        }
+    }
+
+    this.drawImage = function(inputUrl, width, height) {
+        if (inputUrl !== "") {
+            var imageElement = paper.image(inputUrl, whiteboard.imageEl.cx, whiteboard.imageEl.cy, width, height);
+            drawHelperBox(imageElement);
         }
     }
 
     this.drawRectangle = function(x, y) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
         rectElement.attr("fill", "#9ACD32");
-        drawHelperBox(rectElement.getBBox(), rectElement);
+        drawHelperBox(rectElement);
     }
 
     this.drawCircle = function(x, y) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
         circleElement.attr("fill", "#008080");
         circleElement.scale(1, 1);  // workaround for webkit based browsers
-        drawHelperBox(circleElement.getBBox(), circleElement);
+        drawHelperBox(circleElement);
     }
 
     this.drawEllipse = function(x, y) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
         ellipseElement.attr("fill", "#BA55D3");
-        drawHelperBox(ellipseElement.getBBox(), ellipseElement);
-    }
-
-    this.openIconsDialog = function(x, y) {
-        whiteboard.iconEl.cx = x - offsetLeft;
-        whiteboard.iconEl.cy = y - offsetTop;
-        dialogIcons.dialog("open");
+        drawHelperBox(ellipseElement);
     }
 
     this.openTextDialog = function(x, y) {
         whiteboard.textEl.cx = x - offsetLeft;
         whiteboard.textEl.cy = y - offsetTop;
         dialogInputText.dialog("open");
+    }
+
+    this.openImageDialog = function(x, y) {
+        whiteboard.imageEl.cx = x - offsetLeft;
+        whiteboard.imageEl.cy = y - offsetTop;
+        dialogInputImage.dialog("open");
+    }
+
+    this.openIconsDialog = function(x, y) {
+        whiteboard.iconEl.cx = x - offsetLeft;
+        whiteboard.iconEl.cy = y - offsetTop;
+        dialogIcons.dialog("open");
     }
 
     this.clearWhiteboard = function() {
@@ -135,7 +129,7 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
 
     // register handlers for drag & drop on element
     var ddStartEl = function () {
-        if (!modeSwitcher.moveMode) {
+        if (!modeSwitcher.moveMode[0]) {
             return false;
         }
 
@@ -148,7 +142,7 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
     }
 
     var ddMoveEl = function (dx, dy) {
-        if (!modeSwitcher.moveMode) {
+        if (!modeSwitcher.moveMode[0]) {
             return false;
         }
 
@@ -160,7 +154,7 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
     }
 
     var ddStopEl = function () {
-        if (!modeSwitcher.moveMode) {
+        if (!modeSwitcher.moveMode[0]) {
             return false;
         }
 
@@ -169,26 +163,26 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
 
     // register hover on element
     var hoverOverEl = function (event) {
-        if (modeSwitcher.selectMode) {
-            this.attr({"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-width": 2, "fill-opacity": 0, "stroke-dasharray": "."});
+        if (modeSwitcher.selectMode[0]) {
+            this.attr(config.attributes.selectBoxVisible);
             this.attr("cursor", "default");
             return true;
         }
 
-        if (modeSwitcher.moveMode) {
+        if (modeSwitcher.moveMode[0]) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                this.circleSet.attr(config.attributes.opacityHidden);
             }
-            this.attr({"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-width": 2, "fill": "#0276FD", "fill-opacity": 0.2, "stroke-dasharray": "-"});
+            this.attr(config.attributes.moveBoxVisible);
             this.attr("cursor", "move");
             return true;
         }
 
-        if (modeSwitcher.removeMode) {
+        if (modeSwitcher.removeMode[0]) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                this.circleSet.attr(config.attributes.opacityHidden);
             }
-            this.attr({"stroke": "#FF0000", "stroke-opacity": 0.8, "stroke-width": 2, "fill": "#FF0000", "fill-opacity": 0.2, "stroke-dasharray": "-"});
+            this.attr(config.attributes.removeBoxVisible);
             this.attr("cursor", "crosshair");
             return true;
         }
@@ -197,48 +191,48 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
     }
 
     var hoverOutEl = function (event) {
-        if (modeSwitcher.selectMode) {
+        if (modeSwitcher.selectMode[0]) {
             if (selectedObj == null || selectedObj.uuid != this.uuid) {
-                this.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                this.attr(config.attributes.opacityHidden);
             }
             return true;
         }
 
-        if (modeSwitcher.moveMode) {
+        if (modeSwitcher.moveMode[0]) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.attr({"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-width": 2, "fill-opacity": 0, "stroke-dasharray": "."});
-                this.circleSet.attr({"stroke-opacity": 0.8, "fill-opacity": 0.8});
+                this.attr(config.attributes.selectBoxVisible);
+                this.circleSet.attr(config.attributes.opacityVisible);
             } else {
-                this.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                this.attr(config.attributes.opacityHidden);
             }
             this.attr("cursor", "default");
             return true;
         }
 
-        if (modeSwitcher.removeMode) {
+        if (modeSwitcher.removeMode[0]) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.attr({"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-width": 2, "fill-opacity": 0, "stroke-dasharray": "."});
-                this.circleSet.attr({"stroke-opacity": 0.8, "fill-opacity": 0.8});
+                this.attr(config.attributes.selectBoxVisible);
+                this.circleSet.attr(config.attributes.opacityVisible);
             } else {
-                this.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                this.attr(config.attributes.opacityHidden);
             }
         }
     }
 
     // register handler for click on element
     var clickEl = function(event) {
-        if (modeSwitcher.selectMode) {
-            this.circleSet.attr({"stroke-opacity": 0.8, "fill-opacity": 0.8});
+        if (modeSwitcher.selectMode[0]) {
+            this.circleSet.attr(config.attributes.opacityVisible);
             if (selectedObj != null && selectedObj.uuid != this.uuid) {
                 // hide last selection
-                selectedObj.attr({"stroke-opacity": 0, "fill-opacity": 0});
-                selectedObj.circleSet.attr({"stroke-opacity": 0, "fill-opacity": 0});
+                selectedObj.attr(config.attributes.opacityHidden);
+                selectedObj.circleSet.attr(config.attributes.opacityHidden);
             }
             selectedObj = this;
             return true;
         }
 
-        if (modeSwitcher.removeMode) {
+        if (modeSwitcher.removeMode[0]) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
                 // last selected object = this object ==> reset
                 selectedObj = null;
@@ -254,12 +248,12 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
 
     // mousedown, mousemove and mouseup handlers on whiteboard
     var mousedownHandler = function (event) {
-        if (modeSwitcher.freeLineMode) {
+        if (modeSwitcher.freeLineMode[0]) {
             _self.drawFreeLineBegin(event.pageX, event.pageY);
             return false;
         }
 
-        if (modeSwitcher.straightLineMode) {
+        if (modeSwitcher.straightLineMode[0]) {
             _self.drawStraightLineBegin(event.pageX, event.pageY);
             return false;
         }
@@ -268,12 +262,12 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
     }
 
     var mousemoveHandler = function (event) {
-        if (modeSwitcher.freeLineMode) {
+        if (modeSwitcher.freeLineMode[0]) {
             whiteboard.lineEl.path.attr("path", whiteboard.lineEl.path.attr("path") + "L" + (event.pageX - offsetLeft) + "," + (event.pageY - offsetTop));
             return true;
         }
 
-        if (modeSwitcher.straightLineMode) {
+        if (modeSwitcher.straightLineMode[0]) {
             whiteboard.lineEl.pathArray[1] = ["L", event.pageX - offsetLeft, event.pageY - offsetTop];
             whiteboard.lineEl.path.attr("path", whiteboard.lineEl.pathArray);
             return true;
@@ -283,7 +277,7 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
     var mouseupHandler = function () {
         whiteboard.unbind(".mmu");
         if (whiteboard.lineEl.path) {
-            drawHelperBox(whiteboard.lineEl.path.getBBox(), whiteboard.lineEl.path);
+            drawHelperBox(whiteboard.lineEl.path);
             whiteboard.lineEl.path = null;
             whiteboard.lineEl.pathArray = null;
         }
@@ -291,27 +285,32 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
 
     // click handler on whiteboard
     var clickHandler = function(event) {
-        if (modeSwitcher.rectangleMode) {
+        if (modeSwitcher.rectangleMode[0]) {
             _self.drawRectangle(event.pageX, event.pageY);
             return true;
         }
 
-        if (modeSwitcher.circleMode) {
+        if (modeSwitcher.circleMode[0]) {
             _self.drawCircle(event.pageX, event.pageY);
             return true;
         }
 
-        if (modeSwitcher.ellipseMode) {
+        if (modeSwitcher.ellipseMode[0]) {
             _self.drawEllipse(event.pageX, event.pageY);
             return true;
         }
 
-        if (modeSwitcher.iconMode) {
+        if (modeSwitcher.imageMode[0]) {
+            _self.openImageDialog(event.pageX, event.pageY);
+            return true;
+        }
+
+        if (modeSwitcher.iconMode[0]) {
             _self.openIconsDialog(event.pageX, event.pageY);
             return true;
         }
 
-        if (modeSwitcher.textMode) {
+        if (modeSwitcher.textMode[0]) {
             _self.openTextDialog(event.pageX, event.pageY);
             return true;
         }
@@ -321,17 +320,18 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
 
     // mouseleave handler on whiteboard
     var mouseleaveHandler = function(event) {
-        if (modeSwitcher.freeLineMode || modeSwitcher.straightLineMode) {
+        if (modeSwitcher.freeLineMode[0] || modeSwitcher.straightLineMode[0]) {
             mouseupHandler();
         }
 
         return false;
     }
 
-    var drawHelperBox = function(bbox, el) {
+    var drawHelperBox = function(el) {
         // draw helper rectangle around the element
+        var bbox = el.getBBox();
         var helperRect = paper.rect(bbox.x - 1, bbox.y - 1, (bbox.width !== 0 ? bbox.width + 2 : 3), (bbox.height !== 0 ? bbox.height + 2 : 3));
-        helperRect.attr({"stroke": "#0D0BF5", "stroke-width": 2, "stroke-dasharray": "-", "fill": "#0276FD", "stroke-opacity": 0, "fill-opacity": 0});
+        helperRect.attr(config.attributes.helperRect);
         helperRect.hover(hoverOverEl, hoverOutEl);
         helperRect.click(clickEl);
         helperRect.drag(ddMoveEl, ddStartEl, ddStopEl);
@@ -345,12 +345,18 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
         // build a set
         var circleSet = paper.set();
         circleSet.push(c1, c2, c3, c4);
-        circleSet.attr({"stroke": "#0D0BF5", "fill": "#0D0BF5", "stroke-width": 1, "stroke-opacity": 0, "fill-opacity": 0});
+        circleSet.attr(config.attributes.circleSet);
 
         // set references
         helperRect.element = el;
         helperRect.circleSet = circleSet;
         helperRect.uuid = uuid();
+        for (var name in modeSwitcher) {
+            if (modeSwitcher[name][0]) {
+                helperRect.classType = modeSwitcher[name][1];
+                break;
+            }
+        }
 
         return helperRect;
     }
@@ -362,9 +368,10 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
         var fiilNone = {fill: "#000", opacity: 0};
         var fillHover = {fill: "90-#0050af-#002c62", stroke: "#FF0000"};
         var iconPaper = Raphael("iconsArea", 600, 360);
+        var wbIcons = config.svgIconSet;
 
-        for (var name in whiteboardIcons) {
-            var curIcon = iconPaper.path(whiteboardIcons[name]).attr(fillStroke).translate(x, y);
+        for (var name in wbIcons) {
+            var curIcon = iconPaper.path(wbIcons[name]).attr(fillStroke).translate(x, y);
             curIcon.offsetX = x + 20;
             curIcon.offsetY = y + 20;
             var overlayIcon = iconPaper.rect(x, y, 40, 40).attr(fiilNone);
@@ -372,7 +379,7 @@ WhiteboardDesigner = function(whiteboardId, dialogIconsId, dialogInputTextId, sv
             overlayIcon.click(function () {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
-                drawHelperBox(iconElement.getBBox(), iconElement);
+                drawHelperBox(iconElement);
 
             }).hover(function () {
                 this.icon.attr(fillHover);

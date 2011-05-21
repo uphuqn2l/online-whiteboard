@@ -11,28 +11,29 @@
         <ui:include src="/sections/invitation.xhtml"/>
     </p:dialog>
 
-    <p:dialog id="dialogIcons" header="Choose icon" resizable="false" closable="true" modal="true" width="617">
-        <h:panelGroup id="iconsArea" layout="block"/>
-    </p:dialog>
     <p:dialog id="dialogInputText" header="Input text" resizable="false" closable="true" modal="true" width="433">
         <p:inputTextarea id="textArea"/>
+    </p:dialog>
+    <p:dialog id="dialogInputImage" header="Input image URL" resizable="false" closable="true" modal="true" width="495">
+        <ul id="errorImageUl"/>
+        <h:panelGrid id="dlgImageGrid" columns="2" columnClasses="dlgImageCol1,dlgImageCol2">
+            <h:outputLabel value="Image URL" for="inputUrl"/>
+            <p:inputText id="inputUrl"/>
+            <h:outputLabel value="Image width (px)" for="imgWidth"/>
+            <h:panelGroup>
+                <p:inputText id="imgWidth" maxlength="4"/>
+                <h:outputLabel value="Image height (px)" for="imgHeight"
+                               style="margin-left: 10px; margin-right: 10px;"/>
+                <p:inputText id="imgHeight" maxlength="4"/>
+            </h:panelGroup>
+        </h:panelGrid>
+    </p:dialog>
+    <p:dialog id="dialogIcons" header="Choose icon" resizable="false" closable="true" modal="true" width="617">
+        <h:panelGroup id="iconsArea" layout="block"/>
     </p:dialog>
     <script type="text/javascript">
         /* <![CDATA[ */
         jQuery(function() {
-            jQuery("#dialogIcons").dialog("option", "buttons", {
-                "Close": function() {
-                    jQuery(this).dialog("close");
-                }
-            }).bind("dialogopen", function(event, ui) {
-                // fix for scrollbars in IE
-                jQuery('body').css('overflow', 'hidden');
-                jQuery('.ui-widget-overlay').css('width', '100%');
-            }).bind("dialogclose", function(event, ui) {
-                // fix for scrollbars in IE
-                jQuery('body').css('overflow', 'auto');
-            });
-
             jQuery("#dialogInputText").dialog("option", "buttons", {
                 "Accept": function() {
                     var inputText = jQuery(this).find("#textArea").val();
@@ -50,6 +51,78 @@
                 // fix for scrollbars in IE
                 jQuery('body').css('overflow', 'auto');
                 jQuery(this).find("#textArea").val('');
+            });
+
+            jQuery("#dialogInputImage").dialog("option", "buttons", {
+                "Accept": function() {
+                    var validator = jQuery("#mainForm").validate({
+                        onfocusout: false,
+                        onkeyup: false,
+                        errorLabelContainer: "#errorImageUl",
+                        wrapper: "li",
+                        rules: {
+                            inputUrl: {
+                                url: true
+                            },
+                            imgWidth: {
+                                digits: true,
+                                min: 1
+                            },
+                            imgHeight: {
+                                digits: true,
+                                min: 1
+                            }
+                        },
+                        messages: {
+                            inputUrl: "Please enter a valid image URL.",
+                            imgWidth: "Please enter a valid image width (only positive digits are allowed).",
+                            imgHeight: "Please enter a valid image height (only positive digits are allowed)."
+                        }
+                    });
+
+                    var isValid1 = validator.element("#inputUrl");
+                    var isValid2 = validator.element("#imgWidth");
+                    var isValid3 = validator.element("#imgHeight");
+
+                    if ((typeof isValid1 !== 'undefined' && !isValid1) || (typeof isValid2 !== 'undefined' && !isValid2) || (typeof isValid3 !== 'undefined' && !isValid3)) {
+                        // validation failed
+                        return false;
+                    }
+
+                    var jq = jQuery(this);
+                    var inputUrl = jq.find("#inputUrl").val();
+                    var imgWidth = jq.find("#imgWidth").val();
+                    var imgHeight = jq.find("#imgHeight").val();
+                    jQuery(this).dialog("close");
+                    whiteboardDesigner.drawImage(inputUrl, imgWidth, imgHeight);
+                },
+                "Close": function() {
+                    jQuery(this).dialog("close");
+                }
+            }).bind("dialogopen", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'hidden');
+                jQuery('.ui-widget-overlay').css('width', '100%');
+            }).bind("dialogclose", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'auto');
+                // reset input
+                jQuery(this).find("#inputUrl").val('');
+                // clean up validation messages
+                jQuery("#errorImageUl").html('');
+            });
+
+            jQuery("#dialogIcons").dialog("option", "buttons", {
+                "Close": function() {
+                    jQuery(this).dialog("close");
+                }
+            }).bind("dialogopen", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'hidden');
+                jQuery('.ui-widget-overlay').css('width', '100%');
+            }).bind("dialogclose", function(event, ui) {
+                // fix for scrollbars in IE
+                jQuery('body').css('overflow', 'auto');
             });
         });
         /* ]]> */
