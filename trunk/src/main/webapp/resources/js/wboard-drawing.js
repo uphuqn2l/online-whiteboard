@@ -9,6 +9,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     var dialogInputText = jQuery("#" + config.ids.dialogInputText);
     var dialogInputImage = jQuery("#" + config.ids.dialogInputImage);
     var dialogIcons = jQuery("#" + config.ids.dialogIcons);
+    var dialogResize = jQuery("#" + config.ids.dialogResize);
 
     var offsetLeft = whiteboard.offset().left;
     var offsetTop = whiteboard.offset().top;
@@ -103,6 +104,11 @@ WhiteboardDesigner = function(witeboardConfig) {
         drawHelperBox(ellipseElement);
     }
 
+    this.resizeWhiteboard = function(width, height) {
+        whiteboard.css({width: width + 'px', height: height + 'px'});
+        paper.setSize(width, height);
+    }
+
     this.openTextDialog = function(x, y) {
         whiteboard.textEl.cx = x - offsetLeft;
         whiteboard.textEl.cy = y - offsetTop;
@@ -119,6 +125,10 @@ WhiteboardDesigner = function(witeboardConfig) {
         whiteboard.iconEl.cx = x - offsetLeft;
         whiteboard.iconEl.cy = y - offsetTop;
         dialogIcons.dialog("open");
+    }
+
+    this.openResizeDialog = function() {
+        dialogResize.dialog("open");
     }
 
     this.clearWhiteboard = function() {
