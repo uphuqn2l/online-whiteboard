@@ -188,15 +188,33 @@ td.colUsers {
     padding: 3px 10px 3px 10px;
 }
 
+.dlgResizeCol1 {
+    text-align: right !important;
+    padding: 3px 5px 3px 5px;
+    white-space: nowrap;
+}
+
+.dlgResizeCol2 {
+    text-align: left !important;
+    padding: 3px 5px 3px 5px;
+}
+
 #inputUrl {
     width: 340px !important;
 }
 
 #imgWidth,
-#imgHeight {
+#imgHeight,
+#wbWidth,
+#wbHeight {
     width: 80px !important;
 }
 
-#errorImageUl li label {
+.errormsg li {
+    list-style: none;
+}
+
+.errormsg li label {
     color: red;
+    font-weight: bold;
 }

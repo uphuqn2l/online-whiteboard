@@ -7,7 +7,8 @@ WhiteboardConfig = function() {
         whiteboard: "whiteboard",
         dialogInputText: "dialogInputText",
         dialogInputImage: "dialogInputImage",
-        dialogIcons: "dialogIcons"
+        dialogIcons: "dialogIcons",
+        dialogResize: "dialogResize"
     };
 
     // default properties for all elements
