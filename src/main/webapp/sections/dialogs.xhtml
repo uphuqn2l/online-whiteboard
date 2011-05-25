@@ -7,15 +7,20 @@
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition>
     <p:dialog id="inviteDialog" header="Invite people" draggable="false" resizable="false" closable="true"
-              modal="true" width="700" widgetVar="inviteWidget">
+              modal="true" styleClass="autoWidthDialog" onShow="onShowAutoWidthDialog(this.jq);"
+              onHide="onHideAutoWidthDialog(this.jq);" widgetVar="inviteWidget">
         <ui:include src="/sections/invitation.xhtml"/>
     </p:dialog>
 
-    <p:dialog id="dialogInputText" header="Input text" resizable="false" closable="true" modal="true" width="433">
+    <p:dialog id="dialogInputText" header="Input text" resizable="false" closable="true" modal="true"
+              styleClass="autoWidthDialog" onShow="onShowAutoWidthDialog(this.jq);"
+              onHide="onHideAutoWidthDialog(this.jq);">
         <p:inputTextarea id="textArea"/>
     </p:dialog>
-    <p:dialog id="dialogInputImage" header="Input image URL" resizable="false" closable="true" modal="true" width="495"
-              styleClass="validatable">
+
+    <p:dialog id="dialogInputImage" header="Input image URL" resizable="false" closable="true" modal="true"
+              styleClass="validatable autoWidthDialog" onShow="onShowAutoWidthDialog(this.jq);"
+              onHide="onHideAutoWidthDialog(this.jq);">
         <ul id="errorImageUl" class="errormsg"/>
         <h:panelGrid id="dlgImageGrid" columns="2" columnClasses="dlgImageCol1,dlgImageCol2">
             <h:outputLabel value="Image URL" for="inputUrl"/>
@@ -29,8 +34,10 @@
             </h:panelGroup>
         </h:panelGrid>
     </p:dialog>
-    <p:dialog id="dialogResize" header="Resize Whiteboard" resizable="false" closable="true" modal="true" width="510"
-              styleClass="validatable">
+
+    <p:dialog id="dialogResize" header="Resize Whiteboard" resizable="false" closable="true" modal="true"
+              styleClass="validatable autoWidthDialog" onShow="onShowAutoWidthDialog(this.jq);"
+              onHide="onHideAutoWidthDialog(this.jq);">
         <ul id="errorResizeUl" class="errormsg"/>
         <h:panelGrid id="dlgResizeGrid" columns="4"
                      columnClasses="dlgResizeCol1,dlgResizeCol2,dlgResizeCol1,dlgResizeCol2">
@@ -40,7 +47,10 @@
             <p:inputText id="wbHeight" maxlength="4"/>
         </h:panelGrid>
     </p:dialog>
-    <p:dialog id="dialogIcons" header="Choose icon" resizable="false" closable="true" modal="true" width="617">
+
+    <p:dialog id="dialogIcons" header="Choose icon" resizable="false" closable="true" modal="true"
+              styleClass="autoWidthDialog" onShow="onShowAutoWidthDialog(this.jq);"
+              onHide="onHideAutoWidthDialog(this.jq);">
         <h:panelGroup id="iconsArea" layout="block"/>
     </p:dialog>
 </ui:composition>
