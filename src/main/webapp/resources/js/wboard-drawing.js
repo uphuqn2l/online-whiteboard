@@ -381,7 +381,9 @@ WhiteboardDesigner = function(witeboardConfig) {
     var drawHelperBox = function(el, classType, select) {
         // draw helper rectangle around the element
         var bbox = el.getBBox();
-        var helperRect = paper.rect(bbox.x - 1, bbox.y - 1, (bbox.width !== 0 ? bbox.width + 2 : 3), (bbox.height !== 0 ? bbox.height + 2 : 3));
+        var bboxWidth = parseFloat(bbox.width);
+        var bboxHeight = parseFloat(bbox.height);
+        var helperRect = paper.rect(bbox.x - 1, bbox.y - 1, (bboxWidth !== 0 ? bboxWidth + 2 : 3), (bboxHeight !== 0 ? bboxHeight + 2 : 3));
         helperRect.attr(config.attributes.helperRect);
         helperRect.hover(hoverOverEl, hoverOutEl);
         helperRect.click(clickEl);
@@ -389,9 +391,9 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         // draw invisible circles for possible later selection
         var c1 = paper.circle(bbox.x, bbox.y, 3);
-        var c2 = paper.circle(bbox.x + bbox.width, bbox.y, 3);
-        var c3 = paper.circle(bbox.x, bbox.y + bbox.height, 3);
-        var c4 = paper.circle(bbox.x + bbox.width, bbox.y + bbox.height, 3);
+        var c2 = paper.circle(bbox.x + bboxWidth, bbox.y, 3);
+        var c3 = paper.circle(bbox.x, bbox.y + bboxHeight, 3);
+        var c4 = paper.circle(bbox.x + bboxWidth, bbox.y + bboxHeight, 3);
 
         // build a set
         var circleSet = paper.set();
@@ -423,7 +425,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     var drawIcons = function() {
         var x = 0, y = 0;
         var fillStroke = {fill: "#000", stroke: "none"};
-        var fiilNone = {fill: "#000", opacity: 0};
+        var fillNone = {fill: "#000", opacity: 0};
         var fillHover = {fill: "90-#0050af-#002c62", stroke: "#FF0000"};
         var iconPaper = Raphael("iconsArea", 600, 360);
         var wbIcons = config.svgIconSet;
@@ -432,13 +434,14 @@ WhiteboardDesigner = function(witeboardConfig) {
             var curIcon = iconPaper.path(wbIcons[name]).attr(fillStroke).translate(x, y);
             curIcon.offsetX = x + 20;
             curIcon.offsetY = y + 20;
-            var overlayIcon = iconPaper.rect(x, y, 40, 40).attr(fiilNone);
+            var overlayIcon = iconPaper.rect(x, y, 40, 40).attr(fillNone);
             overlayIcon.icon = curIcon;
-            overlayIcon.click(function () {
+            overlayIcon.click(function (event) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
                 drawHelperBox(iconElement, config.classTypes.icon, true);
-
+                event.stopPropagation();
+                event.preventDefault();
             }).hover(function () {
                 this.icon.attr(fillHover);
             }, function () {
