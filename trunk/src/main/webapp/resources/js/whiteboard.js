@@ -70,13 +70,7 @@ jQuery(function() {
         "Close": function() {
             jQuery(this).dialog("close");
         }
-    }).bind("dialogopen", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'hidden');
-        jQuery('.ui-widget-overlay').css('width', '100%');
     }).bind("dialogclose", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'auto');
         jQuery(this).find("#textArea").val('');
     });
 
@@ -101,13 +95,7 @@ jQuery(function() {
         "Close": function() {
             jQuery(this).dialog("close");
         }
-    }).bind("dialogopen", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'hidden');
-        jQuery('.ui-widget-overlay').css('width', '100%');
     }).bind("dialogclose", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'auto');
         // reset input
         jQuery(this).find("#inputUrl").val('');
         // clean up validation messages
@@ -133,13 +121,7 @@ jQuery(function() {
         "Close": function() {
             jQuery(this).dialog("close");
         }
-    }).bind("dialogopen", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'hidden');
-        jQuery('.ui-widget-overlay').css('width', '100%');
     }).bind("dialogclose", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'auto');
         //var jq = jQuery(this);
         //jq.find("#wbWidth").val('');
         //jq.find("#wbHeight").val('');
@@ -151,13 +133,6 @@ jQuery(function() {
         "Close": function() {
             jQuery(this).dialog("close");
         }
-    }).bind("dialogopen", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'hidden');
-        jQuery('.ui-widget-overlay').css('width', '100%');
-    }).bind("dialogclose", function(event, ui) {
-        // fix for scrollbars in IE
-        jQuery('body').css('overflow', 'auto');
     });
 
     // create a global whiteboard designer instance
@@ -167,4 +142,27 @@ jQuery(function() {
 function showProperties(id) {
     jQuery("#propertiesDialog").find(".editPanel").hide();
     jQuery("#" + id).show();
+}
+
+function onShowAutoWidthDialog(jqDialog) {
+    // fix for auto width in IE
+    var parent = jqDialog.parent();
+    var contentWidth = jqDialog.width();
+    parent.find('.ui-dialog-titlebar').each(function() {
+        jQuery(this).width(contentWidth);
+    });
+    parent.removeClass("autoWidthDialog").width(contentWidth + 26);
+    jqDialog.dialog('option', 'position', 'center');
+
+    // fix for scrollbars in IE
+    jQuery('body').css('overflow', 'hidden');
+    jQuery('.ui-widget-overlay').css('width', '100%');
+}
+
+function onHideAutoWidthDialog(jqDialog) {
+    // fix for auto width in IE
+    jqDialog.parent().addClass("autoWidthDialog");
+
+    // fix for scrollbars in IE
+    jQuery('body').css('overflow', 'auto');
 }

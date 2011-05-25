@@ -173,7 +173,7 @@ td.colUsers {
 
 #textArea {
     margin: 10px 0px 0px 0px;
-    width: 400px !important;
+    width: 410px !important;
     height: 150px !important;
 }
 
@@ -217,4 +217,8 @@ td.colUsers {
 .errormsg li label {
     color: red;
     font-weight: bold;
+}
+
+.autoWidthDialog {
+    width: auto !important;
 }
