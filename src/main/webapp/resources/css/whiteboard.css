@@ -111,14 +111,6 @@ td.colUsers {
     height: 22px;
 }
 
-.btn-selectElement {
-    background-image: url("#{resource['img:selectElement.png']}") !important;
-}
-
-.btn-moveElement {
-    background-image: url("#{resource['img:moveElement.png']}") !important;
-}
-
 .btn-inputText {
     background-image: url("#{resource['img:inputText.png']}") !important;
 }
@@ -149,6 +141,22 @@ td.colUsers {
 
 .btn-pasteIcon {
     background-image: url("#{resource['img:pasteIcon.png']}") !important;
+}
+
+.btn-selectElement {
+    background-image: url("#{resource['img:selectElement.png']}") !important;
+}
+
+.btn-moveElement {
+    background-image: url("#{resource['img:moveElement.png']}") !important;
+}
+
+.btn-bringFrontElement {
+    background-image: url("#{resource['img:bringFront.png']}") !important;
+}
+
+.btn-bringBackElement {
+    background-image: url("#{resource['img:bringBack.png']}") !important;
 }
 
 .btn-cloneElement {

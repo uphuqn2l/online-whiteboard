@@ -25,8 +25,6 @@ var circle = {
     uuid: "567e6162-3b6f-4ae2-a171-2470b63dff00",
     x: 10,
     y: 20,
-    movedToFront: true,
-    movedToBack: false,
     rotationDegree: 90,
     radius: 50,
     backgroundColor: "#FF0000",
