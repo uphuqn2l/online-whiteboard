@@ -20,7 +20,7 @@ public class JsonConverter
     private JsonConverter() {
         GsonBuilder gsonBilder = new GsonBuilder();
         gsonBilder.registerTypeAdapter(AbstractElement.class, new AbstractElementAdapter());
-        gsonBilder.serializeNulls().setPrettyPrinting();
+        gsonBilder.serializeNulls();
         gson = gsonBilder.create();
     }
 
