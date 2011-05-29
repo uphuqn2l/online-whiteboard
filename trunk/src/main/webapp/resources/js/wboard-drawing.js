@@ -22,8 +22,6 @@ WhiteboardDesigner = function(witeboardConfig) {
     });
 
     var modeSwitcher = {
-        "selectMode": false,
-        "moveMode": false,
         "textMode": false,
         "freeLineMode": false,
         "straightLineMode": false,
@@ -32,6 +30,10 @@ WhiteboardDesigner = function(witeboardConfig) {
         "ellipseMode": false,
         "imageMode": false,
         "iconMode": false,
+        "selectMode": false,
+        "moveMode": false,
+        "bringFrontMode": false,
+        "bringBackMode": false,
         "cloneMode": false,
         "removeMode": false,
         "clearMode": false,

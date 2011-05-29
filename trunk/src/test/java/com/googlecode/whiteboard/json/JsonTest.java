@@ -82,8 +82,6 @@ public class JsonTest
         circle1.setUuid(UUID.randomUUID().toString());
         circle1.setX(100);
         circle1.setY(100);
-        circle1.setMovedToFront(false);
-        circle1.setMovedToBack(true);
         circle1.setRotationDegree(0);
         circle1.setRadius(250);
         circle1.setBackgroundColor("#FFFFFF");
