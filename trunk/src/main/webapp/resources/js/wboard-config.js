@@ -41,7 +41,7 @@ WhiteboardConfig = function() {
     this.attributes.moveBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#0276FD", "fill-opacity": 0.2});
     this.attributes.bringFrontBackBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
-        "stroke": "#84A855", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#9DBA77", "fill-opacity": 0.2});
+        "stroke": "#71AA24", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#A5DC5B", "fill-opacity": 0.2});
     this.attributes.removeBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#FF0000", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#FF0000", "fill-opacity": 0.2});
     this.attributes.cloneBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
