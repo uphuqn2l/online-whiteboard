@@ -40,6 +40,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         "resizeMode": false
     };
 
+    var dragDropStart = false;
     var selectedObj = null;
     var _self = this;
 
@@ -134,7 +135,6 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.circleSet.toFront();
         helperBox.toFront();
         helperBox.attr(config.attributes.opacityHidden);
-        helperBox.attr("cursor", "default");
     }
 
     this.bringBackElement = function(helperBox) {
@@ -142,7 +142,6 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.circleSet.toBack();
         helperBox.element.toBack();
         helperBox.attr(config.attributes.opacityHidden);
-        helperBox.attr("cursor", "default");
     }
 
     this.cloneElement = function(helperBox) {
@@ -150,7 +149,6 @@ WhiteboardDesigner = function(witeboardConfig) {
         cloneEl.translate(15, 15);
         drawHelperBox(cloneEl, helperBox.classType, false);
         helperBox.attr(config.attributes.opacityHidden);
-        helperBox.attr("cursor", "default");
     }
 
     this.resizeWhiteboard = function(width, height) {
@@ -194,10 +192,16 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         this.odx = 0;
         this.ody = 0;
+        
+        if (selectedObj != null && selectedObj.uuid == this.uuid) {
+            this.circleSet.attr(config.attributes.opacityHidden);
+        }
+        this.attr(config.attributes.moveBoxVisible);
         this.attr("cursor", "move");
-        this.element.toFront();
-        this.circleSet.toFront();
-        this.toFront();
+        //this.element.toFront();
+        //this.circleSet.toFront();
+        //this.toFront();
+        _self.dragDropStart = true;
     }
 
     var ddMoveEl = function (dx, dy) {
@@ -217,12 +221,16 @@ WhiteboardDesigner = function(witeboardConfig) {
             return false;
         }
 
-        this.attr(config.attributes.opacityHidden);
-        this.attr("cursor", "default");
+        _self.dragDropStart = false;
+        // TODO check if there are other elements above this and hide move helper
     }
 
     // register hover on element
     var hoverOverEl = function (event) {
+        if (_self.dragDropStart) {
+            return false;
+        }
+
         if (modeSwitcher.selectMode) {
             this.attr(config.attributes.selectBoxVisible);
             this.attr("cursor", "default");
@@ -252,7 +260,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                 this.circleSet.attr(config.attributes.opacityHidden);
             }
             this.attr(config.attributes.bringFrontBackBoxVisible);
-            this.attr("cursor", "crosshair");
+            this.attr("cursor", "default");
             return true;
         }
 
@@ -261,7 +269,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                 this.circleSet.attr(config.attributes.opacityHidden);
             }
             this.attr(config.attributes.bringFrontBackBoxVisible);
-            this.attr("cursor", "crosshair");
+            this.attr("cursor", "default");
             return true;
         }
 
@@ -270,7 +278,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                 this.circleSet.attr(config.attributes.opacityHidden);
             }
             this.attr(config.attributes.cloneBoxVisible);
-            this.attr("cursor", "crosshair");
+            this.attr("cursor", "default");
             return true;
         }
 
@@ -278,6 +286,10 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     var hoverOutEl = function (event) {
+        if (_self.dragDropStart) {
+            return false;
+        }
+
         if (modeSwitcher.selectMode) {
             if (selectedObj == null || selectedObj.uuid != this.uuid || !selectedObj.visibleSelect) {
                 this.attr(config.attributes.opacityHidden);
