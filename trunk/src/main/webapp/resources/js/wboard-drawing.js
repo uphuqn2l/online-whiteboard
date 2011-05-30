@@ -129,10 +129,28 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.remove();
     }
 
+    this.bringFrontElement = function(helperBox) {
+        helperBox.element.toFront();
+        helperBox.circleSet.toFront();
+        helperBox.toFront();
+        helperBox.attr(config.attributes.opacityHidden);
+        helperBox.attr("cursor", "default");
+    }
+
+    this.bringBackElement = function(helperBox) {
+        helperBox.toBack();
+        helperBox.circleSet.toBack();
+        helperBox.element.toBack();
+        helperBox.attr(config.attributes.opacityHidden);
+        helperBox.attr("cursor", "default");
+    }
+
     this.cloneElement = function(helperBox) {
         var cloneEl = helperBox.element.clone();
         cloneEl.translate(15, 15);
         drawHelperBox(cloneEl, helperBox.classType, false);
+        helperBox.attr(config.attributes.opacityHidden);
+        helperBox.attr("cursor", "default");
     }
 
     this.resizeWhiteboard = function(width, height) {
@@ -199,6 +217,7 @@ WhiteboardDesigner = function(witeboardConfig) {
             return false;
         }
 
+        this.attr(config.attributes.opacityHidden);
         this.attr("cursor", "default");
     }
 
@@ -228,6 +247,24 @@ WhiteboardDesigner = function(witeboardConfig) {
             return true;
         }
 
+        if (modeSwitcher.bringFrontMode) {
+            if (selectedObj != null && selectedObj.uuid == this.uuid) {
+                this.circleSet.attr(config.attributes.opacityHidden);
+            }
+            this.attr(config.attributes.bringFrontBackBoxVisible);
+            this.attr("cursor", "crosshair");
+            return true;
+        }
+
+        if (modeSwitcher.bringBackMode) {
+            if (selectedObj != null && selectedObj.uuid == this.uuid) {
+                this.circleSet.attr(config.attributes.opacityHidden);
+            }
+            this.attr(config.attributes.bringFrontBackBoxVisible);
+            this.attr("cursor", "crosshair");
+            return true;
+        }
+
         if (modeSwitcher.cloneMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
                 this.circleSet.attr(config.attributes.opacityHidden);
@@ -248,33 +285,16 @@ WhiteboardDesigner = function(witeboardConfig) {
             return true;
         }
 
-        if (modeSwitcher.moveMode) {
-            if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
-                this.attr(config.attributes.selectBoxVisible);
-                this.circleSet.attr(config.attributes.opacityVisible);
-            } else {
-                this.attr(config.attributes.opacityHidden);
-            }
-            this.attr("cursor", "default");
-            return true;
-        }
-
-        if (modeSwitcher.removeMode) {
-            if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
-                this.attr(config.attributes.selectBoxVisible);
-                this.circleSet.attr(config.attributes.opacityVisible);
-            } else {
-                this.attr(config.attributes.opacityHidden);
-            }
-            return true;
-        }
-
-        if (modeSwitcher.cloneMode) {
-            if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
-                this.attr(config.attributes.selectBoxVisible);
-                this.circleSet.attr(config.attributes.opacityVisible);
-            } else {
-                this.attr(config.attributes.opacityHidden);
+        with (modeSwitcher) {
+            if (moveMode || removeMode || bringFrontMode || bringBackMode || cloneMode) {
+                if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
+                    this.attr(config.attributes.selectBoxVisible);
+                    this.circleSet.attr(config.attributes.opacityVisible);
+                } else {
+                    this.attr(config.attributes.opacityHidden);
+                }
+                this.attr("cursor", "default");
+                return true;
             }
         }
     }
@@ -288,6 +308,16 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         if (modeSwitcher.removeMode) {
             _self.removeElement(this);
+            return true;
+        }
+
+        if (modeSwitcher.bringFrontMode) {
+            _self.bringFrontElement(this);
+            return true;
+        }
+
+        if (modeSwitcher.bringBackMode) {
+            _self.bringBackElement(this);
             return true;
         }
 
