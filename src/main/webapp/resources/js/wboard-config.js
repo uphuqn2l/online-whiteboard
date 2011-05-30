@@ -36,10 +36,16 @@ WhiteboardConfig = function() {
         opacityVisible: {"stroke-opacity": 0.8, "fill-opacity": 0.8}
     };
 
-    this.attributes.selectBoxVisible = jQuery.extend({}, this.attributes.helperRect, {"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": ".", "fill-opacity": 0});
-    this.attributes.moveBoxVisible = jQuery.extend({}, this.attributes.helperRect, {"stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#0276FD", "fill-opacity": 0.2});
-    this.attributes.removeBoxVisible = jQuery.extend({}, this.attributes.helperRect, {"stroke": "#FF0000", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#FF0000", "fill-opacity": 0.2});
-    this.attributes.cloneBoxVisible = jQuery.extend({}, this.attributes.helperRect, {"stroke": "#8B4513", "stroke-opacity": 0.8, "stroke-dasharray": "-.", "fill": "#F4A460", "fill-opacity": 0.2});
+    this.attributes.selectBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
+        "stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": ".", "fill-opacity": 0});
+    this.attributes.moveBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
+        "stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#0276FD", "fill-opacity": 0.2});
+    this.attributes.bringFrontBackBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
+        "stroke": "#84A855", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#9DBA77", "fill-opacity": 0.2});
+    this.attributes.removeBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
+        "stroke": "#FF0000", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#FF0000", "fill-opacity": 0.2});
+    this.attributes.cloneBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
+        "stroke": "#8B4513", "stroke-opacity": 0.8, "stroke-dasharray": "-.", "fill": "#F4A460", "fill-opacity": 0.2});
 
     // icons definitions (paths)
     this.svgIconSet = {
