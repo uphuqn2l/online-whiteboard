@@ -41,6 +41,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     };
 
     var dragDropStart = false;
+    var lastHoverObj = null;
     var selectedObj = null;
     var _self = this;
 
@@ -192,15 +193,8 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         this.odx = 0;
         this.ody = 0;
-        
-        if (selectedObj != null && selectedObj.uuid == this.uuid) {
-            this.circleSet.attr(config.attributes.opacityHidden);
-        }
-        this.attr(config.attributes.moveBoxVisible);
+
         this.attr("cursor", "move");
-        //this.element.toFront();
-        //this.circleSet.toFront();
-        //this.toFront();
         _self.dragDropStart = true;
     }
 
@@ -221,13 +215,30 @@ WhiteboardDesigner = function(witeboardConfig) {
             return false;
         }
 
+        if (lastHoverObj != null) {
+            // overlapping ==> handle current overlapped element (hide / show helpers)
+            if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
+                this.attr(config.attributes.selectBoxVisible);
+                this.circleSet.attr(config.attributes.opacityVisible);
+            } else {
+                this.attr(config.attributes.opacityHidden);
+            }
+            this.attr("cursor", "default");
+            
+            // handle new element which overlapps the current one - show "move helper"
+            lastHoverObj.circleSet.attr(config.attributes.opacityHidden);
+            lastHoverObj.attr(config.attributes.moveBoxVisible);
+            lastHoverObj.attr("cursor", "move");
+            lastHoverObj = null;
+        }
+
         _self.dragDropStart = false;
-        // TODO check if there are other elements above this and hide move helper
     }
 
     // register hover on element
     var hoverOverEl = function (event) {
         if (_self.dragDropStart) {
+            lastHoverObj = this;
             return false;
         }
 
@@ -287,6 +298,7 @@ WhiteboardDesigner = function(witeboardConfig) {
 
     var hoverOutEl = function (event) {
         if (_self.dragDropStart) {
+            lastHoverObj = null;
             return false;
         }
 
