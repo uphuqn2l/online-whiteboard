@@ -1,19 +1,6 @@
 jQuery(function() {
-    // configure panels
-    var parentT = jQuery('#toolboxDialog').parent();
-    parentT.css('left', parentT.offset().left - 325 + 'px');
-
-    var parentP = jQuery('#propertiesDialog').parent();
-    parentP.css('left', parentP.offset().left - 10 + 'px');
-
-    var parentM = jQuery('#monitoringDialog').parent();
-    parentM.css('top', parentM.offset().top - 10 + 'px');
-
-    var toolboxItems = jQuery('.toolboxItem');
-    toolboxItems.click(function() {
-        toolboxItems.removeClass('ui-state-selected');
-        jQuery(this).addClass('ui-state-selected');
-    });
+    // bind onclick handler
+    bindOnclickToolboxItems();
 
     // configure validator
     jQuery.validator.addMethod("imageSize", function(value, element, param) {
@@ -139,9 +126,10 @@ jQuery(function() {
     whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
 });
 
-function showProperties(id) {
-    jQuery("#propertiesDialog").find(".editPanel").hide();
-    jQuery("#" + id).show();
+function showProperties(showClass) {
+    var propsDialog = jQuery(".propertiesPanel");
+    propsDialog.find(".editPanel").hide();
+    propsDialog.find("." + showClass).show();
 }
 
 function onShowAutoWidthDialog(jqDialog) {
@@ -165,4 +153,18 @@ function onHideAutoWidthDialog(jqDialog) {
 
     // fix for scrollbars in IE
     jQuery('body').css('overflow', 'auto');
+}
+
+function removeUnusedDialogs() {
+    jQuery('#toolboxDialog').remove();
+    jQuery('#propertiesDialog').remove();
+    jQuery('#monitoringDialog').remove();
+}
+
+function bindOnclickToolboxItems() {
+    var toolboxItems = jQuery('.toolboxItem');
+    toolboxItems.bind('click', function() {
+        toolboxItems.removeClass('ui-state-selected');
+        jQuery(this).addClass('ui-state-selected');
+    });
 }

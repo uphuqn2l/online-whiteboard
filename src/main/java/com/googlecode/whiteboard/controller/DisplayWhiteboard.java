@@ -9,6 +9,7 @@ import com.googlecode.whiteboard.model.Whiteboard;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,9 +21,19 @@ public class DisplayWhiteboard implements Serializable
     private static final long serialVersionUID = 20110501L;
 
     private Whiteboard whiteboard;
+    private boolean pinned;
 
     public void init(Whiteboard whiteboard) {
         this.whiteboard = whiteboard;
+        pinned = true;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     public String getTitle() {
@@ -78,5 +89,9 @@ public class DisplayWhiteboard implements Serializable
         } else {
             return "User " + users.get(users.size() - 1) + " has joined this whiteboard.";
         }
+    }
+
+    public void tooglePinUnpin(ActionEvent e) {
+         pinned = !pinned;
     }
 }
