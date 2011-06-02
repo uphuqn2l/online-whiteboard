@@ -25,26 +25,22 @@ td.colImg img {
     border: none;
 }
 
+td.colCreated,
+td.colUsers,
 td.colInvite {
     vertical-align: middle;
     padding-right: 15px;
     white-space: nowrap;
 }
 
-td.colCreated {
-    vertical-align: middle;
-    padding-right: 15px;
-    white-space: nowrap;
-}
-
-td.colUsers {
+td.colPin {
     vertical-align: middle;
     white-space: nowrap;
 }
 
 #whiteboard {
     border: 2px solid #3E9AE4;
-    margin: 5px 10px 10px 10px;
+    margin-bottom: 10px;
 }
 
 #toolboxDialog,
@@ -60,42 +56,42 @@ td.colUsers {
     display: none;
 }
 
-#editNoSelection {
+.editNoSelection {
     padding: 30px;
     text-align: center;
     display: block;
 }
 
 .toolboxItem {
-    height: 30px;
+    height: 28px;
     white-space: nowrap;
     display: block;
-    margin: 3px 0 0 0 !important;
+    margin: 2px 0 0 0 !important;
     border: none !important;
     width: 100% !important;
     text-align: left !important;
 }
 
-#monitoringGroup {
-    height: 85px;
+.monitoringGroup {
+    height: 88px;
     vertical-align: middle;
     text-align: left;
     padding: 8px;
     overflow: auto;
 }
 
-#toolboxDialog .ui-state-default,
-#toolboxDialog .ui-widget-content .ui-state-default {
+.toolboxPanel .ui-state-default,
+.toolboxPanel .ui-widget-content .ui-state-default {
     font-weight: normal;
 }
 
-#toolboxDialog .ui-state-hover,
-#toolboxDialog .ui-widget-content .ui-state-hover {
+.toolboxPanel .ui-state-hover,
+.toolboxPanel .ui-widget-content .ui-state-hover {
     font-weight: bold;
 }
 
-#toolboxDialog .ui-state-selected,
-#toolboxDialog .ui-widget-content .ui-state-selected {
+.toolboxPanel .ui-state-selected,
+.toolboxPanel .ui-widget-content .ui-state-selected {
     background: url("#{resource['primefaces-cupertino:ui-bg_glass_50_3baae3_1x400.png']}") repeat-x scroll 50% 50% #3BAAE3;
     color: #FFFFFF;
     font-weight: bold;
@@ -103,6 +99,24 @@ td.colUsers {
 
 .toolboxItem .ui-button-text {
     padding-left: 48px !important;
+}
+
+#whiteboardGrid {
+    margin: 5px 10px 10px 10px;
+}
+
+#whiteboardGrid td {
+    vertical-align: top;
+    padding-right: 10px;
+}
+
+#whiteboardGrid .toolboxItem .ui-button-text {
+    width: 140px;
+}
+
+#whiteboardGrid .ui-dialog {
+    position: static;
+    width: auto;
 }
 
 .btn-icon {

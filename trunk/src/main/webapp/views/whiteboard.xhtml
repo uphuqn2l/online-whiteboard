@@ -4,43 +4,104 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite/composite">
 <ui:composition template="/templates/masterLayout.xhtml">
     <ui:define name="body">
         <p:messages id="wbMessages"/>
         <h:form id="mainForm" prependId="false">
-            <h:panelGrid id="headline" columns="7" cellpadding="0" cellspacing="0"
-                         columnClasses="colTitle,colImg,colInvite,colImg,colCreated,colImg,colUsers">
+            <h:panelGrid id="headline" columns="9" cellpadding="0" cellspacing="0"
+                         columnClasses="colTitle,colImg,colCreated,colImg,colUsers,colImg,colInvite,colImg,colPin">
                 <h:outputText value="#{displayWhiteboard.title}"/>
-                <h:graphicImage library="img" name="sendLink.png"/>
-                <p:commandLink value="Invite people" ajax="false" style="margin-bottom: 3px; display: block;"
-                               onclick="inviteWidget.show(); return false;"/>
                 <h:graphicImage library="img" name="calendar.png"/>
                 <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.creator}"/>
                 <h:graphicImage library="img" name="userInfo.png"/>
                 <h:outputText id="activeUsers" value="Active users: #{displayWhiteboard.usersCount}"/>
+                <h:graphicImage library="img" name="sendLink.png"/>
+                <p:commandLink value="Invite people" ajax="false" style="margin-bottom: 3px; display: block;"
+                               onclick="inviteWidget.show(); return false;"/>
+                <h:graphicImage library="img" name="pinned.png" rendered="#{not displayWhiteboard.pinned}"/>
+                <h:graphicImage library="img" name="unpinned.png" rendered="#{displayWhiteboard.pinned}"/>
+                <p:commandLink value="Pin panels" style="margin-bottom: 3px; display: block;"
+                               actionListener="#{displayWhiteboard.tooglePinUnpin}"
+                               oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();" process="headline"
+                               update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
+                               rendered="#{not displayWhiteboard.pinned}"/>
+                <p:commandLink value="Unpin panels" style="margin-bottom: 3px; display: block;"
+                               actionListener="#{displayWhiteboard.tooglePinUnpin}"
+                               oncomplete="bindOnclickToolboxItems();" process="headline"
+                               update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
+                               rendered="#{displayWhiteboard.pinned}"/>
             </h:panelGrid>
 
-            <h:panelGroup id="whiteboard" layout="block"/>
+            <h:panelGrid id="whiteboardGrid" columns="3" cellpadding="0" cellspacing="0">
+                <h:panelGroup layout="block">
+                    <h:panelGroup id="whiteboard" layout="block"/>
+                    <h:panelGroup id="monitorPanel">
+                        <h:panelGroup layout="block"
+                                      styleClass="ui-dialog ui-widget-content ui-corner-all"
+                                      rendered="#{displayWhiteboard.pinned}">
+                            <cc:dialogTitlebar title="Event Monitoring"/>
+                            <ui:include src="/sections/monitoring.xhtml"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup id="toolboxPanel">
+                    <h:panelGroup layout="block" style="width: 200px;"
+                                  styleClass="toolboxPanel ui-dialog ui-widget-content ui-corner-all"
+                                  rendered="#{displayWhiteboard.pinned}">
+                        <cc:dialogTitlebar title="Toolbox"/>
+                        <ui:include src="/sections/toolbox.xhtml"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup id="propertiesPanel">
+                    <h:panelGroup layout="block" style="width: 300px;"
+                                  styleClass="propertiesPanel ui-dialog ui-widget-content ui-corner-all"
+                                  rendered="#{displayWhiteboard.pinned}">
+                        <cc:dialogTitlebar title="Edit Properties"/>
+                        <ui:include src="/sections/properties.xhtml"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:panelGrid>
             <script type="text/javascript">
                 /* <![CDATA[ */
                 jQuery("#whiteboard").css({width: '#{displayWhiteboard.width}px', height: '#{displayWhiteboard.height}px'});
                 /* ]]> */
             </script>
 
-            <p:dialog id="toolboxDialog" header="Toolbox" draggable="true" resizable="true" closable="false"
-                      visible="true"
-                      position="'right',10" widgetVar="toolboxWidget" width="200">
-                <ui:include src="/sections/toolbox.xhtml"/>
-            </p:dialog>
-            <p:dialog id="propertiesDialog" header="Edit Properties" draggable="true" resizable="true" closable="false"
-                      visible="true" position="'right',10" widgetVar="propertiesWidget" width="300">
-                <ui:include src="/sections/properties.xhtml"/>
-            </p:dialog>
-            <p:dialog id="monitoringDialog" header="Event Monitoring" draggable="true" resizable="true" closable="true"
-                      visible="true" position="10,'bottom'" widgetVar="monitoringWidget" width="800">
-                <ui:include src="/sections/monitoring.xhtml"/>
-            </p:dialog>
+            <h:panelGroup id="unpinnedPanels">
+                <p:dialog id="toolboxDialog" styleClass="toolboxPanel" header="Toolbox" draggable="true"
+                          resizable="true" closable="false" visible="true" position="'right',10"
+                          widgetVar="toolboxWidget" width="200" rendered="#{not displayWhiteboard.pinned}">
+                    <ui:include src="/sections/toolbox.xhtml"/>
+                </p:dialog>
+                <p:dialog id="propertiesDialog" styleClass="propertiesPanel" header="Edit Properties"
+                          draggable="true" resizable="true" closable="false" visible="true" position="'right',10"
+                          widgetVar="propertiesWidget" width="300" rendered="#{not displayWhiteboard.pinned}">
+                    <ui:include src="/sections/properties.xhtml"/>
+                </p:dialog>
+                <p:dialog id="monitoringDialog" header="Event Monitoring" draggable="true"
+                          resizable="true" closable="true" visible="true" position="10,'bottom'"
+                          widgetVar="monitoringWidget" width="800" rendered="#{not displayWhiteboard.pinned}">
+                    <ui:include src="/sections/monitoring.xhtml"/>
+                </p:dialog>
+                <h:panelGroup rendered="#{not displayWhiteboard.pinned}">
+                    <script type="text/javascript">
+                        /* <![CDATA[ */
+                        jQuery(function() {
+                            var parentT = jQuery('#toolboxDialog').parent();
+                            parentT.css('left', parentT.offset().left - 325 + 'px');
+
+                            var parentP = jQuery('#propertiesDialog').parent();
+                            parentP.css('left', parentP.offset().left - 10 + 'px');
+
+                            var parentM = jQuery('#monitoringDialog').parent();
+                            parentM.css('top', parentM.offset().top - 10 + 'px');
+                        });
+                        /* ]]> */
+                    </script>
+                </h:panelGroup>
+            </h:panelGroup>
 
             <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
