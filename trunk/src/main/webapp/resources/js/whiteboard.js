@@ -138,6 +138,7 @@ function onShowAutoWidthDialog(jqDialog) {
     var contentWidth = jqDialog.width();
     parent.find('.ui-dialog-titlebar').each(function() {
         jQuery(this).width(contentWidth);
+
     });
     parent.removeClass("autoWidthDialog").width(contentWidth + 26);
     jqDialog.dialog('option', 'position', 'center');
@@ -149,10 +150,26 @@ function onShowAutoWidthDialog(jqDialog) {
 
 function onHideAutoWidthDialog(jqDialog) {
     // fix for auto width in IE
-    jqDialog.parent().addClass("autoWidthDialog");
+    var parent = jqDialog.parent();
+    parent.find('.ui-dialog-titlebar').each(function() {
+        // reset titlebar width
+        jQuery(this).css('width', '');
+    });
+    parent.addClass("autoWidthDialog");
 
     // fix for scrollbars in IE
     jQuery('body').css('overflow', 'auto');
+}
+
+function adjustOpenAutoWidthDialog(dialogId) {
+    var jqDialog = jQuery('#' + dialogId);
+    var parent = jqDialog.parent();
+    parent.find('.ui-dialog-titlebar').each(function() {
+        jQuery(this).css('width', '');
+    });
+    parent.addClass('autoWidthDialog');
+
+    onShowAutoWidthDialog(jqDialog);
 }
 
 function removeUnusedDialogs() {

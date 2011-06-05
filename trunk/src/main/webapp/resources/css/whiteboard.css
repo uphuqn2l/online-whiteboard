@@ -57,7 +57,7 @@ td.colPin {
 }
 
 .editNoSelection {
-    padding: 30px;
+    padding: 30px 80px 30px 80px;
     text-align: center;
     display: block;
 }
@@ -243,4 +243,66 @@ td.colPin {
 
 .autoWidthDialog {
     width: auto !important;
+}
+
+.editPropsTable {
+    margin: 0;
+}
+
+.editPropsFooter {
+    padding-top: 12px;
+    text-align: center !important;
+}
+
+.editPropsCol1 {
+    text-align: right !important;
+    vertical-align: middle !important;
+    padding: 2px 4px 2px 0 !important;
+    white-space: nowrap;
+}
+
+.editPropsCol2 {
+    text-align: left !important;
+    vertical-align: middle !important;
+    padding: 2px !important;
+}
+
+.editPropsCol2 input,
+.editPropsCol2 select {
+    border: 1px solid #AED0EA;
+    background: none repeat scroll 0 0 #FFFFFF;
+    width: 100%;
+    padding: 2px;
+}
+
+.editPropsCol2 input {
+    height: 16px;
+}
+
+.webkit .editPropsCol2 select {
+    padding: 1px;
+}
+
+.editPropsCol2 .ui-spinner-button {
+    height: 10px !important;
+}
+
+.webkit .editPropsCol2 .ui-spinner-buttons {
+    top: 14px !important;
+}
+
+.editPropsCol2 .ui-spinner-buttons .ui-spinner-up {
+    margin-top: -17px !important;
+}
+
+.editPropsCol2 .ui-spinner-buttons .ui-spinner-up span,
+.editPropsCol2 .ui-spinner-buttons .ui-spinner-down span {
+    margin-top: -3px !important;
+}
+
+.editPropsCol2 .ui-inputfield {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    padding: 3px !important;
+    font-weight: normal !important;
 }
