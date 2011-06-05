@@ -6,6 +6,21 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.prime.com.tr/ui">
 <ui:composition>
-    <h:outputText value="Text"/>
+    <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
+                 footerClass="editPropsFooter">
+        <h:outputLabel for="cxText" value="X coordinate (top left)"/>
+        <h:inputText id="cxText"/>
+        <h:outputLabel for="cyText" value="Y coordinate (top left)"/>
+        <h:inputText id="cyText"/>
+        <h:outputLabel for="fontFamily" value="Font family"/>
+        <h:selectOneMenu id="fontFamily">
+            <f:selectItems value="#{createWhiteboard.fontFamilies}"/>
+        </h:selectOneMenu>
+        <h:outputLabel for="fontSize" value="Font size"/>
+        <p:spinner id="fontSize" min="6" max="96" maxlength="2"/>
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
+        </f:facet>
+    </h:panelGrid>
 </ui:composition>
 </html>
