@@ -248,16 +248,16 @@ td.colPin {
 
 .radioButtons,
 .radioButtons td {
-	white-space: nowrap;
+    white-space: nowrap;
     padding: 0;
 }
 
 .radioLineDirection td:first-child {
-	padding-right: 15px;
+    padding-right: 15px;
 }
 
 .radioButtons input {
-	margin-left: 0px;
+    margin-left: 0px;
     width: auto !important;
     border: none !important;
     background: none !important;
@@ -265,7 +265,7 @@ td.colPin {
 
 .radioButtons input,
 .radioButtons label {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 .editPropsTable {
@@ -299,7 +299,7 @@ td.colPin {
 
 .editPropsCol2 input {
     height: 16px;
-    width: 108px;
+    width: 80px;
 }
 
 .webkit .editPropsCol2 select {
@@ -324,6 +324,10 @@ td.colPin {
 
 .editPropsCol2 .ui-spinner-buttons .ui-spinner-up {
     margin-top: -16px !important;
+}
+
+.linux.gecko .editPropsCol2 .ui-spinner-buttons .ui-spinner-up {
+    margin-top: -17px !important;
 }
 
 .editPropsCol2 .ui-spinner-buttons .ui-spinner-up span,
