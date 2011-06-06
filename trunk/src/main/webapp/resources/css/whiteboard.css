@@ -60,6 +60,7 @@ td.colPin {
     padding: 30px 80px 30px 80px;
     text-align: center;
     display: block;
+    white-space: nowrap;
 }
 
 .toolboxItem {
@@ -245,6 +246,28 @@ td.colPin {
     width: auto !important;
 }
 
+.radioButtons,
+.radioButtons td {
+	white-space: nowrap;
+    padding: 0;
+}
+
+.radioLineDirection td:first-child {
+	padding-right: 15px;
+}
+
+.radioButtons input {
+	margin-left: 0px;
+    width: auto !important;
+    border: none !important;
+    background: none !important;
+}
+
+.radioButtons input,
+.radioButtons label {
+	vertical-align: middle;
+}
+
 .editPropsTable {
     margin: 0;
 }
@@ -271,12 +294,12 @@ td.colPin {
 .editPropsCol2 select {
     border: 1px solid #AED0EA;
     background: none repeat scroll 0 0 #FFFFFF;
-    width: 100%;
     padding: 2px;
 }
 
 .editPropsCol2 input {
     height: 16px;
+    width: 108px;
 }
 
 .webkit .editPropsCol2 select {
@@ -288,11 +311,19 @@ td.colPin {
 }
 
 .webkit .editPropsCol2 .ui-spinner-buttons {
-    top: 14px !important;
+    top: 13px !important;
+}
+
+.ie .editPropsCol2 .ui-spinner-buttons {
+    top: 12px !important;
+}
+
+.ie7 .editPropsCol2 .ui-spinner-buttons {
+    top: 17px !important;
 }
 
 .editPropsCol2 .ui-spinner-buttons .ui-spinner-up {
-    margin-top: -17px !important;
+    margin-top: -16px !important;
 }
 
 .editPropsCol2 .ui-spinner-buttons .ui-spinner-up span,
@@ -305,4 +336,10 @@ td.colPin {
     -webkit-box-shadow: none !important;
     padding: 3px !important;
     font-weight: normal !important;
+}
+
+.editPropsCol2 .colorSelector div {
+    background: url("#{resource['img:colorpicker_icon.png']}") repeat scroll center center transparent;
+    height: 28px;
+    width: 28px;
 }
