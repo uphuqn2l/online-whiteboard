@@ -9,10 +9,10 @@
 <ui:composition>
     <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
                  footerClass="editPropsFooter">
-        <h:outputLabel for="cxText" value="X coordinate (top left)"/>
-        <h:inputText id="cxText"/>
-        <h:outputLabel for="cyText" value="Y coordinate (top left)"/>
-        <h:inputText id="cyText"/>
+        <h:outputLabel for="textCx" value="X coordinate (top left)"/>
+        <h:inputText id="textCx"/>
+        <h:outputLabel for="textCy" value="Y coordinate (top left)"/>
+        <h:inputText id="textCy"/>
         <h:outputLabel for="fontFamily" value="Font family"/>
         <h:selectOneMenu id="fontFamily">
             <f:selectItems value="#{createWhiteboard.fontFamilies}"/>
@@ -29,10 +29,10 @@
             <f:selectItem itemLabel="Normal" itemValue="normal"/>
             <f:selectItem itemLabel="Italic" itemValue="italic"/>
         </h:selectOneRadio>
-        <h:outputLabel for="colorText" value="Color"/>
-        <cc:colorPicker id="colorText"/>
-        <h:outputLabel for="rotateText" value="Rotate (0-360&deg;)"/>
-        <p:spinner id="rotateText" min="0" max="360" maxlength="3"/>
+        <h:outputLabel for="textColor" value="Color"/>
+        <cc:colorPicker id="textColor"/>
+        <h:outputLabel for="textRotation" value="Rotate (0-360&deg;)"/>
+        <p:spinner id="textRotation" min="0" max="360" maxlength="3"/>
         <f:facet name="footer">
             <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
         </f:facet>

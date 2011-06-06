@@ -4,8 +4,11 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite/composite">
 <ui:composition>
-    <h:outputText value="Free Line"/>
+    <ui:include src="/sections/properties/line.xhtml">
+        <ui:param name="lineMode" value="freeLine"/>
+    </ui:include>
 </ui:composition>
 </html>

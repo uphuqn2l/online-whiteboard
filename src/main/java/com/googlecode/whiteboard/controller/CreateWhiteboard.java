@@ -6,6 +6,7 @@
 package com.googlecode.whiteboard.controller;
 
 import com.googlecode.whiteboard.model.Whiteboard;
+import com.googlecode.whiteboard.model.attribute.StrokeStyle;
 import com.googlecode.whiteboard.utils.FacesAccessor;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +23,7 @@ public class CreateWhiteboard implements Serializable
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
     private List<SelectItem> fontFamilies;
+    private List<SelectItem> lineStyles;
 
     @PostConstruct
     protected void initialize() {
@@ -102,5 +104,24 @@ public class CreateWhiteboard implements Serializable
         }
 
         return fontFamilies;
+    }
+
+    public List getLineStyles() {
+        if (lineStyles == null) {
+            lineStyles = new ArrayList<SelectItem>();
+            lineStyles.add(new SelectItem(StrokeStyle.No.name(), StrokeStyle.No.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.Dash.name(), StrokeStyle.Dash.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.Dot.name(), StrokeStyle.Dot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDot.name(), StrokeStyle.DashDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDotDot.name(), StrokeStyle.DashDotDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DotBlank.name(), StrokeStyle.DotBlank.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashBlank.name(), StrokeStyle.DashBlank.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDash.name(), StrokeStyle.DashDash.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashBlankDot.name(), StrokeStyle.DashBlankDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDashDot.name(), StrokeStyle.DashDashDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDashDotDot.name(), StrokeStyle.DashDashDotDot.getStyle()));
+        }
+
+        return lineStyles;
     }
 }
