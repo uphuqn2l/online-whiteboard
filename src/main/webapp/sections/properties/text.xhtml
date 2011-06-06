@@ -4,7 +4,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite/composite">
 <ui:composition>
     <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
                  footerClass="editPropsFooter">
@@ -18,6 +19,20 @@
         </h:selectOneMenu>
         <h:outputLabel for="fontSize" value="Font size"/>
         <p:spinner id="fontSize" min="6" max="96" maxlength="2"/>
+        <h:outputLabel for="fontWeight" value="Font weight"/>
+        <h:selectOneRadio id="fontWeight" layout="lineDirection" styleClass="radioButtons">
+            <f:selectItem itemLabel="Normal" itemValue="normal"/>
+            <f:selectItem itemLabel="Bold" itemValue="bold"/>
+        </h:selectOneRadio>
+        <h:outputLabel for="fontStyle" value="Font style"/>
+        <h:selectOneRadio id="fontStyle" layout="lineDirection" styleClass="radioButtons">
+            <f:selectItem itemLabel="Normal" itemValue="normal"/>
+            <f:selectItem itemLabel="Italic" itemValue="italic"/>
+        </h:selectOneRadio>
+        <h:outputLabel for="colorText" value="Color"/>
+        <cc:colorPicker id="colorText"/>
+        <h:outputLabel for="rotateText" value="Rotate (0-360&deg;)"/>
+        <p:spinner id="rotateText" min="0" max="360" maxlength="3"/>
         <f:facet name="footer">
             <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
         </f:facet>

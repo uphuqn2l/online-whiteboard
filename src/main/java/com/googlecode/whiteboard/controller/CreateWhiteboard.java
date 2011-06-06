@@ -84,7 +84,6 @@ public class CreateWhiteboard implements Serializable
             fontFamilies.add(new SelectItem("\"Book Antiqua\"", "Book Antiqua"));
             fontFamilies.add(new SelectItem("\"Century Gothic\"", "Century Gothic"));
             fontFamilies.add(new SelectItem("\"Comic Sans MS\"", "Comic Sans MS"));
-            fontFamilies.add(new SelectItem("\"Copperplate Gothic Light\"", "Copperplate Gothic Light"));
             fontFamilies.add(new SelectItem("\"Courier\"", "Courier"));
             fontFamilies.add(new SelectItem("\"Courier New\"", "Courier New"));
             fontFamilies.add(new SelectItem("\"Garamond\"", "Garamond"));
