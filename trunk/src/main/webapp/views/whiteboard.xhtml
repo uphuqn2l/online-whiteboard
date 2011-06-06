@@ -18,11 +18,11 @@
                 <h:graphicImage library="img" name="userInfo.png"/>
                 <h:outputText id="activeUsers" value="Active users: #{displayWhiteboard.usersCount}"/>
                 <h:graphicImage library="img" name="sendLink.png"/>
-                <p:commandLink value="Invite people" ajax="false" style="margin-bottom: 3px; display: block;"
+                <p:commandLink value="Invite people" ajax="false" style="display: block;"
                                onclick="inviteWidget.show(); return false;"/>
                 <h:graphicImage library="img" name="pinned.png" rendered="#{not displayWhiteboard.pinned}"/>
                 <h:graphicImage library="img" name="unpinned.png" rendered="#{displayWhiteboard.pinned}"/>
-                <p:commandLink value="Pin panels" style="margin-bottom: 3px; display: block;"
+                <p:commandLink value="Pin panels" style="display: block;"
                                actionListener="#{displayWhiteboard.tooglePinUnpin}"
                                oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();" process="headline"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
