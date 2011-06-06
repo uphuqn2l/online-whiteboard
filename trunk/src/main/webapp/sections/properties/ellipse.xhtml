@@ -4,8 +4,40 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite/composite">
 <ui:composition>
-    <h:outputText value="Ellipse"/>
+    <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
+                 footerClass="editPropsFooter">
+        <h:outputLabel for="ellipseCx" value="X coordinate (centre)"/>
+        <cc:numericInput id="ellipseCx"/>
+        <h:outputLabel for="ellipseCy" value="Y coordinate (centre)"/>
+        <cc:numericInput id="ellipseCy"/>
+        <h:outputLabel for="hRadius" value="Horizontal radius"/>
+        <p:spinner id="hRadius" min="1" max="999" maxlength="3"/>
+        <h:outputLabel for="vRadius" value="Vertical radius"/>
+        <p:spinner id="vRadius" min="1" max="999" maxlength="3"/>
+        <h:outputLabel for="ellipseBkgrColor" value="Background color"/>
+        <cc:colorPicker id="ellipseBkgrColor"/>
+        <h:outputLabel for="ellipseBorderColor" value="Border color"/>
+        <cc:colorPicker id="ellipseBorderColor"/>
+        <h:outputLabel for="ellipseBorderWidth" value="Border width"/>
+        <p:spinner id="ellipseBorderWidth" min="1" max="100" maxlength="3"/>
+        <h:outputLabel for="ellipseBorderStyle" value="Border style"/>
+        <h:selectOneMenu id="ellipseBorderStyle" style="font-weight: bold; width: 60px;">
+            <f:selectItems value="#{createWhiteboard.lineStyles}"/>
+        </h:selectOneMenu>
+        <h:outputLabel for="ellipseBkgrOpacity" value="Background opacity"/>
+        <p:spinner id="ellipseBkgrOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
+        <h:outputLabel for="ellipseBorderOpacity" value="Border opacity"/>
+        <p:spinner id="ellipseBorderOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
+        <h:outputLabel for="ellipseRotation" value="Rotate (0-360&deg;)"/>
+        <p:spinner id="ellipseRotation" min="0" max="360" maxlength="3"/>
+        <h:outputLabel for="ellipseScale" value="Scale factor"/>
+        <p:spinner id="ellipseScale" min="0.1" max="10" maxlength="2" stepFactor="0.1"/>
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
+        </f:facet>
+    </h:panelGrid>
 </ui:composition>
 </html>

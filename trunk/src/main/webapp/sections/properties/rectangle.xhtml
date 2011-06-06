@@ -4,8 +4,42 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite/composite">
 <ui:composition>
-    <h:outputText value="Rectangle"/>
+    <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
+                 footerClass="editPropsFooter">
+        <h:outputLabel for="rectCx" value="X coordinate (top left)"/>
+        <cc:numericInput id="rectCx"/>
+        <h:outputLabel for="rectCy" value="Y coordinate (top left)"/>
+        <cc:numericInput id="rectCy"/>
+        <h:outputLabel for="rectWidth" value="Width"/>
+        <cc:numericInput id="rectWidth"/>
+        <h:outputLabel for="rectHeight" value="Height"/>
+        <cc:numericInput id="rectHeight"/>
+        <h:outputLabel for="cornerRadius" value="Corners radius"/>
+        <p:spinner id="cornerRadius" min="0" max="15" maxlength="2"/>
+        <h:outputLabel for="rectBkgrColor" value="Background color"/>
+        <cc:colorPicker id="rectBkgrColor"/>
+        <h:outputLabel for="rectBorderColor" value="Border color"/>
+        <cc:colorPicker id="rectBorderColor"/>
+        <h:outputLabel for="rectBorderWidth" value="Border width"/>
+        <p:spinner id="rectBorderWidth" min="1" max="100" maxlength="3"/>
+        <h:outputLabel for="rectBorderStyle" value="Border style"/>
+        <h:selectOneMenu id="rectBorderStyle" style="font-weight: bold; width: 60px;">
+            <f:selectItems value="#{createWhiteboard.lineStyles}"/>
+        </h:selectOneMenu>
+        <h:outputLabel for="rectBkgrOpacity" value="Background opacity"/>
+        <p:spinner id="rectBkgrOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
+        <h:outputLabel for="rectBorderOpacity" value="Border opacity"/>
+        <p:spinner id="rectBorderOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
+        <h:outputLabel for="rectRotation" value="Rotate (0-360&deg;)"/>
+        <p:spinner id="rectRotation" min="0" max="360" maxlength="3"/>
+        <h:outputLabel for="rectScale" value="Scale factor"/>
+        <p:spinner id="rectScale" min="0.1" max="10" maxlength="2" stepFactor="0.1"/>
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
+        </f:facet>
+    </h:panelGrid>
 </ui:composition>
 </html>

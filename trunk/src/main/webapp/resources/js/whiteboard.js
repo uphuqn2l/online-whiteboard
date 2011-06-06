@@ -1,5 +1,5 @@
 jQuery(function() {
-    // bind onclick handler
+    // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
 
     // configure validator
