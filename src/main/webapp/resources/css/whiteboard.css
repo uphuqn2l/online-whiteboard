@@ -346,4 +346,5 @@ td.colPin {
     background: url("#{resource['img:colorpicker_icon.png']}") repeat scroll center center transparent;
     height: 28px;
     width: 28px;
+    cursor: pointer;
 }

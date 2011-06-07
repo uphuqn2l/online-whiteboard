@@ -27,7 +27,7 @@
                                oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();" process="headline"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
                                rendered="#{not displayWhiteboard.pinned}"/>
-                <p:commandLink value="Unpin panels" style="margin-bottom: 3px; display: block;"
+                <p:commandLink value="Unpin panels" style="display: block;"
                                actionListener="#{displayWhiteboard.tooglePinUnpin}"
                                oncomplete="bindOnclickToolboxItems();" process="headline"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
