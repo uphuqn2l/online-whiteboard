@@ -34,8 +34,57 @@ WhiteboardConfig = function() {
             "rotation": 0
         },
         freeLine: {
+            "stroke": "#000000",
+            "stroke-width": 3,
+            "stroke-dasharray": "",
+            "stroke-opacity": 1.0,
             "rotation": 0
-        }
+        },
+        straightLine: {
+            "stroke": "#000000",
+            "stroke-width": 3,
+            "stroke-dasharray": "",
+            "stroke-opacity": 1.0,
+            "rotation": 0
+        },
+        rectangle: {
+            "width": 160,
+            "height": 100,
+            "r": 0,
+            "fill": "#9ACD32",
+            "stroke": "#000000",
+            "stroke-width": 1,
+            "stroke-dasharray": "",
+            "fill-opacity": 1.0,
+            "stroke-opacity": 1.0,
+            "rotation": 0
+        },
+        circle: {
+            "r": 70,
+            "fill": "#008080",
+            "stroke": "#000000",
+            "stroke-width": 1,
+            "stroke-dasharray": "",
+            "fill-opacity": 1.0,
+            "stroke-opacity": 1.0,
+            "rotation": 0
+        },
+        ellipse: {
+            "rx": 80,
+            "ry": 50,
+            "fill": "#BA55D3",
+            "stroke": "#000000",
+            "stroke-width": 1,
+            "stroke-dasharray": "",
+            "fill-opacity": 1.0,
+            "stroke-opacity": 1.0,
+            "rotation": 0
+        },
+        image: {
+            "width": 150,
+            "height": 150,
+            "rotation": 0
+        }        
     };
 
     // attributes for various helper objects

@@ -20,7 +20,6 @@ public class Rectangle extends Positionable implements Serializable
     private String borderStyle;
     private double backgroundOpacity;
     private double borderOpacity;
-    private double scaleFactor;
 
     public int getWidth() {
         return width;
@@ -92,13 +91,5 @@ public class Rectangle extends Positionable implements Serializable
 
     public void setBorderOpacity(double borderOpacity) {
         this.borderOpacity = borderOpacity;
-    }
-
-    public double getScaleFactor() {
-        return scaleFactor;
-    }
-
-    public void setScaleFactor(double scaleFactor) {
-        this.scaleFactor = scaleFactor;
     }
 }
