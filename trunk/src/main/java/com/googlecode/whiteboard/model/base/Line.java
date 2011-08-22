@@ -12,7 +12,6 @@ public abstract class Line extends AbstractElement
     private int lineWidth;
     private String lineStyle;
     private double opacity;
-    private double scaleFactor;
 
     public String getPath() {
         return path;
@@ -52,13 +51,5 @@ public abstract class Line extends AbstractElement
 
     public void setOpacity(double opacity) {
         this.opacity = opacity;
-    }
-
-    public double getScaleFactor() {
-        return scaleFactor;
-    }
-
-    public void setScaleFactor(double scaleFactor) {
-        this.scaleFactor = scaleFactor;
     }
 }

@@ -25,7 +25,17 @@ WhiteboardConfig = function() {
 
     // default properties for all elements
     this.properties = {
-
+        text: {
+            "font-family": "Verdana",
+            "font-size": 18,
+            "font-weight": "normal",
+            "font-style": "normal",
+            "fill": "#000000",
+            "rotation": 0
+        },
+        freeLine: {
+            "rotation": 0
+        }
     };
 
     // attributes for various helper objects
