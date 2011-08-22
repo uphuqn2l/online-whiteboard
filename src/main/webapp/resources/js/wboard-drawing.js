@@ -77,7 +77,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     this.drawText = function(inputText) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
-            textElement.attr("font-size", "18");
+            textElement.attr("font-size", 18);
             drawHelperBox(textElement, config.classTypes.text, true);
         }
     }
