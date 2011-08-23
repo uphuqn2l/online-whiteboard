@@ -130,12 +130,6 @@ jQuery(function() {
     whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
 });
 
-function showProperties(showClass) {
-    var propsDialog = jQuery(".propertiesPanel");
-    propsDialog.find(".editPanel").hide();
-    propsDialog.find("." + showClass).show();
-}
-
 function onShowAutoWidthDialog(jqDialog) {
     // fix for auto width in IE
     var parent = jqDialog.parent();

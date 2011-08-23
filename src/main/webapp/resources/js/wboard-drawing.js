@@ -43,6 +43,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     var dragDropStart = false;
     var lastHoverObj = null;
     var selectedObj = null;
+    var wbElements = {};
     var _self = this;
 
     // create raphael canvas
@@ -78,7 +79,8 @@ WhiteboardDesigner = function(witeboardConfig) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
             setDefaultProperties(textElement, this.config.properties.text);
-            drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true);
+            var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true);
+            wbElements[hb.uuid] = hb;
             this.showProperties('editText');
         }
     }
@@ -86,7 +88,9 @@ WhiteboardDesigner = function(witeboardConfig) {
     this.drawImage = function(inputUrl, width, height) {
         if (inputUrl !== "") {
             var imageElement = paper.image(inputUrl, whiteboard.imageEl.cx, whiteboard.imageEl.cy, width, height);
-            drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true);
+            var hb = drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true);
+            wbElements[hb.uuid] = hb;
+            this.showProperties('editImage');
         }
     }
 
@@ -94,21 +98,27 @@ WhiteboardDesigner = function(witeboardConfig) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
         rectElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(rectElement, this.config.properties.rectangle);
-        drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true);
+        var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true);
+        wbElements[hb.uuid] = hb;
+        this.showProperties('editRectangle');
     }
 
     this.drawCircle = function(x, y) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
         circleElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(circleElement, this.config.properties.circle);
-        drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true);
+        var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true);
+        wbElements[hb.uuid] = hb;
+        this.showProperties('editCircle');
     }
 
     this.drawEllipse = function(x, y) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
         ellipseElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(ellipseElement, this.config.properties.ellipse);
-        drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true);
+        var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true);
+        wbElements[hb.uuid] = hb;
+        this.showProperties('editEllipse');
     }
 
     this.selectElement = function(helperBox) {
@@ -120,13 +130,17 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
         selectedObj = helperBox;
         selectedObj.visibleSelect = true;
+        this.showProperties('edit' + selectedObj.classType);
     }
 
     this.removeElement = function(helperBox) {
         if (selectedObj != null && selectedObj.uuid == helperBox.uuid) {
             // last selected object = this object ==> reset
             selectedObj = null;
+            this.showProperties('editNoSelection');
         }
+        wbElements[helperBox.uuid] = null;
+        delete wbElements[helperBox.uuid];
         helperBox.element.remove();
         helperBox.circleSet.remove();
         helperBox.remove();
@@ -158,6 +172,7 @@ WhiteboardDesigner = function(witeboardConfig) {
             hb.rotate(cloneEl.attr("rotation"), bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
         }
         helperBox.attr(this.config.attributes.opacityHidden);
+        wbElements[hb.uuid] = hb;
     }
 
     this.resizeWhiteboard = function(width, height) {
@@ -189,6 +204,11 @@ WhiteboardDesigner = function(witeboardConfig) {
 
     this.clearWhiteboard = function() {
         paper.clear();
+        this.showProperties('editNoSelection');
+        for (eluuid in wbElements) {
+            wbElements[eluuid] = null;
+            delete wbElements[eluuid];
+        }
     }
 
     this.showProperties = function(showClass) {
@@ -196,6 +216,38 @@ WhiteboardDesigner = function(witeboardConfig) {
         propsDialog.find(".editPanel").hide();
         propsDialog.find("." + showClass).show();
     }
+
+    this.transferTextPropertiesToDialog = function(cx, cy, props) {
+
+    }
+
+    this.transferFreeLinePropertiesToDialog = function(props) {
+
+    }
+
+    this.transferStraightLinePropertiesToDialog = function(props) {
+
+    }
+
+    this.transferRectanglePropertiesToDialog = function(cx, cy, props) {
+
+    }
+
+    this.transferCirclePropertiesToDialog = function(cx, cy, props) {
+
+    }
+
+    this.transferEllipsePropertiesToDialog = function(cx, cy, props) {
+
+    }
+
+    this.transferImagePropertiesToDialog = function(cx, cy, props) {
+
+    }
+
+    this.transferIconPropertiesToDialog = function(cx, cy, props) {
+
+    }    
 
     // private access =======================
 
@@ -409,8 +461,9 @@ WhiteboardDesigner = function(witeboardConfig) {
                 dialogType = "editStraightLine";
             }
 
-            drawHelperBox(whiteboard.lineEl.path, classType, rotation, null, true);
-            showProperties(dialogType);
+            var hb = drawHelperBox(whiteboard.lineEl.path, classType, rotation, null, true);
+            wbElements[hb.uuid] = hb;
+            _self.showProperties(dialogType);
             whiteboard.lineEl.path = null;
             whiteboard.lineEl.pathArray = null;
         }
@@ -533,7 +586,9 @@ WhiteboardDesigner = function(witeboardConfig) {
             overlayIcon.click(function (event) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
-                drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true);
+                var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true);
+                wbElements[hb.uuid] = hb;
+                _self.showProperties('editIcon');
                 event.stopPropagation();
                 event.preventDefault();
             }).hover(function () {
