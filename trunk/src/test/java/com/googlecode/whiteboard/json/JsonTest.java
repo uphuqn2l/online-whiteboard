@@ -90,7 +90,6 @@ public class JsonTest
         circle1.setBorderStyle(".");
         circle1.setBackgroundOpacity(0.2);
         circle1.setBorderOpacity(0.8);
-        circle1.setScaleFactor(1.0);
 
         // server-side: convert Java object to JSON text
         String json = gson.toJson(circle1);

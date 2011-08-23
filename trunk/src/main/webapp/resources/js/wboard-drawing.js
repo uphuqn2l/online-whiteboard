@@ -2,14 +2,14 @@
  * Whiteboard designer class for element drawing.
  */
 WhiteboardDesigner = function(witeboardConfig) {
-    var config = witeboardConfig;
+    this.config = witeboardConfig;
 
     // create jQuery objects for whiteboard container and dialogs
-    var whiteboard = jQuery("#" + config.ids.whiteboard);
-    var dialogInputText = jQuery("#" + config.ids.dialogInputText);
-    var dialogInputImage = jQuery("#" + config.ids.dialogInputImage);
-    var dialogIcons = jQuery("#" + config.ids.dialogIcons);
-    var dialogResize = jQuery("#" + config.ids.dialogResize);
+    var whiteboard = jQuery("#" + this.config.ids.whiteboard);
+    var dialogInputText = jQuery("#" + this.config.ids.dialogInputText);
+    var dialogInputImage = jQuery("#" + this.config.ids.dialogInputImage);
+    var dialogIcons = jQuery("#" + this.config.ids.dialogIcons);
+    var dialogResize = jQuery("#" + this.config.ids.dialogResize);
 
     var offsetLeft = whiteboard.offset().left;
     var offsetTop = whiteboard.offset().top;
@@ -46,7 +46,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     var _self = this;
 
     // create raphael canvas
-    var paper = Raphael(config.ids.whiteboard, whiteboard.width(), whiteboard.height());
+    var paper = Raphael(this.config.ids.whiteboard, whiteboard.width(), whiteboard.height());
 
     // public access =======================
 
@@ -60,7 +60,7 @@ WhiteboardDesigner = function(witeboardConfig) {
 
     this.drawFreeLineBegin = function(x, y) {
         whiteboard.lineEl.path = paper.path("M" + (x - offsetLeft) + "," + (y - offsetTop));
-        whiteboard.lineEl.path.attr({stroke: "#000000", "stroke-width": 3});
+        setDefaultProperties(whiteboard.lineEl.path, this.config.properties.freeLine);
         whiteboard.bind("mousemove.mmu", mousemoveHandler);
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
@@ -69,7 +69,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         whiteboard.lineEl.pathArray = [];
         whiteboard.lineEl.pathArray[0] = ["M", x - offsetLeft, y - offsetTop];
         whiteboard.lineEl.path = paper.path(whiteboard.lineEl.pathArray);
-        whiteboard.lineEl.path.attr({stroke: "#000000", "stroke-width": 3});
+        setDefaultProperties(whiteboard.lineEl.path, this.config.properties.straightLine);
         whiteboard.bind("mousemove.mmu", mousemoveHandler);
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
@@ -77,45 +77,46 @@ WhiteboardDesigner = function(witeboardConfig) {
     this.drawText = function(inputText) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
-            textElement.attr("font-size", 18);
-            drawHelperBox(textElement, config.classTypes.text, true);
+            setDefaultProperties(textElement, this.config.properties.text);
+            drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true);
+            this.showProperties('editText');
         }
     }
 
     this.drawImage = function(inputUrl, width, height) {
         if (inputUrl !== "") {
             var imageElement = paper.image(inputUrl, whiteboard.imageEl.cx, whiteboard.imageEl.cy, width, height);
-            drawHelperBox(imageElement, config.classTypes.image, true);
+            drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true);
         }
     }
 
     this.drawRectangle = function(x, y) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
-        rectElement.attr("fill", "#9ACD32");
         rectElement.scale(1, 1);  // workaround for webkit based browsers
-        drawHelperBox(rectElement, config.classTypes.rectangle, true);
+        setDefaultProperties(rectElement, this.config.properties.rectangle);
+        drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true);
     }
 
     this.drawCircle = function(x, y) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
-        circleElement.attr("fill", "#008080");
         circleElement.scale(1, 1);  // workaround for webkit based browsers
-        drawHelperBox(circleElement, config.classTypes.circle, true);
+        setDefaultProperties(circleElement, this.config.properties.circle);
+        drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true);
     }
 
     this.drawEllipse = function(x, y) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
-        ellipseElement.attr("fill", "#BA55D3");
         ellipseElement.scale(1, 1);  // workaround for webkit based browsers
-        drawHelperBox(ellipseElement, config.classTypes.ellipse, true);
+        setDefaultProperties(ellipseElement, this.config.properties.ellipse);
+        drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true);
     }
 
     this.selectElement = function(helperBox) {
-        helperBox.circleSet.attr(config.attributes.opacityVisible);
+        helperBox.circleSet.attr(this.config.attributes.opacityVisible);
         if (selectedObj != null && selectedObj.uuid != helperBox.uuid) {
             // hide last selection
-            selectedObj.attr(config.attributes.opacityHidden);
-            selectedObj.circleSet.attr(config.attributes.opacityHidden);
+            selectedObj.attr(this.config.attributes.opacityHidden);
+            selectedObj.circleSet.attr(this.config.attributes.opacityHidden);
         }
         selectedObj = helperBox;
         selectedObj.visibleSelect = true;
@@ -135,21 +136,28 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.element.toFront();
         helperBox.circleSet.toFront();
         helperBox.toFront();
-        helperBox.attr(config.attributes.opacityHidden);
+        helperBox.attr(this.config.attributes.opacityHidden);
     }
 
     this.bringBackElement = function(helperBox) {
         helperBox.toBack();
         helperBox.circleSet.toBack();
         helperBox.element.toBack();
-        helperBox.attr(config.attributes.opacityHidden);
+        helperBox.attr(this.config.attributes.opacityHidden);
     }
 
     this.cloneElement = function(helperBox) {
         var cloneEl = helperBox.element.clone();
         cloneEl.translate(15, 15);
-        drawHelperBox(cloneEl, helperBox.classType, false);
-        helperBox.attr(config.attributes.opacityHidden);
+        var hb = drawHelperBox(cloneEl, helperBox.classType, null, null, false);
+        if (cloneEl.attr("rotation") != 0) {
+            var bbox = cloneEl.getBBox();
+            var bboxWidth = parseFloat(cloneEl.width);
+            var bboxHeight = parseFloat(cloneEl.height);
+            hb.circleSet.rotate(cloneEl.attr("rotation"), bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            hb.rotate(cloneEl.attr("rotation"), bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+        }
+        helperBox.attr(this.config.attributes.opacityHidden);
     }
 
     this.resizeWhiteboard = function(width, height) {
@@ -181,6 +189,12 @@ WhiteboardDesigner = function(witeboardConfig) {
 
     this.clearWhiteboard = function() {
         paper.clear();
+    }
+
+    this.showProperties = function(showClass) {
+        var propsDialog = jQuery(".propertiesPanel");
+        propsDialog.find(".editPanel").hide();
+        propsDialog.find("." + showClass).show();
     }
 
     // private access =======================
@@ -218,16 +232,16 @@ WhiteboardDesigner = function(witeboardConfig) {
         if (lastHoverObj != null) {
             // overlapping ==> handle current overlapped element (hide / show helpers)
             if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
-                this.attr(config.attributes.selectBoxVisible);
-                this.circleSet.attr(config.attributes.opacityVisible);
+                this.attr(_self.config.attributes.selectBoxVisible);
+                this.circleSet.attr(_self.config.attributes.opacityVisible);
             } else {
-                this.attr(config.attributes.opacityHidden);
+                this.attr(_self.config.attributes.opacityHidden);
             }
             this.attr("cursor", "default");
-            
+
             // handle new element which overlapps the current one - show "move helper"
-            lastHoverObj.circleSet.attr(config.attributes.opacityHidden);
-            lastHoverObj.attr(config.attributes.moveBoxVisible);
+            lastHoverObj.circleSet.attr(_self.config.attributes.opacityHidden);
+            lastHoverObj.attr(_self.config.attributes.moveBoxVisible);
             lastHoverObj.attr("cursor", "move");
             lastHoverObj = null;
         }
@@ -243,52 +257,52 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
 
         if (modeSwitcher.selectMode) {
-            this.attr(config.attributes.selectBoxVisible);
+            this.attr(_self.config.attributes.selectBoxVisible);
             this.attr("cursor", "default");
             return true;
         }
 
         if (modeSwitcher.moveMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr(config.attributes.opacityHidden);
+                this.circleSet.attr(_self.config.attributes.opacityHidden);
             }
-            this.attr(config.attributes.moveBoxVisible);
+            this.attr(_self.config.attributes.moveBoxVisible);
             this.attr("cursor", "move");
             return true;
         }
 
         if (modeSwitcher.removeMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr(config.attributes.opacityHidden);
+                this.circleSet.attr(_self.config.attributes.opacityHidden);
             }
-            this.attr(config.attributes.removeBoxVisible);
+            this.attr(_self.config.attributes.removeBoxVisible);
             this.attr("cursor", "crosshair");
             return true;
         }
 
         if (modeSwitcher.bringFrontMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr(config.attributes.opacityHidden);
+                this.circleSet.attr(_self.config.attributes.opacityHidden);
             }
-            this.attr(config.attributes.bringFrontBackBoxVisible);
+            this.attr(_self.config.attributes.bringFrontBackBoxVisible);
             this.attr("cursor", "default");
             return true;
         }
 
         if (modeSwitcher.bringBackMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr(config.attributes.opacityHidden);
+                this.circleSet.attr(_self.config.attributes.opacityHidden);
             }
-            this.attr(config.attributes.bringFrontBackBoxVisible);
+            this.attr(_self.config.attributes.bringFrontBackBoxVisible);
             this.attr("cursor", "default");
             return true;
         }
 
         if (modeSwitcher.cloneMode) {
             if (selectedObj != null && selectedObj.uuid == this.uuid) {
-                this.circleSet.attr(config.attributes.opacityHidden);
+                this.circleSet.attr(_self.config.attributes.opacityHidden);
             }
-            this.attr(config.attributes.cloneBoxVisible);
+            this.attr(_self.config.attributes.cloneBoxVisible);
             this.attr("cursor", "default");
             return true;
         }
@@ -304,7 +318,7 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         if (modeSwitcher.selectMode) {
             if (selectedObj == null || selectedObj.uuid != this.uuid || !selectedObj.visibleSelect) {
-                this.attr(config.attributes.opacityHidden);
+                this.attr(_self.config.attributes.opacityHidden);
             }
             return true;
         }
@@ -312,10 +326,10 @@ WhiteboardDesigner = function(witeboardConfig) {
         with (modeSwitcher) {
             if (moveMode || removeMode || bringFrontMode || bringBackMode || cloneMode) {
                 if (selectedObj != null && selectedObj.uuid == this.uuid && selectedObj.visibleSelect) {
-                    this.attr(config.attributes.selectBoxVisible);
-                    this.circleSet.attr(config.attributes.opacityVisible);
+                    this.attr(_self.config.attributes.selectBoxVisible);
+                    this.circleSet.attr(_self.config.attributes.opacityVisible);
                 } else {
-                    this.attr(config.attributes.opacityHidden);
+                    this.attr(_self.config.attributes.opacityHidden);
                 }
                 this.attr("cursor", "default");
                 return true;
@@ -384,7 +398,19 @@ WhiteboardDesigner = function(witeboardConfig) {
     var mouseupHandler = function () {
         whiteboard.unbind(".mmu");
         if (whiteboard.lineEl.path) {
-            drawHelperBox(whiteboard.lineEl.path, (modeSwitcher.freeLineMode ? config.classTypes.freeLine : config.classTypes.straightLine), true);
+            var classType, rotation, dialogType;
+            if (modeSwitcher.freeLineMode) {
+                classType = _self.config.classTypes.freeLine;
+                rotation = _self.config.properties.freeLine.rotation;
+                dialogType = "editFreeLine";
+            } else {
+                classType = _self.config.classTypes.straightLine;
+                rotation = _self.config.properties.straightLine.rotation;
+                dialogType = "editStraightLine";
+            }
+
+            drawHelperBox(whiteboard.lineEl.path, classType, rotation, null, true);
+            showProperties(dialogType);
             whiteboard.lineEl.path = null;
             whiteboard.lineEl.pathArray = null;
         }
@@ -434,13 +460,18 @@ WhiteboardDesigner = function(witeboardConfig) {
         return false;
     }
 
-    var drawHelperBox = function(el, classType, select) {
-        // draw helper rectangle around the element
+    // draw helper shapes around the element
+    var drawHelperBox = function(el, classType, rotation, scale, select) {
+        // scale
+        if (scale && scale != 1.0) {
+            el.scale(scale, scale);
+        }
+
         var bbox = el.getBBox();
         var bboxWidth = parseFloat(bbox.width);
         var bboxHeight = parseFloat(bbox.height);
         var helperRect = paper.rect(bbox.x - 1, bbox.y - 1, (bboxWidth !== 0 ? bboxWidth + 2 : 3), (bboxHeight !== 0 ? bboxHeight + 2 : 3));
-        helperRect.attr(config.attributes.helperRect);
+        helperRect.attr(_self.config.attributes.helperRect);
         helperRect.hover(hoverOverEl, hoverOutEl);
         helperRect.click(clickEl);
         helperRect.drag(ddMoveEl, ddStartEl, ddStopEl);
@@ -454,7 +485,14 @@ WhiteboardDesigner = function(witeboardConfig) {
         // build a set
         var circleSet = paper.set();
         circleSet.push(c1, c2, c3, c4);
-        circleSet.attr(config.attributes.circleSet);
+        circleSet.attr(_self.config.attributes.circleSet);
+
+        // rotate
+        if (rotation && rotation != 0) {
+            el.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            circleSet.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            helperRect.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+        }
 
         // set references
         helperRect.element = el;
@@ -465,8 +503,8 @@ WhiteboardDesigner = function(witeboardConfig) {
         if (select) {
             if (selectedObj != null) {
                 // hide last selection
-                selectedObj.attr(config.attributes.opacityHidden);
-                selectedObj.circleSet.attr(config.attributes.opacityHidden);
+                selectedObj.attr(_self.config.attributes.opacityHidden);
+                selectedObj.circleSet.attr(_self.config.attributes.opacityHidden);
             }
 
             // set drawn element as selected
@@ -484,7 +522,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var fillNone = {fill: "#000", opacity: 0};
         var fillHover = {fill: "90-#0050af-#002c62", stroke: "#FF0000"};
         var iconPaper = Raphael("iconsArea", 600, 360);
-        var wbIcons = config.svgIconSet;
+        var wbIcons = _self.config.svgIconSet;
 
         for (var name in wbIcons) {
             var curIcon = iconPaper.path(wbIcons[name]).attr(fillStroke).translate(x, y);
@@ -495,7 +533,7 @@ WhiteboardDesigner = function(witeboardConfig) {
             overlayIcon.click(function (event) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
-                drawHelperBox(iconElement, config.classTypes.icon, true);
+                drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true);
                 event.stopPropagation();
                 event.preventDefault();
             }).hover(function () {
@@ -507,6 +545,14 @@ WhiteboardDesigner = function(witeboardConfig) {
             if (x > 560) {
                 x = 0;
                 y += 40;
+            }
+        }
+    }
+
+    var setDefaultProperties = function(el, propsObj) {
+        for (prop in propsObj) {
+            if (prop != "rotation") {
+                el.attr(prop, propsObj[prop]);
             }
         }
     }
