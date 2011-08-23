@@ -84,7 +84,11 @@ WhiteboardConfig = function() {
             "width": 150,
             "height": 150,
             "rotation": 0
-        }        
+        },
+        icon: {
+            "scale": 1.0,
+            "rotation": 0
+        }
     };
 
     // attributes for various helper objects
