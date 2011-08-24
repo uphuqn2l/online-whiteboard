@@ -36,14 +36,14 @@ WhiteboardConfig = function() {
         freeLine: {
             "stroke": "#000000",
             "stroke-width": 3,
-            "stroke-dasharray": "",
+            "stroke-dasharray": "No",
             "stroke-opacity": 1.0,
             "rotation": 0
         },
         straightLine: {
             "stroke": "#000000",
             "stroke-width": 3,
-            "stroke-dasharray": "",
+            "stroke-dasharray": "No",
             "stroke-opacity": 1.0,
             "rotation": 0
         },
@@ -54,7 +54,7 @@ WhiteboardConfig = function() {
             "fill": "#9ACD32",
             "stroke": "#000000",
             "stroke-width": 1,
-            "stroke-dasharray": "",
+            "stroke-dasharray": "No",
             "fill-opacity": 1.0,
             "stroke-opacity": 1.0,
             "rotation": 0
@@ -64,7 +64,7 @@ WhiteboardConfig = function() {
             "fill": "#008080",
             "stroke": "#000000",
             "stroke-width": 1,
-            "stroke-dasharray": "",
+            "stroke-dasharray": "No",
             "fill-opacity": 1.0,
             "stroke-opacity": 1.0,
             "rotation": 0
@@ -75,7 +75,7 @@ WhiteboardConfig = function() {
             "fill": "#BA55D3",
             "stroke": "#000000",
             "stroke-width": 1,
-            "stroke-dasharray": "",
+            "stroke-dasharray": "No",
             "fill-opacity": 1.0,
             "stroke-opacity": 1.0,
             "rotation": 0

@@ -14,6 +14,13 @@ WhiteboardDesigner = function(witeboardConfig) {
     var offsetLeft = whiteboard.offset().left;
     var offsetTop = whiteboard.offset().top;
 
+    var idSubviewProperties = "#pinnedSubview";
+    var dragDropStart = false;
+    var lastHoverObj = null;
+    var selectedObj = null;
+    var wbElements = {};
+    var _self = this;
+
     jQuery.extend(whiteboard, {
         "lineEl": {"path": null, "pathArray": null},
         "imageEl": {"cx": 0, "cy": 0},
@@ -39,12 +46,6 @@ WhiteboardDesigner = function(witeboardConfig) {
         "clearMode": false,
         "resizeMode": false
     };
-
-    var dragDropStart = false;
-    var lastHoverObj = null;
-    var selectedObj = null;
-    var wbElements = {};
-    var _self = this;
 
     // create raphael canvas
     var paper = Raphael(this.config.ids.whiteboard, whiteboard.width(), whiteboard.height());
@@ -82,6 +83,7 @@ WhiteboardDesigner = function(witeboardConfig) {
             var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true);
             wbElements[hb.uuid] = hb;
             this.showProperties('editText');
+            this.transferTextPropertiesToDialog(whiteboard.textEl.cx, whiteboard.textEl.cy, this.config.properties.text);
         }
     }
 
@@ -130,7 +132,38 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
         selectedObj = helperBox;
         selectedObj.visibleSelect = true;
+
+        // show and fill properties
         this.showProperties('edit' + selectedObj.classType);
+        var selectedProperties = getSelectedProperties(selectedObj, this.config.properties[selectedObj.classType.charAt(0).toLowerCase() + selectedObj.classType.slice(1)]);
+
+        switch (selectedObj.classType) {
+            case this.config.classTypes.text :
+                this.transferTextPropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                break;
+            case this.config.classTypes.freeLine :
+                this.transferFreeLinePropertiesToDialog(selectedProperties);
+                break;
+            case this.config.classTypes.straightLine :
+                this.transferStraightLinePropertiesToDialog(selectedProperties);
+                break;
+            case this.config.classTypes.rectangle :
+                this.transferRectanglePropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                break;
+            case this.config.classTypes.circle :
+                this.transferCirclePropertiesToDialog(selectedObj.element.attr("cx"), selectedObj.element.attr("cy"), selectedProperties);
+                break;
+            case this.config.classTypes.ellipse :
+                this.transferEllipsePropertiesToDialog(selectedObj.element.attr("cx"), selectedObj.element.attr("cy"), selectedProperties);
+                break;
+            case this.config.classTypes.image :
+                this.transferImagePropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                break;
+            case this.config.classTypes.icon :
+                this.transferIconPropertiesToDialog(Math.round(selectedObj.element.attr("x") + 1), Math.round(selectedObj.element.attr("y") + 1), selectedProperties);
+                break;
+            default :
+        }
     }
 
     this.removeElement = function(helperBox) {
@@ -217,16 +250,35 @@ WhiteboardDesigner = function(witeboardConfig) {
         propsDialog.find("." + showClass).show();
     }
 
-    this.transferTextPropertiesToDialog = function(cx, cy, props) {
+    this.setIdSubviewProperties = function(id) {
+        idSubviewProperties = id;
+    }
 
+    this.transferTextPropertiesToDialog = function(cx, cy, props) {
+        jQuery(idSubviewProperties + "_textCx").val(cx);
+        jQuery(idSubviewProperties + "_textCy").val(cy);
+        jQuery(idSubviewProperties + "_fontFamily option[value='" + props["font-family"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_fontSize").val(props["font-size"]);
+        jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontWeight'][value='" + props["font-weight"] + "']").attr('checked', 'checked');
+        jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontStyle'][value='" + props["font-style"] + "']").attr('checked', 'checked');
+        jQuery(idSubviewProperties + "_textColor div").css('backgroundColor', props["fill"]);
+        jQuery(idSubviewProperties + "_textRotation").val(props["rotation"]);
     }
 
     this.transferFreeLinePropertiesToDialog = function(props) {
-
+        jQuery(idSubviewProperties + "_freeLineColor div").css('backgroundColor', props["stroke"]);
+        jQuery(idSubviewProperties + "_freeLineWidth").val(props["stroke-width"]);
+        jQuery(idSubviewProperties + "_freeLineStyle option[value='" + props["stroke-dasharray"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_freeLineOpacity").val(props["stroke-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_freeLineRotation").val(props["rotation"]);
     }
 
     this.transferStraightLinePropertiesToDialog = function(props) {
-
+        jQuery(idSubviewProperties + "_straightLineColor div").css('backgroundColor', props["stroke"]);
+        jQuery(idSubviewProperties + "_straightLineWidth").val(props["stroke-width"]);
+        jQuery(idSubviewProperties + "_straightLineStyle option[value='" + props["stroke-dasharray"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_straightLineOpacity").val(props["stroke-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_straightLineRotation").val(props["rotation"]);
     }
 
     this.transferRectanglePropertiesToDialog = function(cx, cy, props) {
@@ -247,7 +299,7 @@ WhiteboardDesigner = function(witeboardConfig) {
 
     this.transferIconPropertiesToDialog = function(cx, cy, props) {
 
-    }    
+    }
 
     // private access =======================
 
@@ -296,6 +348,38 @@ WhiteboardDesigner = function(witeboardConfig) {
             lastHoverObj.attr(_self.config.attributes.moveBoxVisible);
             lastHoverObj.attr("cursor", "move");
             lastHoverObj = null;
+        }
+
+        // show current coordinates in the properties dialog
+        if (selectedObj != null && selectedObj.uuid == this.uuid) {
+            switch (selectedObj.classType) {
+                case _self.config.classTypes.text :
+                    jQuery(idSubviewProperties + "_textCx").val(this.element.attr("x"));
+                    jQuery(idSubviewProperties + "_textCy").val(this.element.attr("y"));
+                    break;
+                case _self.config.classTypes.rectangle :
+                    jQuery(idSubviewProperties + "_rectCx").val(this.element.attr("x"));
+                    jQuery(idSubviewProperties + "_rectCy").val(this.element.attr("y"));
+                    break;
+                case _self.config.classTypes.circle :
+                    jQuery(idSubviewProperties + "_circleCx").val(this.element.attr("cx"));
+                    jQuery(idSubviewProperties + "_circleCy").val(this.element.attr("cy"));
+                    break;
+                case _self.config.classTypes.ellipse :
+                    jQuery(idSubviewProperties + "_ellipseCx").val(this.element.attr("cx"));
+                    jQuery(idSubviewProperties + "_ellipseCy").val(this.element.attr("cy"));
+                    break;
+                case _self.config.classTypes.image :
+                    jQuery(idSubviewProperties + "_imageCx").val(this.element.attr("x"));
+                    jQuery(idSubviewProperties + "_imageCy").val(this.element.attr("y"));
+                    break;
+                case _self.config.classTypes.icon :
+                    jQuery(idSubviewProperties + "_iconCx").val(Math.round(this.attr("x") + 1));
+                    jQuery(idSubviewProperties + "_iconCy").val(Math.round(this.attr("y") + 1));
+                    break;
+
+                default :
+            }
         }
 
         _self.dragDropStart = false;
@@ -450,20 +534,25 @@ WhiteboardDesigner = function(witeboardConfig) {
     var mouseupHandler = function () {
         whiteboard.unbind(".mmu");
         if (whiteboard.lineEl.path) {
-            var classType, rotation, dialogType;
+            var classType, defProperties, dialogType, transferMethod;
             if (modeSwitcher.freeLineMode) {
                 classType = _self.config.classTypes.freeLine;
-                rotation = _self.config.properties.freeLine.rotation;
+                defProperties = _self.config.properties.freeLine;
                 dialogType = "editFreeLine";
+                transferMethod = "transferFreeLinePropertiesToDialog";
             } else {
                 classType = _self.config.classTypes.straightLine;
-                rotation = _self.config.properties.straightLine.rotation;
+                defProperties = _self.config.properties.straightLine;
                 dialogType = "editStraightLine";
+                transferMethod = "transferStraightLinePropertiesToDialog";
             }
 
-            var hb = drawHelperBox(whiteboard.lineEl.path, classType, rotation, null, true);
+            var hb = drawHelperBox(whiteboard.lineEl.path, classType, defProperties.rotation, null, true);
             wbElements[hb.uuid] = hb;
             _self.showProperties(dialogType);
+            _self[transferMethod](defProperties);
+
+            // reset
             whiteboard.lineEl.path = null;
             whiteboard.lineEl.pathArray = null;
         }
@@ -610,6 +699,15 @@ WhiteboardDesigner = function(witeboardConfig) {
                 el.attr(prop, propsObj[prop]);
             }
         }
+    }
+
+    var getSelectedProperties = function(selectedObj, propsObj) {
+        var selectedProps = {};
+        for (prop in propsObj) {
+            selectedProps[prop] = selectedObj.element.attr(prop);
+        }
+
+        return selectedProps;
     }
 
     // initialize whiteboard
