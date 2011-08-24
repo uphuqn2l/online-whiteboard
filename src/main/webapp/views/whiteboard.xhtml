@@ -23,13 +23,13 @@
                 <h:graphicImage library="img" name="pinned.png" rendered="#{not displayWhiteboard.pinned}"/>
                 <h:graphicImage library="img" name="unpinned.png" rendered="#{displayWhiteboard.pinned}"/>
                 <p:commandLink value="Pin panels" style="display: block;"
-                               actionListener="#{displayWhiteboard.tooglePinUnpin}"
-                               oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();" process="headline"
+                               actionListener="#{displayWhiteboard.tooglePinUnpin}" process="headline"
+                               oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();whiteboardDesigner.setIdSubviewProperties('#pinnedSubview');"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
                                rendered="#{not displayWhiteboard.pinned}"/>
                 <p:commandLink value="Unpin panels" style="display: block;"
-                               actionListener="#{displayWhiteboard.tooglePinUnpin}"
-                               oncomplete="bindOnclickToolboxItems();" process="headline"
+                               actionListener="#{displayWhiteboard.tooglePinUnpin}" process="headline"
+                               oncomplete="bindOnclickToolboxItems();whiteboardDesigner.setIdSubviewProperties('#unpinnedSubview');"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
                                rendered="#{displayWhiteboard.pinned}"/>
             </h:panelGrid>
@@ -127,12 +127,6 @@
         <h:outputScript library="js" name="wboard-drawing.js" target="body"/>
         <h:outputScript library="js" name="whiteboard.js" target="body"/>
         <h:outputStylesheet library="css" name="whiteboard.css"/>
-
-        <h:outputScript id="initDefaultProperties" target="body">
-            /* <![CDATA[ */
-            
-            /* ]]> */
-        </h:outputScript>
     </ui:define>
 </ui:composition>
 </html>

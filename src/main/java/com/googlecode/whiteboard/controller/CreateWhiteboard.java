@@ -81,26 +81,26 @@ public class CreateWhiteboard implements Serializable
     public List getFontFamilies() {
         if (fontFamilies == null) {
             fontFamilies = new ArrayList<SelectItem>();
-            fontFamilies.add(new SelectItem("\"Arial\"", "Arial"));
-            fontFamilies.add(new SelectItem("\"Arial Black\"", "Arial Black"));
-            fontFamilies.add(new SelectItem("\"Book Antiqua\"", "Book Antiqua"));
-            fontFamilies.add(new SelectItem("\"Century Gothic\"", "Century Gothic"));
-            fontFamilies.add(new SelectItem("\"Comic Sans MS\"", "Comic Sans MS"));
-            fontFamilies.add(new SelectItem("\"Courier\"", "Courier"));
-            fontFamilies.add(new SelectItem("\"Courier New\"", "Courier New"));
-            fontFamilies.add(new SelectItem("\"Garamond\"", "Garamond"));
-            fontFamilies.add(new SelectItem("\"Geneva\"", "Geneva"));
-            fontFamilies.add(new SelectItem("\"Georgia\"", "Georgia"));
-            fontFamilies.add(new SelectItem("\"Helvetica\"", "Helvetica"));
-            fontFamilies.add(new SelectItem("\"Impact\"", "Impact"));
-            fontFamilies.add(new SelectItem("\"Lucida Console\"", "Lucida Console"));
-            fontFamilies.add(new SelectItem("\"Lucida Sans Unicode\"", "Lucida Sans Unicode"));
-            fontFamilies.add(new SelectItem("\"Palatino Linotype\"", "Palatino Linotype"));
-            fontFamilies.add(new SelectItem("\"sans-serif\"", "Sans-Serif"));
-            fontFamilies.add(new SelectItem("\"Tahoma\"", "Tahoma"));
-            fontFamilies.add(new SelectItem("\"Times New Roman\"", "Times New Roman"));
-            fontFamilies.add(new SelectItem("\"Trebuchet MS\"", "Trebuchet MS"));
-            fontFamilies.add(new SelectItem("\"Verdana\"", "Verdana"));
+            fontFamilies.add(new SelectItem("Arial", "Arial"));
+            fontFamilies.add(new SelectItem("Arial Black", "Arial Black"));
+            fontFamilies.add(new SelectItem("Book Antiqua", "Book Antiqua"));
+            fontFamilies.add(new SelectItem("Century Gothic", "Century Gothic"));
+            fontFamilies.add(new SelectItem("Comic Sans MS", "Comic Sans MS"));
+            fontFamilies.add(new SelectItem("Courier", "Courier"));
+            fontFamilies.add(new SelectItem("Courier New", "Courier New"));
+            fontFamilies.add(new SelectItem("Garamond", "Garamond"));
+            fontFamilies.add(new SelectItem("Geneva", "Geneva"));
+            fontFamilies.add(new SelectItem("Georgia", "Georgia"));
+            fontFamilies.add(new SelectItem("Helvetica", "Helvetica"));
+            fontFamilies.add(new SelectItem("Impact", "Impact"));
+            fontFamilies.add(new SelectItem("Lucida Console", "Lucida Console"));
+            fontFamilies.add(new SelectItem("Lucida Sans Unicode", "Lucida Sans Unicode"));
+            fontFamilies.add(new SelectItem("Palatino Linotype", "Palatino Linotype"));
+            fontFamilies.add(new SelectItem("Sans-Serif", "Sans-Serif"));
+            fontFamilies.add(new SelectItem("Tahoma", "Tahoma"));
+            fontFamilies.add(new SelectItem("Times New Roman", "Times New Roman"));
+            fontFamilies.add(new SelectItem("Trebuchet MS", "Trebuchet MS"));
+            fontFamilies.add(new SelectItem("Verdana", "Verdana"));
         }
 
         return fontFamilies;

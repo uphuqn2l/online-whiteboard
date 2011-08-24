@@ -14,9 +14,9 @@
         <h:outputLabel for="imageCy" value="Y coordinate (top left)"/>
         <cc:numericInput id="imageCy"/>
         <h:outputLabel for="imageWidth" value="Width"/>
-        <cc:numericInput id="imageWidth"/>
+        <cc:numericInput id="imageWidth" allowNegative="false"/>
         <h:outputLabel for="imageHeight" value="Height"/>
-        <cc:numericInput id="imageHeight"/>
+        <cc:numericInput id="imageHeight" allowNegative="false"/>
         <h:outputLabel for="imageRotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="imageRotation" min="0" max="360" maxlength="3"/>
         <f:facet name="footer">

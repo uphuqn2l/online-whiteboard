@@ -14,9 +14,9 @@
         <h:outputLabel for="rectCy" value="Y coordinate (top left)"/>
         <cc:numericInput id="rectCy"/>
         <h:outputLabel for="rectWidth" value="Width"/>
-        <cc:numericInput id="rectWidth"/>
+        <cc:numericInput id="rectWidth" allowNegative="false"/>
         <h:outputLabel for="rectHeight" value="Height"/>
-        <cc:numericInput id="rectHeight"/>
+        <cc:numericInput id="rectHeight" allowNegative="false"/>
         <h:outputLabel for="cornerRadius" value="Corners radius"/>
         <p:spinner id="cornerRadius" min="0" max="99" maxlength="2"/>
         <h:outputLabel for="rectBkgrColor" value="Background color"/>
