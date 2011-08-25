@@ -51,7 +51,7 @@ WhiteboardConfig = function() {
             "width": 160,
             "height": 100,
             "r": 0,
-            "fill": "#9ACD32",
+            "fill": "#D5E6AE",
             "stroke": "#000000",
             "stroke-width": 1,
             "stroke-dasharray": "No",

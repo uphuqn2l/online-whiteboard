@@ -93,6 +93,12 @@ WhiteboardDesigner = function(witeboardConfig) {
             var hb = drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true);
             wbElements[hb.uuid] = hb;
             this.showProperties('editImage');
+            var imageProps = {
+                "width": width,
+                "height": height,
+                "rotation": this.config.properties.image.rotation
+            };
+            this.transferImagePropertiesToDialog(whiteboard.imageEl.cx, whiteboard.imageEl.cy, imageProps);
         }
     }
 
@@ -103,6 +109,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true);
         wbElements[hb.uuid] = hb;
         this.showProperties('editRectangle');
+        this.transferRectanglePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.rectangle);
     }
 
     this.drawCircle = function(x, y) {
@@ -112,6 +119,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true);
         wbElements[hb.uuid] = hb;
         this.showProperties('editCircle');
+        this.transferCirclePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.circle);
     }
 
     this.drawEllipse = function(x, y) {
@@ -121,6 +129,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true);
         wbElements[hb.uuid] = hb;
         this.showProperties('editEllipse');
+        this.transferEllipsePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.ellipse);
     }
 
     this.selectElement = function(helperBox) {
@@ -160,7 +169,8 @@ WhiteboardDesigner = function(witeboardConfig) {
                 this.transferImagePropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
                 break;
             case this.config.classTypes.icon :
-                this.transferIconPropertiesToDialog(Math.round(selectedObj.element.attr("x") + 1), Math.round(selectedObj.element.attr("y") + 1), selectedProperties);
+                selectedProperties["scale"] = parseFloat((selectedProperties["scale"] + '').split("\\s+")[0]);
+                this.transferIconPropertiesToDialog(Math.round(selectedObj.attr("x") + 1), Math.round(selectedObj.attr("y") + 1), selectedProperties);
                 break;
             default :
         }
@@ -282,23 +292,60 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     this.transferRectanglePropertiesToDialog = function(cx, cy, props) {
-
+        jQuery(idSubviewProperties + "_rectCx").val(cx);
+        jQuery(idSubviewProperties + "_rectCy").val(cy);
+        jQuery(idSubviewProperties + "_rectWidth").val(props["width"]);
+        jQuery(idSubviewProperties + "_rectHeight").val(props["height"]);
+        jQuery(idSubviewProperties + "_cornerRadius").val(props["r"]);
+        jQuery(idSubviewProperties + "_rectBkgrColor div").css('backgroundColor', props["fill"]);
+        jQuery(idSubviewProperties + "_rectBorderColor div").css('backgroundColor', props["stroke"]);
+        jQuery(idSubviewProperties + "_rectBorderWidth").val(props["stroke-width"]);
+        jQuery(idSubviewProperties + "_rectBorderStyle option[value='" + props["stroke-dasharray"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_rectBkgrOpacity").val(props["fill-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_rectBorderOpacity").val(props["stroke-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_rectRotation").val(props["rotation"]);
     }
 
     this.transferCirclePropertiesToDialog = function(cx, cy, props) {
-
+        jQuery(idSubviewProperties + "_circleCx").val(cx);
+        jQuery(idSubviewProperties + "_circleCy").val(cy);
+        jQuery(idSubviewProperties + "_radius").val(props["r"]);
+        jQuery(idSubviewProperties + "_circleBkgrColor div").css('backgroundColor', props["fill"]);
+        jQuery(idSubviewProperties + "_circleBorderColor div").css('backgroundColor', props["stroke"]);
+        jQuery(idSubviewProperties + "_circleBorderWidth").val(props["stroke-width"]);
+        jQuery(idSubviewProperties + "_circleBorderStyle option[value='" + props["stroke-dasharray"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_circleBkgrOpacity").val(props["fill-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_circleBorderOpacity").val(props["stroke-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_circleRotation").val(props["rotation"]);
     }
 
     this.transferEllipsePropertiesToDialog = function(cx, cy, props) {
-
+        jQuery(idSubviewProperties + "_ellipseCx").val(cx);
+        jQuery(idSubviewProperties + "_ellipseCy").val(cy);
+        jQuery(idSubviewProperties + "_hRadius").val(props["rx"]);
+        jQuery(idSubviewProperties + "_vRadius").val(props["ry"]);
+        jQuery(idSubviewProperties + "_ellipseBkgrColor div").css('backgroundColor', props["fill"]);
+        jQuery(idSubviewProperties + "_ellipseBorderColor div").css('backgroundColor', props["stroke"]);
+        jQuery(idSubviewProperties + "_ellipseBorderWidth").val(props["stroke-width"]);
+        jQuery(idSubviewProperties + "_ellipseBorderStyle option[value='" + props["stroke-dasharray"] + "']").attr('selected', true);
+        jQuery(idSubviewProperties + "_ellipseBkgrOpacity").val(props["fill-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_ellipseBorderOpacity").val(props["stroke-opacity"].toFixed(1));
+        jQuery(idSubviewProperties + "_ellipseRotation").val(props["rotation"]);
     }
 
     this.transferImagePropertiesToDialog = function(cx, cy, props) {
-
+        jQuery(idSubviewProperties + "_imageCx").val(cx);
+        jQuery(idSubviewProperties + "_imageCy").val(cy);
+        jQuery(idSubviewProperties + "_imageWidth").val(props["width"]);
+        jQuery(idSubviewProperties + "_imageHeight").val(props["height"]);
+        jQuery(idSubviewProperties + "_imageRotation").val(props["rotation"]);
     }
 
     this.transferIconPropertiesToDialog = function(cx, cy, props) {
-
+        jQuery(idSubviewProperties + "_iconCx").val(cx);
+        jQuery(idSubviewProperties + "_iconCy").val(cy);
+        jQuery(idSubviewProperties + "_iconRotation").val(props["rotation"]);
+        jQuery(idSubviewProperties + "_iconScale").val(props["scale"].toFixed(1));
     }
 
     // private access =======================
@@ -678,6 +725,11 @@ WhiteboardDesigner = function(witeboardConfig) {
                 var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true);
                 wbElements[hb.uuid] = hb;
                 _self.showProperties('editIcon');
+                var iconProps = {
+                    "scale": _self.config.properties.icon.scale,
+                    "rotation": _self.config.properties.icon.rotation
+                };
+                _self.transferIconPropertiesToDialog(Math.round(hb.attr("x") + 1), Math.round(hb.attr("y") + 1), iconProps);
                 event.stopPropagation();
                 event.preventDefault();
             }).hover(function () {
