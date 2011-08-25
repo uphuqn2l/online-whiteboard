@@ -84,8 +84,8 @@ jQuery(function() {
         }
     }).bind("dialogopen", function(event, ui) {
         // show default width / height
-        jQuery(this).find("#imgWidth").val(whiteboardDesigner.config.properties.image.width + '');
-        jQuery(this).find("#imgHeight").val(whiteboardDesigner.config.properties.image.height + '');
+        jQuery(this).find("#imgWidth").val(whiteboardDesigner.config.properties.image.width);
+        jQuery(this).find("#imgHeight").val(whiteboardDesigner.config.properties.image.height);
     }).bind("dialogclose", function(event, ui) {
         // reset input
         jQuery(this).find("#inputUrl").val('');
