@@ -53,5 +53,13 @@
               onHide="onHideAutoWidthDialog(this.jq);">
         <h:panelGroup id="iconsArea" layout="block"/>
     </p:dialog>
+
+    <p:dialog styleClass="headlessDialog autoWidthDialog" modal="true" visible="false" closable="false"
+              draggable="false" resizable="false" widgetVar="loadingDialogWidget"
+              onShow="onShowAutoWidthDialog(this.jq);" onHide="onHideAutoWidthDialog(this.jq);">
+        <h:panelGroup layout="block" styleClass="commonDialog">
+            <h:outputText value="Please wait, data are processing..."/>
+        </h:panelGroup>
+    </p:dialog>
 </ui:composition>
 </html>

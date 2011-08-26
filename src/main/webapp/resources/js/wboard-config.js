@@ -91,6 +91,21 @@ WhiteboardConfig = function() {
         }
     };
 
+    // dasharray mapping
+    this.dasharrayMapping = {
+        "No": "",
+        "Dash": "-",
+        "Dot": ".",
+        "DashDot": "-.",
+        "DashDotDot": "-..",
+        "DotBlank": ". ",
+        "DashBlank": "- ",
+        "DashDash": "--",
+        "DashBlankDot": "- .",
+        "DashDashDot": "--.",
+        "DashDashDotDot": "--.."
+    }
+
     // attributes for various helper objects
     this.attributes = {
         helperRect: {"stroke-width": 2, "stroke-opacity": 0, "fill": "#0D0BF5", "fill-opacity": 0},

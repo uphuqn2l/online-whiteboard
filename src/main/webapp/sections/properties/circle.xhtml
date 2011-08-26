@@ -31,9 +31,9 @@
         <p:spinner id="circleBorderOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
         <h:outputLabel for="circleRotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="circleRotation" min="0" max="360" maxlength="3"/>
-        <f:facet name="footer">
-            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
-        </f:facet>
+        <ui:include src="/sections/defbutton.xhtml">
+            <ui:param name="properties" value="circle"/>
+        </ui:include>
     </h:panelGrid>
 </ui:composition>
 </html>

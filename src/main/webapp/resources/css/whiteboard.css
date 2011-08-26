@@ -246,6 +246,19 @@ td.colPin {
     width: auto !important;
 }
 
+.headlessDialog .ui-dialog-titlebar {
+    display: none !important;
+}
+
+.ui-dialog .commonDialog {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    white-space: nowrap;
+    margin: auto;
+    border: none;
+}
+
 .radioButtons,
 .radioButtons td {
     white-space: nowrap;

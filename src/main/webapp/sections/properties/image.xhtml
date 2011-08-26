@@ -19,9 +19,9 @@
         <cc:numericInput id="imageHeight" allowNegative="false"/>
         <h:outputLabel for="imageRotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="imageRotation" min="0" max="360" maxlength="3"/>
-        <f:facet name="footer">
-            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
-        </f:facet>
+        <ui:include src="/sections/defbutton.xhtml">
+            <ui:param name="properties" value="image"/>
+        </ui:include>
     </h:panelGrid>
 </ui:composition>
 </html>
