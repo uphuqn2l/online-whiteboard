@@ -21,9 +21,9 @@
         <p:spinner id="#{lineMode}Opacity" min="0" max="1" maxlength="1" stepFactor="0.1"/>
         <h:outputLabel for="#{lineMode}Rotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="#{lineMode}Rotation" min="0" max="360" maxlength="3"/>
-        <f:facet name="footer">
-            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
-        </f:facet>
+        <ui:include src="/sections/defbutton.xhtml">
+            <ui:param name="properties" value="#{lineMode}"/>
+        </ui:include>
     </h:panelGrid>
 </ui:composition>
 </html>

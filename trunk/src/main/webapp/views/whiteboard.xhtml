@@ -24,12 +24,12 @@
                 <h:graphicImage library="img" name="unpinned.png" rendered="#{displayWhiteboard.pinned}"/>
                 <p:commandLink value="Pin panels" style="display: block;"
                                actionListener="#{displayWhiteboard.tooglePinUnpin}" process="headline"
-                               oncomplete="removeUnusedDialogs();bindOnclickToolboxItems();whiteboardDesigner.setIdSubviewProperties('#pinnedSubview');"
+                               onstart="loadingDialogWidget.show();" oncomplete="pinPanels();"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
                                rendered="#{not displayWhiteboard.pinned}"/>
                 <p:commandLink value="Unpin panels" style="display: block;"
                                actionListener="#{displayWhiteboard.tooglePinUnpin}" process="headline"
-                               oncomplete="bindOnclickToolboxItems();whiteboardDesigner.setIdSubviewProperties('#unpinnedSubview');"
+                               onstart="loadingDialogWidget.show();" oncomplete="unpinPanels();"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels"
                                rendered="#{displayWhiteboard.pinned}"/>
             </h:panelGrid>

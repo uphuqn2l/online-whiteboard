@@ -37,10 +37,18 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getTitle() {
+        if (whiteboard == null) {
+            return "";
+        }
+
         return whiteboard.getTitle();
     }
 
     public String getCreator() {
+        if (whiteboard == null) {
+            return "";
+        }
+
         return whiteboard.getCreator();
     }
 
@@ -52,14 +60,26 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public int getWidth() {
+        if (whiteboard == null) {
+            return 0;
+        }
+
         return whiteboard.getWidth();
     }
 
     public int getHeight() {
+        if (whiteboard == null) {
+            return 0;
+        }
+
         return whiteboard.getHeight();
     }
 
     public int getUsersCount() {
+        if (whiteboard == null) {
+            return 0;
+        }
+
         return whiteboard.getUsers().size();
     }
 
@@ -68,6 +88,10 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getInvitationLink() {
+        if (whiteboard == null) {
+            return "";
+        }
+
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         String scheme = ec.getRequestScheme();
         int port = ec.getRequestServerPort();
@@ -83,6 +107,10 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getMonitoringMessage() {
+        if (whiteboard == null) {
+            return "";
+        }
+
         List<String> users = whiteboard.getUsers();
         if (users.size() < 2) {
             return "User " + getCreator() + " has created this whiteboard.";
@@ -92,6 +120,6 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public void tooglePinUnpin(ActionEvent e) {
-         pinned = !pinned;
+        pinned = !pinned;
     }
 }

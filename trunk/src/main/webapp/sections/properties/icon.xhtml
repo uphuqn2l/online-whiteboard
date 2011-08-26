@@ -17,9 +17,9 @@
         <p:spinner id="iconRotation" min="0" max="360" maxlength="3"/>
         <h:outputLabel for="iconScale" value="Scale factor"/>
         <p:spinner id="iconScale" min="0.1" max="10" maxlength="2" stepFactor="0.1"/>
-        <f:facet name="footer">
-            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
-        </f:facet>
+        <ui:include src="/sections/defbutton.xhtml">
+            <ui:param name="properties" value="icon"/>
+        </ui:include>
     </h:panelGrid>
 </ui:composition>
 </html>

@@ -33,9 +33,9 @@
         <cc:colorPicker id="textColor"/>
         <h:outputLabel for="textRotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="textRotation" min="0" max="360" maxlength="3"/>
-        <f:facet name="footer">
-            <p:commandButton type="button" value="Make as default" image="ui-icon-check" onclick=""/>
-        </f:facet>
+        <ui:include src="/sections/defbutton.xhtml">
+            <ui:param name="properties" value="text"/>
+        </ui:include>
     </h:panelGrid>
 </ui:composition>
 </html>

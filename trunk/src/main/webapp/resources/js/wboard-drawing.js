@@ -60,6 +60,10 @@ WhiteboardDesigner = function(witeboardConfig) {
         whiteboard.css("cursor", cursor);
     }
 
+    this.getSelectedObject = function() {
+        return selectedObj;
+    }
+
     this.drawFreeLineBegin = function(x, y) {
         whiteboard.lineEl.path = paper.path("M" + (x - offsetLeft) + "," + (y - offsetTop));
         setDefaultProperties(whiteboard.lineEl.path, this.config.properties.freeLine);
@@ -141,14 +145,17 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
         selectedObj = helperBox;
         selectedObj.visibleSelect = true;
+        this.showSelectedProperties(selectedObj);
+    }
 
+    this.showSelectedProperties = function(selObj) {
         // show and fill properties
-        this.showProperties('edit' + selectedObj.classType);
-        var selectedProperties = getSelectedProperties(selectedObj, this.config.properties[selectedObj.classType.charAt(0).toLowerCase() + selectedObj.classType.slice(1)]);
+        this.showProperties('edit' + selObj.classType);
+        var selectedProperties = getSelectedProperties(selObj, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
 
-        switch (selectedObj.classType) {
+        switch (selObj.classType) {
             case this.config.classTypes.text :
-                this.transferTextPropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                this.transferTextPropertiesToDialog(selObj.element.attr("x"), selObj.element.attr("y"), selectedProperties);
                 break;
             case this.config.classTypes.freeLine :
                 this.transferFreeLinePropertiesToDialog(selectedProperties);
@@ -157,20 +164,20 @@ WhiteboardDesigner = function(witeboardConfig) {
                 this.transferStraightLinePropertiesToDialog(selectedProperties);
                 break;
             case this.config.classTypes.rectangle :
-                this.transferRectanglePropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                this.transferRectanglePropertiesToDialog(selObj.element.attr("x"), selObj.element.attr("y"), selectedProperties);
                 break;
             case this.config.classTypes.circle :
-                this.transferCirclePropertiesToDialog(selectedObj.element.attr("cx"), selectedObj.element.attr("cy"), selectedProperties);
+                this.transferCirclePropertiesToDialog(selObj.element.attr("cx"), selObj.element.attr("cy"), selectedProperties);
                 break;
             case this.config.classTypes.ellipse :
-                this.transferEllipsePropertiesToDialog(selectedObj.element.attr("cx"), selectedObj.element.attr("cy"), selectedProperties);
+                this.transferEllipsePropertiesToDialog(selObj.element.attr("cx"), selObj.element.attr("cy"), selectedProperties);
                 break;
             case this.config.classTypes.image :
-                this.transferImagePropertiesToDialog(selectedObj.element.attr("x"), selectedObj.element.attr("y"), selectedProperties);
+                this.transferImagePropertiesToDialog(selObj.element.attr("x"), selObj.element.attr("y"), selectedProperties);
                 break;
             case this.config.classTypes.icon :
                 selectedProperties["scale"] = parseFloat((selectedProperties["scale"] + '').split("\\s+")[0]);
-                this.transferIconPropertiesToDialog(Math.round(selectedObj.attr("x") + 1), Math.round(selectedObj.attr("y") + 1), selectedProperties);
+                this.transferIconPropertiesToDialog(Math.round(selObj.attr("x") + 1), Math.round(selObj.attr("y") + 1), selectedProperties);
                 break;
             default :
         }
@@ -207,12 +214,13 @@ WhiteboardDesigner = function(witeboardConfig) {
         var cloneEl = helperBox.element.clone();
         cloneEl.translate(15, 15);
         var hb = drawHelperBox(cloneEl, helperBox.classType, null, null, false);
-        if (cloneEl.attr("rotation") != 0) {
+        var rotationDegree = cloneEl.attr("rotation");
+        if (rotationDegree != 0) {
             var bbox = cloneEl.getBBox();
-            var bboxWidth = parseFloat(cloneEl.width);
-            var bboxHeight = parseFloat(cloneEl.height);
-            hb.circleSet.rotate(cloneEl.attr("rotation"), bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
-            hb.rotate(cloneEl.attr("rotation"), bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            var bboxWidth = parseFloat(cloneEl.attr("width"));
+            var bboxHeight = parseFloat(cloneEl.attr("height"));
+            hb.circleSet.rotate(rotationDegree, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            hb.rotate(rotationDegree, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
         }
         helperBox.attr(this.config.attributes.opacityHidden);
         wbElements[hb.uuid] = hb;
@@ -346,6 +354,79 @@ WhiteboardDesigner = function(witeboardConfig) {
         jQuery(idSubviewProperties + "_iconCy").val(cy);
         jQuery(idSubviewProperties + "_iconRotation").val(props["rotation"]);
         jQuery(idSubviewProperties + "_iconScale").val(props["scale"].toFixed(1));
+    }
+
+    this.makeAsDefault = function(properties) {
+        var classType = properties.charAt(0).toUpperCase() + properties.slice(1);
+        var props = this.config.properties[properties];
+
+        switch (classType) {
+            case this.config.classTypes.text :
+                props["font-family"] = jQuery(idSubviewProperties + "_fontFamily option:selected").val();
+                props["font-size"] = parseInt(jQuery(idSubviewProperties + "_fontSize").val());
+                props["font-weight"] = jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontWeight']:checked").val();
+                props["font-style"] = jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontStyle']:checked").val();
+                props["fill"] = jQuery(idSubviewProperties + "_textColor div").css('backgroundColor');
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_textRotation").val());
+                break;
+            case this.config.classTypes.freeLine :
+                props["stroke"] = jQuery(idSubviewProperties + "_freeLineColor div").css('backgroundColor');
+                props["stroke-width"] = parseInt(jQuery(idSubviewProperties + "_freeLineWidth").val());
+                props["stroke-dasharray"] = jQuery(idSubviewProperties + "_freeLineStyle option:selected").val();
+                props["stroke-opacity"] = parseFloat(jQuery(idSubviewProperties + "_freeLineOpacity").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_freeLineRotation").val());
+                break;
+            case this.config.classTypes.straightLine :
+                props["stroke"] = jQuery(idSubviewProperties + "_straightLineColor div").css('backgroundColor');
+                props["stroke-width"] = parseInt(jQuery(idSubviewProperties + "_straightLineWidth").val());
+                props["stroke-dasharray"] = jQuery(idSubviewProperties + "_straightLineStyle option:selected").val();
+                props["stroke-opacity"] = parseFloat(jQuery(idSubviewProperties + "_straightLineOpacity").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_straightLineRotation").val());
+                break;
+            case this.config.classTypes.rectangle :
+                props["width"] = parseInt(jQuery(idSubviewProperties + "_rectWidth").val());
+                props["height"] = parseInt(jQuery(idSubviewProperties + "_rectHeight").val());
+                props["r"] = parseInt(jQuery(idSubviewProperties + "_cornerRadius").val());
+                props["fill"] = jQuery(idSubviewProperties + "_rectBkgrColor div").css('backgroundColor');
+                props["stroke"] = jQuery(idSubviewProperties + "_rectBorderColor div").css('backgroundColor');
+                props["stroke-width"] = parseInt(jQuery(idSubviewProperties + "_rectBorderWidth").val());
+                props["stroke-dasharray"] = jQuery(idSubviewProperties + "_rectBorderStyle option:selected").val();
+                props["fill-opacity"] = parseFloat(jQuery(idSubviewProperties + "_rectBkgrOpacity").val());
+                props["stroke-opacity"] = parseFloat(jQuery(idSubviewProperties + "_rectBorderOpacity").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_rectRotation").val());
+                break;
+            case this.config.classTypes.circle :
+                props["r"] = parseInt(jQuery(idSubviewProperties + "_radius").val());
+                props["fill"] = jQuery(idSubviewProperties + "_circleBkgrColor div").css('backgroundColor');
+                props["stroke"] = jQuery(idSubviewProperties + "_circleBorderColor div").css('backgroundColor');
+                props["stroke-width"] = parseInt(jQuery(idSubviewProperties + "_circleBorderWidth").val());
+                props["stroke-dasharray"] = jQuery(idSubviewProperties + "_circleBorderStyle option:selected").val();
+                props["fill-opacity"] = parseFloat(jQuery(idSubviewProperties + "_circleBkgrOpacity").val());
+                props["stroke-opacity"] = parseFloat(jQuery(idSubviewProperties + "_circleBorderOpacity").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_circleRotation").val());
+                break;
+            case this.config.classTypes.ellipse :
+                props["rx"] = parseInt(jQuery(idSubviewProperties + "_hRadius").val());
+                props["ry"] = parseInt(jQuery(idSubviewProperties + "_vRadius").val());
+                props["fill"] = jQuery(idSubviewProperties + "_ellipseBkgrColor div").css('backgroundColor');
+                props["stroke"] = jQuery(idSubviewProperties + "_ellipseBorderColor div").css('backgroundColor');
+                props["stroke-width"] = parseInt(jQuery(idSubviewProperties + "_ellipseBorderWidth").val());
+                props["stroke-dasharray"] = jQuery(idSubviewProperties + "_ellipseBorderStyle option:selected").val();
+                props["fill-opacity"] = parseFloat(jQuery(idSubviewProperties + "_ellipseBkgrOpacity").val());
+                props["stroke-opacity"] = parseFloat(jQuery(idSubviewProperties + "_ellipseBorderOpacity").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_ellipseRotation").val());
+                break;
+            case this.config.classTypes.image :
+                props["width"] = parseInt(jQuery(idSubviewProperties + "_imageWidth").val());
+                props["height"] = parseInt(jQuery(idSubviewProperties + "_imageHeight").val());
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_imageRotation").val());
+                break;
+            case this.config.classTypes.icon :
+                props["rotation"] = parseInt(jQuery(idSubviewProperties + "_iconRotation").val());
+                props["scale"] = parseFloat(jQuery(idSubviewProperties + "_iconScale").val());
+                break;
+            default :
+        }
     }
 
     // private access =======================
@@ -679,6 +760,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         // rotate
         if (rotation && rotation != 0) {
             el.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+            el.attr("rotation", parseInt(rotation));
             circleSet.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
             helperRect.rotate(rotation, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
         }
@@ -748,7 +830,11 @@ WhiteboardDesigner = function(witeboardConfig) {
     var setDefaultProperties = function(el, propsObj) {
         for (prop in propsObj) {
             if (prop != "rotation") {
-                el.attr(prop, propsObj[prop]);
+                if (prop == "stroke-dasharray") {
+                    el.attr(prop, _self.config.dasharrayMapping[propsObj[prop]]);
+                } else {
+                    el.attr(prop, propsObj[prop]);
+                }
             }
         }
     }

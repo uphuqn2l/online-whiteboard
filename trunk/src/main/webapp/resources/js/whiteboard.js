@@ -184,6 +184,33 @@ function bindOnclickToolboxItems() {
     });
 }
 
+function pinPanels() {
+    removeUnusedDialogs();
+    bindOnclickToolboxItems();
+    whiteboardDesigner.setIdSubviewProperties('#pinnedSubview');
+
+    // show properties of last selected element
+    if (whiteboardDesigner.getSelectedObject() != null) {
+        whiteboardDesigner.showSelectedProperties(whiteboardDesigner.getSelectedObject());
+    }
+
+    // hide loading dialog
+    loadingDialogWidget.hide();
+}
+
+function unpinPanels() {
+    bindOnclickToolboxItems();
+    whiteboardDesigner.setIdSubviewProperties('#unpinnedSubview');
+
+    // show properties of last selected element
+    if (whiteboardDesigner.getSelectedObject() != null) {
+        whiteboardDesigner.showSelectedProperties(whiteboardDesigner.getSelectedObject());
+    }
+
+    // hide loading dialog
+    loadingDialogWidget.hide();
+}
+
 function colorToHex(color) {
     if (color.substr(0, 1) === '#') {
         return color;
