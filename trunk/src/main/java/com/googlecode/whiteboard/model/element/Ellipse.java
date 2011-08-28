@@ -3,15 +3,18 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model;
+package com.googlecode.whiteboard.model.element;
 
 import com.googlecode.whiteboard.model.base.Positionable;
 
 import java.io.Serializable;
 
-public class Circle extends Positionable implements Serializable
+public class Ellipse extends Positionable implements Serializable
 {
-    private int radius;
+    private static final long serialVersionUID = 20110506L;
+
+    private int hRadius;
+    private int vRadius;
     private String backgroundColor;
     private String borderColor;
     private int borderWidth;
@@ -19,12 +22,20 @@ public class Circle extends Positionable implements Serializable
     private double backgroundOpacity;
     private double borderOpacity;
 
-    public int getRadius() {
-        return radius;
+    public int getHRadius() {
+        return hRadius;
     }
 
-    public void setRadius(int radius) {
-        this.radius = radius;
+    public void setHRadius(int hRadius) {
+        this.hRadius = hRadius;
+    }
+
+    public int getVRadius() {
+        return vRadius;
+    }
+
+    public void setVRadius(int vRadius) {
+        this.vRadius = vRadius;
     }
 
     public String getBackgroundColor() {

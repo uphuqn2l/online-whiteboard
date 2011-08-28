@@ -1,4 +1,4 @@
-jQuery(function() {
+function initWhiteboard(jsWhiteboard) {
     // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
 
@@ -128,7 +128,12 @@ jQuery(function() {
 
     // create a global whiteboard designer instance
     whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
-});
+
+    // restore existing whiteboard if any exists
+    if (jsWhiteboard != '') {
+        whiteboardDesigner.restoreWhiteboard(jsWhiteboard);
+    }
+}
 
 function onShowAutoWidthDialog(jqDialog) {
     // fix for auto width in IE

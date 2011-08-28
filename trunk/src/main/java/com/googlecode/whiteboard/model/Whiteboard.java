@@ -83,11 +83,19 @@ public class Whiteboard implements Serializable
         return users;
     }
 
+    public Map<String, AbstractElement> getElements() {
+        return elements;
+    }
+
     public void addElement(AbstractElement element) {
         elements.put(element.getUuid(), element);
     }
 
     public AbstractElement getElement(String uuid) {
         return elements.get(uuid);
+    }
+
+    public int getCount() {
+        return elements.size();
     }
 }

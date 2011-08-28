@@ -6,7 +6,7 @@
 package com.googlecode.whiteboard.json;
 
 import com.google.gson.Gson;
-import com.googlecode.whiteboard.model.Circle;
+import com.googlecode.whiteboard.model.element.Circle;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
