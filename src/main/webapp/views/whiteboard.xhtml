@@ -127,6 +127,14 @@
         <h:outputScript library="js" name="wboard-drawing.js" target="body"/>
         <h:outputScript library="js" name="whiteboard.js" target="body"/>
         <h:outputStylesheet library="css" name="whiteboard.css"/>
+
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            jQuery(function() {
+                initWhiteboard(#{displayWhiteboard.elementsAsJson});
+            });
+            /* ]]> */
+        </script>
     </ui:define>
 </ui:composition>
 </html>

@@ -84,7 +84,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
             setDefaultProperties(textElement, this.config.properties.text);
-            var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true);
+            var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
             this.showProperties('editText');
             this.transferTextPropertiesToDialog(whiteboard.textEl.cx, whiteboard.textEl.cy, this.config.properties.text);
@@ -94,7 +94,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     this.drawImage = function(inputUrl, width, height) {
         if (inputUrl !== "") {
             var imageElement = paper.image(inputUrl, whiteboard.imageEl.cx, whiteboard.imageEl.cy, width, height);
-            var hb = drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true);
+            var hb = drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
             this.showProperties('editImage');
             var imageProps = {
@@ -110,7 +110,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
         rectElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(rectElement, this.config.properties.rectangle);
-        var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true);
+        var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
         this.showProperties('editRectangle');
         this.transferRectanglePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.rectangle);
@@ -120,7 +120,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
         circleElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(circleElement, this.config.properties.circle);
-        var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true);
+        var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
         this.showProperties('editCircle');
         this.transferCirclePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.circle);
@@ -130,7 +130,7 @@ WhiteboardDesigner = function(witeboardConfig) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
         ellipseElement.scale(1, 1);  // workaround for webkit based browsers
         setDefaultProperties(ellipseElement, this.config.properties.ellipse);
-        var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true);
+        var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
         this.showProperties('editEllipse');
         this.transferEllipsePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.ellipse);
@@ -151,7 +151,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     this.showSelectedProperties = function(selObj) {
         // show and fill properties
         this.showProperties('edit' + selObj.classType);
-        var selectedProperties = getSelectedProperties(selObj, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
+        var selectedProperties = getSelectedProperties(selObj.element, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
 
         switch (selObj.classType) {
             case this.config.classTypes.text :
@@ -211,17 +211,31 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     this.cloneElement = function(helperBox) {
-        var cloneEl = helperBox.element.clone();
+        var cloneEl;
+        if (helperBox.classType == this.config.classTypes.icon) {
+            // workaround with scale factor
+            var scaleFactor = parseFloat((helperBox.element.attr("scale") + '').split("\\s+")[0]);
+            helperBox.element.scale(1, 1);
+            cloneEl = helperBox.element.clone();
+            helperBox.element.scale(scaleFactor, scaleFactor);
+            cloneEl.scale(scaleFactor, scaleFactor);
+        } else {
+            cloneEl = helperBox.element.clone();
+        }
+
+        // shift clone
         cloneEl.translate(15, 15);
-        var hb = drawHelperBox(cloneEl, helperBox.classType, null, null, false);
+
+        var hb = drawHelperBox(cloneEl, helperBox.classType, null, null, false, null);
         var rotationDegree = cloneEl.attr("rotation");
         if (rotationDegree != 0) {
             var bbox = cloneEl.getBBox();
-            var bboxWidth = parseFloat(cloneEl.attr("width"));
-            var bboxHeight = parseFloat(cloneEl.attr("height"));
+            var bboxWidth = parseFloat(bbox.width);
+            var bboxHeight = parseFloat(bbox.height);
             hb.circleSet.rotate(rotationDegree, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
             hb.rotate(rotationDegree, bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
         }
+
         helperBox.attr(this.config.attributes.opacityHidden);
         wbElements[hb.uuid] = hb;
     }
@@ -427,6 +441,123 @@ WhiteboardDesigner = function(witeboardConfig) {
                 break;
             default :
         }
+    }
+
+    this.restoreWhiteboard = function(jsWhiteboard) {
+        var arrElements = jsWhiteboard["elements"];
+        for (var i = 0; i < arrElements.length; i++) {
+            var objElement = arrElements[i];
+            var classType = objElement.type;
+            var props = objElement.properties;
+            var hb;
+
+            switch (classType) {
+                case this.config.classTypes.text :
+                    var textElement = paper.text(props.x, props.y, props.text);
+                    setDefaultProperties(textElement, {
+                        "font-family" : props.fontFamily,
+                        "font-size" : props.fontSize,
+                        "font-weight" : props.fontWeight,
+                        "font-style" : props.fontStyle,
+                        "fill" : props.color
+                    });
+                    hb = drawHelperBox(textElement, this.config.classTypes.text, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.freeLine :
+                    var freeLine = paper.path(props.path);
+                    setDefaultProperties(freeLine, {
+                        "stroke" : props.color,
+                        "stroke-width" : props.lineWidth,
+                        "stroke-dasharray" : props.lineStyle,
+                        "stroke-opacity" : props.opacity
+                    });
+                    hb = drawHelperBox(freeLine, this.config.classTypes.freeLine, props.rotation, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.straightLine :
+                    var straightLine = paper.path(props.path);
+                    setDefaultProperties(straightLine, {
+                        "stroke" : props.color,
+                        "stroke-width" : props.lineWidth,
+                        "stroke-dasharray" : props.lineStyle,
+                        "stroke-opacity" : props.opacity
+                    });
+                    hb = drawHelperBox(straightLine, this.config.classTypes.straightLine, props.rotation, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.rectangle :
+                    var rectElement = paper.rect(props.x, props.x, props.width, props.height, props.cornerRadius);
+                    rectElement.scale(1, 1);  // workaround for webkit based browsers
+                    setDefaultProperties(rectElement, {
+                        "fill" : props.backgroundColor,
+                        "stroke" : props.borderColor,
+                        "stroke-width" : props.borderWidth,
+                        "stroke-dasharray" : props.borderStyle,
+                        "fill-opacity" : props.backgroundOpacity,
+                        "stroke-opacity" : props.borderOpacity
+                    });
+                    hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.circle :
+                    var circleElement = paper.circle(props.x, props.y, props.radius);
+                    circleElement.scale(1, 1);  // workaround for webkit based browsers
+                    setDefaultProperties(circleElement, {
+                        "fill" : props.backgroundColor,
+                        "stroke" : props.borderColor,
+                        "stroke-width" : props.borderWidth,
+                        "stroke-dasharray" : props.borderStyle,
+                        "fill-opacity" : props.backgroundOpacity,
+                        "stroke-opacity" : props.borderOpacity
+                    });
+                    hb = drawHelperBox(circleElement, this.config.classTypes.circle, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.ellipse :
+                    var ellipseElement = paper.ellipse(props.x, props.y, props.hRadius, props.vRadius);
+                    ellipseElement.scale(1, 1);  // workaround for webkit based browsers
+                    setDefaultProperties(ellipseElement, {
+                        "fill" : props.backgroundColor,
+                        "stroke" : props.borderColor,
+                        "stroke-width" : props.borderWidth,
+                        "stroke-dasharray" : props.borderStyle,
+                        "fill-opacity" : props.backgroundOpacity,
+                        "stroke-opacity" : props.borderOpacity
+                    });
+                    hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.image :
+                    var imageElement = paper.image(props.url, props.x, props.y, props.width, props.height);
+                    hb = drawHelperBox(imageElement, this.config.classTypes.image, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                case this.config.classTypes.icon :
+                    var iconElement = paper.path(this.config.svgIconSet[props.name]).attr({fill: "#000", stroke: "none"});
+                    iconElement.scale(props.scaleFactor, props.scaleFactor);
+                    var bbox = iconElement.getBBox();
+                    // at first bring to 0,0 position after scale
+                    iconElement.translate(0 - bbox.x, 0 - bbox.y);
+                    // at second move to given position
+                    iconElement.translate(props.x, props.y);
+                    // and remains 
+                    hb = drawHelperBox(iconElement, this.config.classTypes.icon, props.rotationDegree, null, false, props.uuid);
+                    wbElements[hb.uuid] = hb;
+
+                    break;
+                default :
+            }
+        }
+
+        jQuery("<p style='margin: 2px 0 2px 0'>" + jsWhiteboard["message"] + "</p>").appendTo(".monitoringGroup");
     }
 
     // private access =======================
@@ -675,7 +806,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                 transferMethod = "transferStraightLinePropertiesToDialog";
             }
 
-            var hb = drawHelperBox(whiteboard.lineEl.path, classType, defProperties.rotation, null, true);
+            var hb = drawHelperBox(whiteboard.lineEl.path, classType, defProperties.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
             _self.showProperties(dialogType);
             _self[transferMethod](defProperties);
@@ -731,7 +862,7 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     // draw helper shapes around the element
-    var drawHelperBox = function(el, classType, rotation, scale, select) {
+    var drawHelperBox = function(el, classType, rotation, scale, select, id) {
         // scale
         if (scale && scale != 1.0) {
             el.scale(scale, scale);
@@ -768,8 +899,12 @@ WhiteboardDesigner = function(witeboardConfig) {
         // set references
         helperRect.element = el;
         helperRect.circleSet = circleSet;
-        helperRect.uuid = uuid();
         helperRect.classType = classType;
+        if (id == null) {
+            helperRect.uuid = uuid();
+        } else {
+            helperRect.uuid = id;
+        }
 
         if (select) {
             if (selectedObj != null) {
@@ -804,7 +939,7 @@ WhiteboardDesigner = function(witeboardConfig) {
             overlayIcon.click(function (event) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
-                var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true);
+                var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true, null);
                 wbElements[hb.uuid] = hb;
                 _self.showProperties('editIcon');
                 var iconProps = {
@@ -839,13 +974,27 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
     }
 
-    var getSelectedProperties = function(selectedObj, propsObj) {
+    var getSelectedProperties = function(el, propsObj) {
         var selectedProps = {};
         for (prop in propsObj) {
-            selectedProps[prop] = selectedObj.element.attr(prop);
+            if (prop == "stroke-dasharray") {
+                selectedProps[prop] = getDasharrayValue(el.attr(prop));
+            } else {
+                selectedProps[prop] = el.attr(prop);
+            }
         }
 
         return selectedProps;
+    }
+
+    var getDasharrayValue = function(label) {
+        for (value in _self.config.dasharrayMapping) {
+            if (label == _self.config.dasharrayMapping[value]) {
+                return value;
+            }
+        }
+
+        return "No";
     }
 
     // initialize whiteboard

@@ -3,7 +3,7 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.model;
+package com.googlecode.whiteboard.model.element;
 
 import com.googlecode.whiteboard.model.base.Positionable;
 
@@ -11,6 +11,8 @@ import java.io.Serializable;
 
 public class Image extends Positionable implements Serializable
 {
+    private static final long serialVersionUID = 20110506L;
+
     private String url;
     private int width;
     private int height;

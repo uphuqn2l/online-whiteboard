@@ -19,12 +19,6 @@ public abstract class AbstractElement
         return null;
     }
 
-    public String convertToJson() {
-        // TODO
-
-        return null;
-    }
-
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
