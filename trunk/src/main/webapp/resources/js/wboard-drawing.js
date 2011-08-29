@@ -323,6 +323,17 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.circleSet.toFront();
         helperBox.toFront();
         helperBox.attr(this.config.attributes.opacityHidden);
+
+        // send changes to server
+        this.sendChanges({
+            "action": "toFront",
+            "element": {
+                "type": helperBox.classType,
+                "properties": {
+                    "uuid": helperBox.uuid
+                }
+            }
+        });
     }
 
     this.bringBackElement = function(helperBox) {
@@ -330,6 +341,17 @@ WhiteboardDesigner = function(witeboardConfig) {
         helperBox.circleSet.toBack();
         helperBox.element.toBack();
         helperBox.attr(this.config.attributes.opacityHidden);
+
+        // send changes to server
+        this.sendChanges({
+            "action": "toBack",
+            "element": {
+                "type": helperBox.classType,
+                "properties": {
+                    "uuid": helperBox.uuid
+                }
+            }
+        });
     }
 
     this.cloneElement = function(helperBox) {
@@ -360,11 +382,73 @@ WhiteboardDesigner = function(witeboardConfig) {
 
         helperBox.attr(this.config.attributes.opacityHidden);
         wbElements[hb.uuid] = hb;
+
+        var objChanges = {
+            "action": "clone",
+            "element": {
+                "type": hb.classType,
+                "properties": {
+                    "uuid": hb.uuid,
+                    "rotationDegree": rotationDegree
+                }
+            }
+        };
+
+        switch (hb.classType) {
+            case this.config.classTypes.text :
+                objChanges.element.properties.x = cloneEl.attr("x");
+                objChanges.element.properties.y = cloneEl.attr("y");
+                objChanges.element.properties.text = cloneEl.attr("text");
+                objChanges.element.properties.fontFamily = cloneEl.attr("font-family");
+                objChanges.element.properties.fontSize = cloneEl.attr("font-size");
+                objChanges.element.properties.fontWeight = cloneEl.attr("font-weight");
+                objChanges.element.properties.fontStyle = cloneEl.attr("font-style");
+                objChanges.element.properties.color = cloneEl.attr("fill");
+                this.sendChanges(objChanges);
+
+                break;
+            case this.config.classTypes.freeLine :
+            case this.config.classTypes.straightLine :
+                objChanges.element.properties.path = cloneEl.attr("path") + '';
+                objChanges.element.properties.color = cloneEl.attr("stroke");
+                objChanges.element.properties.lineWidth = cloneEl.attr("stroke-width");
+                objChanges.element.properties.lineStyle = getDasharrayValue(cloneEl.attr("stroke-dasharray"));
+                objChanges.element.properties.opacity = cloneEl.attr("stroke-opacity");
+                this.sendChanges(objChanges);
+
+                break;
+            case this.config.classTypes.rectangle :
+
+                break;
+            case this.config.classTypes.circle :
+
+                break;
+            case this.config.classTypes.ellipse :
+
+                break;
+            case this.config.classTypes.image :
+
+                break;
+            case this.config.classTypes.icon :
+
+                break;
+
+            default :
+        }
     }
 
     this.resizeWhiteboard = function(width, height) {
         whiteboard.css({width: width + 'px', height: height + 'px'});
         paper.setSize(width, height);
+
+        // send changes to server
+        this.sendChanges({
+            "action": "resize",
+            "parameters": {
+                "width": width,
+                "height": height
+            }
+        });
     }
 
     this.openTextDialog = function(x, y) {
@@ -396,6 +480,11 @@ WhiteboardDesigner = function(witeboardConfig) {
             wbElements[eluuid] = null;
             delete wbElements[eluuid];
         }
+
+        // send changes to server
+        this.sendChanges({
+            "action": "clear"
+        });
     }
 
     this.showProperties = function(showClass) {
@@ -742,39 +831,90 @@ WhiteboardDesigner = function(witeboardConfig) {
             lastHoverObj = null;
         }
 
-        // show current coordinates in the properties dialog
-        if (selectedObj != null && selectedObj.uuid == this.uuid) {
-            switch (selectedObj.classType) {
-                case _self.config.classTypes.text :
-                    jQuery(idSubviewProperties + "_textCx").val(this.element.attr("x"));
-                    jQuery(idSubviewProperties + "_textCy").val(this.element.attr("y"));
-                    break;
-                case _self.config.classTypes.rectangle :
-                    jQuery(idSubviewProperties + "_rectCx").val(this.element.attr("x"));
-                    jQuery(idSubviewProperties + "_rectCy").val(this.element.attr("y"));
-                    break;
-                case _self.config.classTypes.circle :
-                    jQuery(idSubviewProperties + "_circleCx").val(this.element.attr("cx"));
-                    jQuery(idSubviewProperties + "_circleCy").val(this.element.attr("cy"));
-                    break;
-                case _self.config.classTypes.ellipse :
-                    jQuery(idSubviewProperties + "_ellipseCx").val(this.element.attr("cx"));
-                    jQuery(idSubviewProperties + "_ellipseCy").val(this.element.attr("cy"));
-                    break;
-                case _self.config.classTypes.image :
-                    jQuery(idSubviewProperties + "_imageCx").val(this.element.attr("x"));
-                    jQuery(idSubviewProperties + "_imageCy").val(this.element.attr("y"));
-                    break;
-                case _self.config.classTypes.icon :
-                    jQuery(idSubviewProperties + "_iconCx").val(Math.round(this.attr("x") + 1));
-                    jQuery(idSubviewProperties + "_iconCy").val(Math.round(this.attr("y") + 1));
-                    break;
-
-                default :
-            }
-        }
-
         _self.dragDropStart = false;
+
+        var updatePropsDialog = (selectedObj != null && selectedObj.uuid == this.uuid);
+        var objChanges = {
+            "action": "move",
+            "element": {
+                "type": this.classType,
+                "properties": {
+                    "uuid": this.uuid
+                }
+            }
+        };
+
+        // show current coordinates in the properties dialog (if needed) and send changes to server
+        switch (this.classType) {
+            case _self.config.classTypes.text :
+                objChanges.element.properties.x = this.element.attr("x");
+                objChanges.element.properties.y = this.element.attr("y");
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_textCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_textCy").val(objChanges.element.properties.y);
+                }
+                break;
+            case _self.config.classTypes.freeLine :
+            case _self.config.classTypes.straightLine :
+                objChanges.element.properties.path = this.element.attr("path") + '';
+                _self.sendChanges(objChanges);
+
+                break;
+            case _self.config.classTypes.rectangle :
+                objChanges.element.properties.x = this.element.attr("x");
+                objChanges.element.properties.y = this.element.attr("y");
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_rectCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_rectCy").val(objChanges.element.properties.y);
+                }
+                break;
+            case _self.config.classTypes.circle :
+                objChanges.element.properties.x = this.element.attr("cx");
+                objChanges.element.properties.y = this.element.attr("cy");
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_circleCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_circleCy").val(objChanges.element.properties.y);
+                }
+                break;
+            case _self.config.classTypes.ellipse :
+                objChanges.element.properties.x = this.element.attr("cx");
+                objChanges.element.properties.y = this.element.attr("cy");
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_ellipseCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_ellipseCy").val(objChanges.element.properties.y);
+                }
+                break;
+            case _self.config.classTypes.image :
+                objChanges.element.properties.x = this.element.attr("x");
+                objChanges.element.properties.y = this.element.attr("y");
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_imageCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_imageCy").val(objChanges.element.properties.y);
+                }
+                break;
+            case _self.config.classTypes.icon :
+                objChanges.element.properties.x = Math.round(this.attr("x") + 1);
+                objChanges.element.properties.y = Math.round(this.attr("y") + 1);
+                _self.sendChanges(objChanges);
+
+                if (updatePropsDialog) {
+                    jQuery(idSubviewProperties + "_iconCx").val(objChanges.element.properties.x);
+                    jQuery(idSubviewProperties + "_iconCy").val(objChanges.element.properties.y);
+                }
+                break;
+
+            default :
+        }
     }
 
     // register hover on element

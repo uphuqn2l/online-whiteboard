@@ -178,15 +178,35 @@ public class DisplayWhiteboard implements Serializable
 
         switch (ccd.getAction()) {
             case Create:
-                WhiteboardUtils.createElement(whiteboardsManager, whiteboard, ccd);
+                WhiteboardUtils.createElement(whiteboard, ccd);
                 break;
             case Remove:
-                WhiteboardUtils.removeElement(whiteboardsManager, whiteboard, ccd);
+                WhiteboardUtils.removeElement(whiteboard, ccd);
+                break;
+            case Clone:
+                WhiteboardUtils.cloneElement(whiteboard, ccd);
+                break;
+            case Move:
+                WhiteboardUtils.moveElement(whiteboard, ccd);
+                break;
+            case BringToFront:
+                WhiteboardUtils.bringToFront(whiteboard, ccd);
+                break;
+            case BringToBack:
+                WhiteboardUtils.bringToBack(whiteboard, ccd);
+                break;
+            case Clear:
+                WhiteboardUtils.clearWhiteboard(whiteboard, ccd);
+                break;
+            case Resize:
+                WhiteboardUtils.resizeWhiteboard(whiteboard, ccd);
                 break;
             default:
                 LOG.warning("Unknown client action!");
                 break;
         }
+
+        whiteboardsManager.updateWhiteboard(whiteboard);
 
         //WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false)
     }

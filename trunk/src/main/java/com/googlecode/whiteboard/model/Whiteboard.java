@@ -87,6 +87,10 @@ public class Whiteboard implements Serializable
         return elements;
     }
 
+    public void setElements(Map<String, AbstractElement> elements) {
+        this.elements = elements;
+    }
+
     public synchronized void addElement(AbstractElement element) {
         elements.put(element.getUuid(), element);
     }
@@ -95,8 +99,12 @@ public class Whiteboard implements Serializable
         return elements.put(element.getUuid(), element);
     }
 
-    public synchronized void removeElement(AbstractElement element) {
-        elements.remove(element.getUuid());
+    public synchronized AbstractElement removeElement(AbstractElement element) {
+        return elements.remove(element.getUuid());
+    }
+
+    public synchronized void clearElements() {
+        elements.clear();
     }
 
     public AbstractElement getElement(String uuid) {
