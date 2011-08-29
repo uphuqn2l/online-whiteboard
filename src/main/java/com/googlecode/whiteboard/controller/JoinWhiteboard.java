@@ -62,7 +62,7 @@ public class JoinWhiteboard implements Serializable
         whiteboardsManager.updateWhiteboard(whiteboard);
 
         DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
-        displayWhiteboard.init(whiteboard);
+        displayWhiteboard.init(whiteboard, user);
 
         return "/views/whiteboard?faces-redirect=true";
     }

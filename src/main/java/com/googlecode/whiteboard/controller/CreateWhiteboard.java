@@ -73,7 +73,7 @@ public class CreateWhiteboard implements Serializable
         whiteboardsManager.addWhiteboard(whiteboard);
 
         DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
-        displayWhiteboard.init(whiteboard);
+        displayWhiteboard.init(whiteboard, getCreator());
 
         return "/views/whiteboard?faces-redirect=true";
     }

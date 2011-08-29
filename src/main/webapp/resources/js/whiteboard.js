@@ -130,7 +130,7 @@ function initWhiteboard(jsWhiteboard) {
     whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
 
     // restore existing whiteboard if any exists
-    if (jsWhiteboard != '') {
+    if (jsWhiteboard != null && jsWhiteboard != '') {
         whiteboardDesigner.restoreWhiteboard(jsWhiteboard);
     }
 }

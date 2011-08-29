@@ -58,6 +58,10 @@
         <managed-bean-name>displayWhiteboard</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.DisplayWhiteboard</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
+        <managed-property>
+            <property-name>whiteboardsManager</property-name>
+            <value>#{whiteboardsManager}</value>
+        </managed-property>
     </managed-bean>
 
 </faces-config>
