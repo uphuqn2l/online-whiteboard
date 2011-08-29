@@ -16,7 +16,7 @@ public class ClientChangedData
     private AbstractElement element;
     private String user;
     private long timestamp;
-    private Map<String, Object> parameters = new HashMap<String, Object>();
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public ClientAction getAction() {
         return action;
@@ -50,11 +50,11 @@ public class ClientChangedData
         this.timestamp = timestamp;
     }
 
-    public Map<String, Object> getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 }
