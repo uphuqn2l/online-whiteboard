@@ -23,12 +23,16 @@ public class WhiteboardsManager
         expiredTime = config.getInt("whiteboard.expiredTime", 30);
     }
 
-    public void addWhiteboard(Whiteboard whiteboard) {
+    public synchronized void addWhiteboard(Whiteboard whiteboard) {
         whiteboards.put(whiteboard.getUuid(), whiteboard);
     }
 
-    public void updateWhiteboard(Whiteboard whiteboard) {
-        whiteboards.put(whiteboard.getUuid(), whiteboard);
+    public synchronized Whiteboard updateWhiteboard(Whiteboard whiteboard) {
+        return whiteboards.put(whiteboard.getUuid(), whiteboard);
+    }
+
+    public synchronized void removeWhiteboard(Whiteboard whiteboard) {
+        whiteboards.remove(whiteboard.getUuid());
     }
 
     public Whiteboard getWhiteboard(String uuid) {

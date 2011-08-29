@@ -28,7 +28,7 @@ public class AbstractElementAdapter implements JsonSerializer<AbstractElement>, 
         JsonElement element = jsonObject.get("properties");
 
         try {
-            return context.deserialize(element, Class.forName("com.googlecode.whiteboard.model.element" + type));
+            return context.deserialize(element, Class.forName("com.googlecode.whiteboard.model.element." + type));
         } catch (ClassNotFoundException cnfe) {
             throw new JsonParseException("Unknown element type: " + type, cnfe);
         }

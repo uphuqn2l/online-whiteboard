@@ -8,6 +8,7 @@ package com.googlecode.whiteboard.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.googlecode.whiteboard.model.base.AbstractElement;
+import com.googlecode.whiteboard.model.transfer.ClientAction;
 
 /*
 * Singleton instance of Gson {@link http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/Gson.html}.
@@ -20,6 +21,7 @@ public class JsonConverter
     private JsonConverter() {
         GsonBuilder gsonBilder = new GsonBuilder();
         gsonBilder.registerTypeAdapter(AbstractElement.class, new AbstractElementAdapter());
+        gsonBilder.registerTypeAdapter(ClientAction.class, new ClientActionEnumAdapter());
         gsonBilder.serializeNulls();
         gson = gsonBilder.create();
     }

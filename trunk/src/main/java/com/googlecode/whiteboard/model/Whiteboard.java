@@ -87,8 +87,16 @@ public class Whiteboard implements Serializable
         return elements;
     }
 
-    public void addElement(AbstractElement element) {
+    public synchronized void addElement(AbstractElement element) {
         elements.put(element.getUuid(), element);
+    }
+
+    public synchronized AbstractElement updateElement(AbstractElement element) {
+        return elements.put(element.getUuid(), element);
+    }
+
+    public synchronized void removeElement(AbstractElement element) {
+        elements.remove(element.getUuid());
     }
 
     public AbstractElement getElement(String uuid) {

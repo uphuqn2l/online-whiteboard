@@ -10,7 +10,7 @@ import com.googlecode.whiteboard.model.base.AbstractElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferRestoredElements
+public class RestoredElements
 {
     private List<AbstractElement> elements = new ArrayList<AbstractElement>();
     private String message;

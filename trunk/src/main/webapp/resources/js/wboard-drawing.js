@@ -86,6 +86,27 @@ WhiteboardDesigner = function(witeboardConfig) {
             setDefaultProperties(textElement, this.config.properties.text);
             var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
+
+            // send changes to server
+            this.sendChanges({
+                "action": "create",
+                "element": {
+                    "type": this.config.classTypes.text,
+                    "properties": {
+                        "uuid": hb.uuid,
+                        "x": whiteboard.textEl.cx,
+                        "y": whiteboard.textEl.cy,
+                        "rotationDegree": this.config.properties.text.rotation,
+                        "text": inputText,
+                        "fontFamily": textElement.attr("font-family"),
+                        "fontSize": textElement.attr("font-size"),
+                        "fontWeight": textElement.attr("font-weight"),
+                        "fontStyle": textElement.attr("font-style"),
+                        "color": textElement.attr("fill")
+                    }
+                }
+            });
+
             this.showProperties('editText');
             this.transferTextPropertiesToDialog(whiteboard.textEl.cx, whiteboard.textEl.cy, this.config.properties.text);
         }
@@ -97,12 +118,29 @@ WhiteboardDesigner = function(witeboardConfig) {
             var hb = drawHelperBox(imageElement, this.config.classTypes.image, this.config.properties.image.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
             this.showProperties('editImage');
-            var imageProps = {
+
+            // send changes to server
+            this.sendChanges({
+                "action": "create",
+                "element": {
+                    "type": this.config.classTypes.image,
+                    "properties": {
+                        "uuid": hb.uuid,
+                        "x": whiteboard.imageEl.cx,
+                        "y": whiteboard.imageEl.cy,
+                        "rotationDegree": this.config.properties.image.rotation,
+                        "url": inputUrl,
+                        "width": width,
+                        "height": height
+                    }
+                }
+            });
+
+            this.transferImagePropertiesToDialog(whiteboard.imageEl.cx, whiteboard.imageEl.cy, {
                 "width": width,
                 "height": height,
                 "rotation": this.config.properties.image.rotation
-            };
-            this.transferImagePropertiesToDialog(whiteboard.imageEl.cx, whiteboard.imageEl.cy, imageProps);
+            });
         }
     }
 
@@ -112,6 +150,30 @@ WhiteboardDesigner = function(witeboardConfig) {
         setDefaultProperties(rectElement, this.config.properties.rectangle);
         var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
+
+        // send changes to server
+        this.sendChanges({
+            "action": "create",
+            "element": {
+                "type": this.config.classTypes.rectangle,
+                "properties": {
+                    "uuid": hb.uuid,
+                    "x": x - offsetLeft,
+                    "y": y - offsetTop,
+                    "rotationDegree": this.config.properties.rectangle.rotation,
+                    "width": rectElement.attr("width"),
+                    "height": rectElement.attr("height"),
+                    "cornerRadius": rectElement.attr("r"),
+                    "backgroundColor": rectElement.attr("fill"),
+                    "borderColor": rectElement.attr("stroke"),
+                    "borderWidth": rectElement.attr("stroke-width"),
+                    "borderStyle": getDasharrayValue(rectElement.attr("stroke-dasharray")),
+                    "backgroundOpacity": rectElement.attr("fill-opacity"),
+                    "borderOpacity": rectElement.attr("stroke-opacity")
+                }
+            }
+        });
+
         this.showProperties('editRectangle');
         this.transferRectanglePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.rectangle);
     }
@@ -122,6 +184,28 @@ WhiteboardDesigner = function(witeboardConfig) {
         setDefaultProperties(circleElement, this.config.properties.circle);
         var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
+
+        // send changes to server
+        this.sendChanges({
+            "action": "create",
+            "element": {
+                "type": this.config.classTypes.circle,
+                "properties": {
+                    "uuid": hb.uuid,
+                    "x": x - offsetLeft,
+                    "y": y - offsetTop,
+                    "rotationDegree": this.config.properties.circle.rotation,
+                    "radius": circleElement.attr("r"),
+                    "backgroundColor": circleElement.attr("fill"),
+                    "borderColor": circleElement.attr("stroke"),
+                    "borderWidth": circleElement.attr("stroke-width"),
+                    "borderStyle": getDasharrayValue(circleElement.attr("stroke-dasharray")),
+                    "backgroundOpacity": circleElement.attr("fill-opacity"),
+                    "borderOpacity": circleElement.attr("stroke-opacity")
+                }
+            }
+        });
+
         this.showProperties('editCircle');
         this.transferCirclePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.circle);
     }
@@ -132,6 +216,29 @@ WhiteboardDesigner = function(witeboardConfig) {
         setDefaultProperties(ellipseElement, this.config.properties.ellipse);
         var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
+
+        // send changes to server
+        this.sendChanges({
+            "action": "create",
+            "element": {
+                "type": this.config.classTypes.ellipse,
+                "properties": {
+                    "uuid": hb.uuid,
+                    "x": x - offsetLeft,
+                    "y": y - offsetTop,
+                    "rotationDegree": this.config.properties.ellipse.rotation,
+                    "hRadius": ellipseElement.attr("rx"),
+                    "vRadius": ellipseElement.attr("ry"),
+                    "backgroundColor": ellipseElement.attr("fill"),
+                    "borderColor": ellipseElement.attr("stroke"),
+                    "borderWidth": ellipseElement.attr("stroke-width"),
+                    "borderStyle": getDasharrayValue(ellipseElement.attr("stroke-dasharray")),
+                    "backgroundOpacity": ellipseElement.attr("fill-opacity"),
+                    "borderOpacity": ellipseElement.attr("stroke-opacity")
+                }
+            }
+        });
+
         this.showProperties('editEllipse');
         this.transferEllipsePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.ellipse);
     }
@@ -184,16 +291,31 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     this.removeElement = function(helperBox) {
-        if (selectedObj != null && selectedObj.uuid == helperBox.uuid) {
+        var eluuid = helperBox.uuid;
+        var elclasstype = helperBox.classType;
+
+        wbElements[eluuid] = null;
+        delete wbElements[eluuid];
+        helperBox.element.remove();
+        helperBox.circleSet.remove();
+        helperBox.remove();
+
+        // send changes to server
+        this.sendChanges({
+            "action": "remove",
+            "element": {
+                "type": elclasstype,
+                "properties": {
+                    "uuid": eluuid
+                }
+            }
+        });
+
+        if (selectedObj != null && selectedObj.uuid == eluuid) {
             // last selected object = this object ==> reset
             selectedObj = null;
             this.showProperties('editNoSelection');
         }
-        wbElements[helperBox.uuid] = null;
-        delete wbElements[helperBox.uuid];
-        helperBox.element.remove();
-        helperBox.circleSet.remove();
-        helperBox.remove();
     }
 
     this.bringFrontElement = function(helperBox) {
@@ -490,7 +612,7 @@ WhiteboardDesigner = function(witeboardConfig) {
 
                     break;
                 case this.config.classTypes.rectangle :
-                    var rectElement = paper.rect(props.x, props.x, props.width, props.height, props.cornerRadius);
+                    var rectElement = paper.rect(props.x, props.y, props.width, props.height, props.cornerRadius);
                     rectElement.scale(1, 1);  // workaround for webkit based browsers
                     setDefaultProperties(rectElement, {
                         "fill" : props.backgroundColor,
@@ -548,7 +670,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                     iconElement.translate(0 - bbox.x, 0 - bbox.y);
                     // at second move to given position
                     iconElement.translate(props.x, props.y);
-                    // and remains 
+                    // and remains
                     hb = drawHelperBox(iconElement, this.config.classTypes.icon, props.rotationDegree, null, false, props.uuid);
                     wbElements[hb.uuid] = hb;
 
@@ -558,6 +680,17 @@ WhiteboardDesigner = function(witeboardConfig) {
         }
 
         jQuery("<p style='margin: 2px 0 2px 0'>" + jsWhiteboard["message"] + "</p>").appendTo(".monitoringGroup");
+    }
+
+    this.sendChanges = function(jsObject) {
+        // set timestamp
+        var curDate = new Date();
+        jsObject.timestamp = curDate.getTime() + curDate.getTimezoneOffset() * 60000;
+
+        // set data in hidden field
+        jQuery("#transferedJsonData").val(JSON.stringify(jsObject));
+        // send ajax request
+        transferJsonData();
     }
 
     // private access =======================
@@ -808,6 +941,24 @@ WhiteboardDesigner = function(witeboardConfig) {
 
             var hb = drawHelperBox(whiteboard.lineEl.path, classType, defProperties.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
+
+            // send changes to server
+            _self.sendChanges({
+                "action": "create",
+                "element": {
+                    "type": classType,
+                    "properties": {
+                        "uuid": hb.uuid,
+                        "rotationDegree": defProperties.rotation,
+                        "path": whiteboard.lineEl.path.attr("path") + '',
+                        "color": whiteboard.lineEl.path.attr("stroke"),
+                        "lineWidth": whiteboard.lineEl.path.attr("stroke-width"),
+                        "lineStyle": getDasharrayValue(whiteboard.lineEl.path.attr("stroke-dasharray")),
+                        "opacity": whiteboard.lineEl.path.attr("stroke-opacity")
+                    }
+                }
+            });
+
             _self.showProperties(dialogType);
             _self[transferMethod](defProperties);
 
@@ -936,17 +1087,36 @@ WhiteboardDesigner = function(witeboardConfig) {
             curIcon.offsetY = y + 20;
             var overlayIcon = iconPaper.rect(x, y, 40, 40).attr(fillNone);
             overlayIcon.icon = curIcon;
+            overlayIcon.iconName = name;
             overlayIcon.click(function (event) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
                 var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true, null);
                 wbElements[hb.uuid] = hb;
+
+                // send changes to server
+                var xC = Math.round(hb.attr("x") + 1);
+                var yC = Math.round(hb.attr("y") + 1);
+                _self.sendChanges({
+                    "action": "create",
+                    "element": {
+                        "type": _self.config.classTypes.icon,
+                        "properties": {
+                            "uuid": hb.uuid,
+                            "x": xC,
+                            "y": yC,
+                            "rotationDegree": _self.config.properties.icon.rotation,
+                            "name": this.iconName,
+                            "scaleFactor": _self.config.properties.icon.scale
+                        }
+                    }
+                });
+
                 _self.showProperties('editIcon');
-                var iconProps = {
+                _self.transferIconPropertiesToDialog(xC, yC, {
                     "scale": _self.config.properties.icon.scale,
                     "rotation": _self.config.properties.icon.rotation
-                };
-                _self.transferIconPropertiesToDialog(Math.round(hb.attr("x") + 1), Math.round(hb.attr("y") + 1), iconProps);
+                });
                 event.stopPropagation();
                 event.preventDefault();
             }).hover(function () {

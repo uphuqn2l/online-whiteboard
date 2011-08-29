@@ -114,6 +114,9 @@
                 </h:panelGroup>
             </h:panelGroup>
 
+            <h:inputHidden id="transferedJsonData" value="#{displayWhiteboard.transferedJsonData}"/>
+            <p:remoteCommand id="remoteCmd" name="transferJsonData" process="remoteCmd,transferedJsonData" actionListener="#{displayWhiteboard.transferJsonData}"/>
+
             <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
     </ui:define>

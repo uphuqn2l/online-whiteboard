@@ -8,27 +8,45 @@ package com.googlecode.whiteboard.controller;
 import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
 import com.googlecode.whiteboard.model.base.AbstractElement;
-import com.googlecode.whiteboard.model.transfer.TransferRestoredElements;
+import com.googlecode.whiteboard.model.transfer.ClientChangedData;
+import com.googlecode.whiteboard.model.transfer.RestoredElements;
+import com.googlecode.whiteboard.utils.WhiteboardUtils;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.logging.Logger;
 
 public class DisplayWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
+    private static final Logger LOG = Logger.getLogger(DisplayWhiteboard.class.getName());
 
     private Whiteboard whiteboard;
+    private WhiteboardsManager whiteboardsManager;
+    private String user;
     private boolean pinned;
+    private String transferedJsonData;
 
-    public void init(Whiteboard whiteboard) {
+    public void init(Whiteboard whiteboard, String user) {
         this.whiteboard = whiteboard;
+        this.user = user;
         pinned = true;
+    }
+
+    public void setWhiteboardsManager(WhiteboardsManager whiteboardsManager) {
+        this.whiteboardsManager = whiteboardsManager;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public boolean isPinned() {
@@ -37,6 +55,14 @@ public class DisplayWhiteboard implements Serializable
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
+    }
+
+    public String getTransferedJsonData() {
+        return transferedJsonData;
+    }
+
+    public void setTransferedJsonData(String transferedJsonData) {
+        this.transferedJsonData = transferedJsonData;
     }
 
     public String getTitle() {
@@ -56,10 +82,7 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getCreationDate() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return dateFormatGmt.format(new Date()) + " (GMT)";
+        return WhiteboardUtils.formatDate(new Date(), true);
     }
 
     public int getWidth() {
@@ -132,7 +155,7 @@ public class DisplayWhiteboard implements Serializable
             return "";
         }
 
-        TransferRestoredElements tre = new TransferRestoredElements();
+        RestoredElements tre = new RestoredElements();
         for (AbstractElement ae : whiteboard.getElements().values()) {
             tre.addElement(ae);
         }
@@ -144,5 +167,27 @@ public class DisplayWhiteboard implements Serializable
         }
 
         return JsonConverter.getGson().toJson(tre);
+    }
+
+    public void transferJsonData(ActionEvent ae) {
+        System.out.println(transferedJsonData);
+
+        // create Java object with all changed data
+        ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
+        ccd.setUser(this.user);
+
+        switch (ccd.getAction()) {
+            case Create:
+                WhiteboardUtils.createElement(whiteboardsManager, whiteboard, ccd);
+                break;
+            case Remove:
+                WhiteboardUtils.removeElement(whiteboardsManager, whiteboard, ccd);
+                break;
+            default:
+                LOG.warning("Unknown client action!");
+                break;
+        }
+
+        //WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false)
     }
 }
