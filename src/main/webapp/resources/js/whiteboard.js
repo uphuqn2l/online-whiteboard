@@ -1,4 +1,4 @@
-function initWhiteboard(jsWhiteboard) {
+function initWhiteboard(jsWhiteboard, pubSubUrl, pubSubTransport) {
     // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
 
@@ -127,12 +127,29 @@ function initWhiteboard(jsWhiteboard) {
     });
 
     // create a global whiteboard designer instance
-    whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig());
+    whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig(), pubSubUrl, pubSubTransport);
 
     // restore existing whiteboard if any exists
-    if (jsWhiteboard != null && jsWhiteboard != '') {
+    if (!isBlankObject(jsWhiteboard)) {
         whiteboardDesigner.restoreWhiteboard(jsWhiteboard);
     }
+
+    // subscribe to bidirectional channel
+    whiteboardDesigner.subscribePubSub();
+}
+
+function isBlankObject(obj) {
+    if (obj == null) {
+        return true;
+    }
+
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function onShowAutoWidthDialog(jqDialog) {

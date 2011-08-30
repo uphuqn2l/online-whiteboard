@@ -20,6 +20,7 @@ public class JoinWhiteboard implements Serializable
     private String user = "";
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
+    private String pubSubTransport = "long-polling"; // TODO
 
     @PostConstruct
     protected void initialize() {
@@ -57,12 +58,20 @@ public class JoinWhiteboard implements Serializable
         this.whiteboardsManager = whiteboardsManager;
     }
 
+    public String getPubSubTransport() {
+        return pubSubTransport;
+    }
+
+    public void setPubSubTransport(String pubSubTransport) {
+        this.pubSubTransport = pubSubTransport;
+    }
+
     public String join() {
         whiteboard.addUser(user);
         whiteboardsManager.updateWhiteboard(whiteboard);
 
         DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
-        displayWhiteboard.init(whiteboard, user);
+        displayWhiteboard.init(whiteboard, user, pubSubTransport);
 
         return "/views/whiteboard?faces-redirect=true";
     }

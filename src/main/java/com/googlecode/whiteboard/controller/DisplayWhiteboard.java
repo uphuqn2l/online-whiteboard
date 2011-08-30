@@ -30,10 +30,12 @@ public class DisplayWhiteboard implements Serializable
     private String user;
     private boolean pinned;
     private String transferedJsonData;
+    private String pubSubTransport;
 
-    public void init(Whiteboard whiteboard, String user) {
+    public void init(Whiteboard whiteboard, String user, String pubSubTransport) {
         this.whiteboard = whiteboard;
         this.user = user;
+        this.pubSubTransport = pubSubTransport;
         pinned = true;
     }
 
@@ -71,6 +73,14 @@ public class DisplayWhiteboard implements Serializable
 
     public void setTransferedJsonData(String transferedJsonData) {
         this.transferedJsonData = transferedJsonData;
+    }
+
+    public String getPubSubTransport() {
+        return pubSubTransport;
+    }
+
+    public void setPubSubTransport(String pubSubTransport) {
+        this.pubSubTransport = pubSubTransport;
     }
 
     public String getTitle() {
@@ -160,7 +170,7 @@ public class DisplayWhiteboard implements Serializable
     public String getElementsAsJson() {
         if (whiteboard == null || whiteboard.getCount() < 1) {
             // empty whiteboard
-            return "";
+            return "{}";
         }
 
         RestoredElements tre = new RestoredElements();
@@ -177,8 +187,23 @@ public class DisplayWhiteboard implements Serializable
         return JsonConverter.getGson().toJson(tre);
     }
 
+    public String getPubSubUrl() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        String scheme = ec.getRequestScheme();
+        int port = ec.getRequestServerPort();
+
+        String serverPort;
+        if (("http".equalsIgnoreCase(scheme) && port != 80) || ("https".equalsIgnoreCase(scheme) && port != 443)) {
+            serverPort = ":" + port;
+        } else {
+            serverPort = "";
+        }
+
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/changes.topic");
+    }
+
     public void transferJsonData(ActionEvent ae) {
-        System.out.println(transferedJsonData);
+        //System.out.println(transferedJsonData);
 
         // create Java object with all changed data
         ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
