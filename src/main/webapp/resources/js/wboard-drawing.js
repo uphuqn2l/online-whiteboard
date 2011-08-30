@@ -355,10 +355,10 @@ WhiteboardDesigner = function(witeboardConfig) {
     }
 
     this.cloneElement = function(helperBox) {
-        var cloneEl;
+        var cloneEl, scaleFactor;
         if (helperBox.classType == this.config.classTypes.icon) {
             // workaround with scale factor
-            var scaleFactor = parseFloat((helperBox.element.attr("scale") + '').split("\\s+")[0]);
+            scaleFactor = parseFloat((helperBox.element.attr("scale") + '').split("\\s+")[0]);
             helperBox.element.scale(1, 1);
             cloneEl = helperBox.element.clone();
             helperBox.element.scale(scaleFactor, scaleFactor);
@@ -371,6 +371,10 @@ WhiteboardDesigner = function(witeboardConfig) {
         cloneEl.translate(15, 15);
 
         var hb = drawHelperBox(cloneEl, helperBox.classType, null, null, false, null);
+        if (helperBox.classType == this.config.classTypes.icon) {
+            hb.iconName = helperBox.iconName;
+        }
+
         var rotationDegree = cloneEl.attr("rotation");
         if (rotationDegree != 0) {
             var bbox = cloneEl.getBBox();
@@ -404,7 +408,6 @@ WhiteboardDesigner = function(witeboardConfig) {
                 objChanges.element.properties.fontWeight = cloneEl.attr("font-weight");
                 objChanges.element.properties.fontStyle = cloneEl.attr("font-style");
                 objChanges.element.properties.color = cloneEl.attr("fill");
-                this.sendChanges(objChanges);
 
                 break;
             case this.config.classTypes.freeLine :
@@ -414,27 +417,66 @@ WhiteboardDesigner = function(witeboardConfig) {
                 objChanges.element.properties.lineWidth = cloneEl.attr("stroke-width");
                 objChanges.element.properties.lineStyle = getDasharrayValue(cloneEl.attr("stroke-dasharray"));
                 objChanges.element.properties.opacity = cloneEl.attr("stroke-opacity");
-                this.sendChanges(objChanges);
 
                 break;
             case this.config.classTypes.rectangle :
+                objChanges.element.properties.x = cloneEl.attr("x");
+                objChanges.element.properties.y = cloneEl.attr("y");
+                objChanges.element.properties.width = cloneEl.attr("width");
+                objChanges.element.properties.height = cloneEl.attr("height");
+                objChanges.element.properties.cornerRadius = cloneEl.attr("r");
+                objChanges.element.properties.backgroundColor = cloneEl.attr("fill");
+                objChanges.element.properties.borderColor = cloneEl.attr("stroke");
+                objChanges.element.properties.borderWidth = cloneEl.attr("stroke-width");
+                objChanges.element.properties.borderStyle = getDasharrayValue(cloneEl.attr("stroke-dasharray"));
+                objChanges.element.properties.backgroundOpacity = cloneEl.attr("fill-opacity");
+                objChanges.element.properties.borderOpacity = cloneEl.attr("stroke-opacity");
 
                 break;
             case this.config.classTypes.circle :
+                objChanges.element.properties.x = cloneEl.attr("cx");
+                objChanges.element.properties.y = cloneEl.attr("cy");
+                objChanges.element.properties.radius = cloneEl.attr("r");
+                objChanges.element.properties.backgroundColor = cloneEl.attr("fill");
+                objChanges.element.properties.borderColor = cloneEl.attr("stroke");
+                objChanges.element.properties.borderWidth = cloneEl.attr("stroke-width");
+                objChanges.element.properties.borderStyle = getDasharrayValue(cloneEl.attr("stroke-dasharray"));
+                objChanges.element.properties.backgroundOpacity = cloneEl.attr("fill-opacity");
+                objChanges.element.properties.borderOpacity = cloneEl.attr("stroke-opacity");
 
                 break;
             case this.config.classTypes.ellipse :
+                objChanges.element.properties.x = cloneEl.attr("cx");
+                objChanges.element.properties.y = cloneEl.attr("cy");
+                objChanges.element.properties.hRadius = cloneEl.attr("rx");
+                objChanges.element.properties.vRadius = cloneEl.attr("ry");
+                objChanges.element.properties.backgroundColor = cloneEl.attr("fill");
+                objChanges.element.properties.borderColor = cloneEl.attr("stroke");
+                objChanges.element.properties.borderWidth = cloneEl.attr("stroke-width");
+                objChanges.element.properties.borderStyle = getDasharrayValue(cloneEl.attr("stroke-dasharray"));
+                objChanges.element.properties.backgroundOpacity = cloneEl.attr("fill-opacity");
+                objChanges.element.properties.borderOpacity = cloneEl.attr("stroke-opacity");
 
                 break;
             case this.config.classTypes.image :
+                objChanges.element.properties.x = cloneEl.attr("x");
+                objChanges.element.properties.y = cloneEl.attr("y");
+                objChanges.element.properties.url = cloneEl.attr("src");
+                objChanges.element.properties.width = cloneEl.attr("width");
+                objChanges.element.properties.height = cloneEl.attr("height");
 
                 break;
             case this.config.classTypes.icon :
+                objChanges.element.properties.x = Math.round(hb.attr("x") + 1);
+                objChanges.element.properties.y = Math.round(hb.attr("y") + 1);
+                objChanges.element.properties.name = hb.iconName;
+                objChanges.element.properties.scaleFactor = scaleFactor;
 
                 break;
-
             default :
         }
+
+        this.sendChanges(objChanges);
     }
 
     this.resizeWhiteboard = function(width, height) {
@@ -761,6 +803,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                     iconElement.translate(props.x, props.y);
                     // and remains
                     hb = drawHelperBox(iconElement, this.config.classTypes.icon, props.rotationDegree, null, false, props.uuid);
+                    hb.iconName = props.name;
                     wbElements[hb.uuid] = hb;
 
                     break;
@@ -1232,6 +1275,7 @@ WhiteboardDesigner = function(witeboardConfig) {
                 dialogIcons.dialog("close");
                 var iconElement = paper.path(this.icon.attr("path")).attr(fillStroke).translate(whiteboard.iconEl.cx - this.icon.offsetX, whiteboard.iconEl.cy - this.icon.offsetY);
                 var hb = drawHelperBox(iconElement, _self.config.classTypes.icon, _self.config.properties.icon.rotation, _self.config.properties.icon.scale, true, null);
+                hb.iconName = this.iconName;
                 wbElements[hb.uuid] = hb;
 
                 // send changes to server
