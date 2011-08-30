@@ -74,6 +74,32 @@
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
 
+    <!-- Atmosphere Servlet -->
+    <servlet>
+        <description>AtmosphereServlet</description>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+        <init-param>
+            <param-name>org.atmosphere.useWebSocket</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.useNative</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
+            <param-value>
+                org.atmosphere.client.FormParamFilter,org.atmosphere.client.JavascriptClientFilter
+            </param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <url-pattern>*.topic</url-pattern>
+    </servlet-mapping>
+
     <!-- Session timeout -->
     <session-config>
         <session-timeout>60</session-timeout>
@@ -85,17 +111,17 @@
     </welcome-file-list>
 
     <!-- Error pages -->
-	<error-page>
-		<error-code>403</error-code>
-		<location>/views/error.jsf?statusCode=403</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/views/error.jsf?statusCode=404</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/views/error.jsf?statusCode=500</location>
-	</error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/views/error.jsf?statusCode=403</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/views/error.jsf?statusCode=404</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/views/error.jsf?statusCode=500</location>
+    </error-page>
 
 </web-app>
