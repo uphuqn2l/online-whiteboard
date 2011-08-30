@@ -229,6 +229,27 @@
             <groupId>org.atmosphere</groupId>
             <artifactId>atmosphere-jersey</artifactId>
             <version>0.7.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.atmosphere</groupId>
+                    <artifactId>atmosphere-ping</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_3.0_spec</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.24</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>0.9.24</version>
         </dependency>
 
         <dependency>
