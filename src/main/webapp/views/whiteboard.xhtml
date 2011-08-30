@@ -126,6 +126,7 @@
         <h:outputScript library="js" name="uuid.js" target="head"/>
         <h:outputScript library="js" name="jquery.validate.min.js" target="head"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
+        <h:outputScript library="js" name="jquery.atmosphere.js" target="head"/>
         <h:outputScript library="js" name="wboard-config.js" target="head"/>
         <h:outputScript library="js" name="wboard-drawing.js" target="body"/>
         <h:outputScript library="js" name="whiteboard.js" target="body"/>
@@ -134,7 +135,9 @@
         <script type="text/javascript">
             /* <![CDATA[ */
             jQuery(function() {
+                loadingDialogWidget.show();
                 initWhiteboard(#{displayWhiteboard.elementsAsJson});
+                loadingDialogWidget.hide();
             });
             /* ]]> */
         </script>

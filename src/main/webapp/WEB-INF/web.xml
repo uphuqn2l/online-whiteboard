@@ -78,7 +78,15 @@
     <servlet>
         <description>AtmosphereServlet</description>
         <servlet-name>AtmosphereServlet</servlet-name>
-        <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+        <servlet-class>com.googlecode.whiteboard.controller.WhiteboardPushServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
+            <param-value>com.sun.jersey.api.core.PackagesResourceConfig</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.googlecode.whiteboard</param-value>
+        </init-param>
         <init-param>
             <param-name>org.atmosphere.useWebSocket</param-name>
             <param-value>true</param-value>
@@ -88,10 +96,12 @@
             <param-value>true</param-value>
         </init-param>
         <init-param>
+            <param-name>org.atmosphere.cpr.WebSocketProcessor</param-name>
+            <param-value>org.atmosphere.cpr.HttpServletRequestWebSocketProcessor</param-value>
+        </init-param>
+        <init-param>
             <param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
-            <param-value>
-                org.atmosphere.client.FormParamFilter,org.atmosphere.client.JavascriptClientFilter
-            </param-value>
+            <param-value>org.atmosphere.client.JavascriptClientFilter</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
