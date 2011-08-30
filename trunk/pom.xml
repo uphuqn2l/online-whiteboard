@@ -225,6 +225,11 @@
             <artifactId>gson</artifactId>
             <version>1.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.atmosphere</groupId>
+            <artifactId>atmosphere-jersey</artifactId>
+            <version>0.7.2</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
