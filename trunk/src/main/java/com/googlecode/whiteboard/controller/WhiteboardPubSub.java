@@ -28,6 +28,8 @@ public class WhiteboardPubSub
     @POST
     @Broadcast
     public Broadcastable publish(@FormParam("message") String message) {
+        System.out.println(message);
+
         return new Broadcastable(message, "", topic);
     }
 }

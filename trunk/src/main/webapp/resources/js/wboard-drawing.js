@@ -1,8 +1,10 @@
 /**
  * Whiteboard designer class for element drawing.
  */
-WhiteboardDesigner = function(witeboardConfig) {
+WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
     this.config = witeboardConfig;
+    this.pubSubUrl = pubSubUrl;
+    this.pubSubTransport = pubSubTransport;
 
     // create jQuery objects for whiteboard container and dialogs
     var whiteboard = jQuery("#" + this.config.ids.whiteboard);
@@ -814,15 +816,32 @@ WhiteboardDesigner = function(witeboardConfig) {
         jQuery("<p style='margin: 2px 0 2px 0'>" + jsWhiteboard["message"] + "</p>").appendTo(".monitoringGroup");
     }
 
+    // subscribe to bidirectional channel
+    this.subscribePubSub = function() {
+        jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {transport: this.pubSubTransport});
+        this.connectedEndpoint = jQuery.atmosphere.response;
+    }
+
+    this.pubSubCallback = function(response) {
+        if (response.transport != 'polling' && response.state != 'connected' && response.state != 'closed' && response.status == 200) {
+            var data = response.responseBody;
+            if (data.length > 0) {
+                // TODO
+            }
+        }
+    }
+
     this.sendChanges = function(jsObject) {
         // set timestamp
         var curDate = new Date();
         jsObject.timestamp = curDate.getTime() + curDate.getTimezoneOffset() * 60000;
 
+        this.connectedEndpoint.push(this.pubSubUrl, null, jQuery.atmosphere.request = {data: 'message=' + JSON.stringify(jsObject)});
+
         // set data in hidden field
-        jQuery("#transferedJsonData").val(JSON.stringify(jsObject));
+        //jQuery("#transferedJsonData").val(JSON.stringify(jsObject));
         // send ajax request
-        transferJsonData();
+        //transferJsonData();
     }
 
     // private access =======================

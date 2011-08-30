@@ -24,6 +24,7 @@ public class CreateWhiteboard implements Serializable
     private WhiteboardsManager whiteboardsManager;
     private List<SelectItem> fontFamilies;
     private List<SelectItem> lineStyles;
+    private String pubSubTransport = "long-polling"; // TODO
 
     @PostConstruct
     protected void initialize() {
@@ -67,13 +68,21 @@ public class CreateWhiteboard implements Serializable
         this.whiteboardsManager = whiteboardsManager;
     }
 
+    public String getPubSubTransport() {
+        return pubSubTransport;
+    }
+
+    public void setPubSubTransport(String pubSubTransport) {
+        this.pubSubTransport = pubSubTransport;
+    }
+
     public String create() {
         whiteboard.setCreationDate(new Date());
         whiteboard.addUser(getCreator());
         whiteboardsManager.addWhiteboard(whiteboard);
 
         DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
-        displayWhiteboard.init(whiteboard, getCreator());
+        displayWhiteboard.init(whiteboard, getCreator(), pubSubTransport);
 
         return "/views/whiteboard?faces-redirect=true";
     }

@@ -114,8 +114,10 @@
                 </h:panelGroup>
             </h:panelGroup>
 
+            <!--
             <h:inputHidden id="transferedJsonData" value="#{displayWhiteboard.transferedJsonData}"/>
             <p:remoteCommand id="remoteCmd" name="transferJsonData" process="remoteCmd,transferedJsonData" actionListener="#{displayWhiteboard.transferJsonData}"/>
+            -->
 
             <ui:include src="/sections/dialogs.xhtml"/>
         </h:form>
@@ -135,9 +137,7 @@
         <script type="text/javascript">
             /* <![CDATA[ */
             jQuery(function() {
-                loadingDialogWidget.show();
-                initWhiteboard(#{displayWhiteboard.elementsAsJson});
-                loadingDialogWidget.hide();
+                initWhiteboard(#{displayWhiteboard.elementsAsJson}, '#{displayWhiteboard.pubSubUrl}', '#{displayWhiteboard.pubSubTransport}');
             });
             /* ]]> */
         </script>
