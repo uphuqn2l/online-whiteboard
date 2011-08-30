@@ -37,6 +37,14 @@ public class DisplayWhiteboard implements Serializable
         pinned = true;
     }
 
+    public Whiteboard getWhiteboard() {
+        return whiteboard;
+    }
+
+    public WhiteboardsManager getWhiteboardsManager() {
+        return whiteboardsManager;
+    }
+
     public void setWhiteboardsManager(WhiteboardsManager whiteboardsManager) {
         this.whiteboardsManager = whiteboardsManager;
     }
