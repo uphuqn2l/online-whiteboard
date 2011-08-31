@@ -5,6 +5,7 @@
 
 package com.googlecode.whiteboard.pubsub;
 
+import com.googlecode.whiteboard.utils.WhiteboardUtils;
 import org.atmosphere.annotation.Broadcast;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
@@ -32,8 +33,6 @@ public class WhiteboardPubSub
     @POST
     @Broadcast
     public String publish(@FormParam("message") String message, @PathParam("sender") String sender) {
-        //System.out.println(message);
-
         // find current sender in all suspended resources and remove it from the notification
         Collection<AtmosphereResource<?, ?>> ars = topic.getAtmosphereResources();
         if (ars == null) {
@@ -41,6 +40,7 @@ public class WhiteboardPubSub
         }
 
         Set<AtmosphereResource<?, ?>> arsSubset = new HashSet<AtmosphereResource<?, ?>>();
+        HttpServletRequest curReq = null;
         for (AtmosphereResource ar : ars) {
             Object req = ar.getRequest();
             if (req instanceof HttpServletRequest) {
@@ -48,11 +48,17 @@ public class WhiteboardPubSub
                 String resSender = pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
                 if (!sender.equals(resSender)) {
                     arsSubset.add(ar);
+                } else {
+                    curReq = (HttpServletRequest)req;
                 }
             }
         }
 
-        topic.broadcast(message, arsSubset);
+        // process current message (JSON) and create a new one (JSON) for subscribed client
+        String newMessage = WhiteboardUtils.updateWhiteboardFromJson(curReq, message);
+
+        // broadcast subscribed clients
+        topic.broadcast(newMessage, arsSubset);
 
         return "";
     }
