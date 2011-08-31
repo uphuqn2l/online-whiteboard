@@ -3,7 +3,7 @@
 * $$Id$$
 */
 
-package com.googlecode.whiteboard.controller;
+package com.googlecode.whiteboard.pubsub;
 
 import org.atmosphere.cpr.AtmosphereServlet;
 import org.atmosphere.cpr.Broadcaster;

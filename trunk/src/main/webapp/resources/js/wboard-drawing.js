@@ -818,7 +818,9 @@ WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
 
     // subscribe to bidirectional channel
     this.subscribePubSub = function() {
-        jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {transport: this.pubSubTransport});
+        jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {
+            transport: this.pubSubTransport
+        });
         this.connectedEndpoint = jQuery.atmosphere.response;
     }
 
@@ -827,6 +829,7 @@ WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
             var data = response.responseBody;
             if (data.length > 0) {
                 // TODO
+                alert(data);
             }
         }
     }
