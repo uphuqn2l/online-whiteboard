@@ -188,6 +188,10 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getPubSubUrl() {
+        if (whiteboard == null) {
+            return "";
+        }
+
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         String scheme = ec.getRequestScheme();
         int port = ec.getRequestServerPort();
@@ -199,7 +203,7 @@ public class DisplayWhiteboard implements Serializable
             serverPort = "";
         }
 
-        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/changes.topic");
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + getUser() + ".topic");
     }
 
     public void transferJsonData(ActionEvent ae) {
