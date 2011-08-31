@@ -829,7 +829,7 @@ WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
             var data = response.responseBody;
             if (data.length > 0) {
                 // TODO
-                alert(data);
+
             }
         }
     }

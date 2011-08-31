@@ -8,7 +8,6 @@ package com.googlecode.whiteboard.controller;
 import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
 import com.googlecode.whiteboard.model.base.AbstractElement;
-import com.googlecode.whiteboard.model.transfer.ClientChangedData;
 import com.googlecode.whiteboard.model.transfer.RestoredElements;
 import com.googlecode.whiteboard.utils.WhiteboardUtils;
 
@@ -18,6 +17,7 @@ import javax.faces.event.ActionEvent;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DisplayWhiteboard implements Serializable
@@ -29,7 +29,6 @@ public class DisplayWhiteboard implements Serializable
     private WhiteboardsManager whiteboardsManager;
     private String user;
     private boolean pinned;
-    private String transferedJsonData;
     private String pubSubTransport;
 
     public void init(Whiteboard whiteboard, String user, String pubSubTransport) {
@@ -65,14 +64,6 @@ public class DisplayWhiteboard implements Serializable
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
-    }
-
-    public String getTransferedJsonData() {
-        return transferedJsonData;
-    }
-
-    public void setTransferedJsonData(String transferedJsonData) {
-        this.transferedJsonData = transferedJsonData;
     }
 
     public String getPubSubTransport() {
@@ -203,48 +194,6 @@ public class DisplayWhiteboard implements Serializable
             serverPort = "";
         }
 
-        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + getUser() + ".topic");
-    }
-
-    public void transferJsonData(ActionEvent ae) {
-        //System.out.println(transferedJsonData);
-
-        // create Java object with all changed data
-        ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
-        ccd.setUser(this.user);
-
-        switch (ccd.getAction()) {
-            case Create:
-                WhiteboardUtils.createElement(whiteboard, ccd);
-                break;
-            case Remove:
-                WhiteboardUtils.removeElement(whiteboard, ccd);
-                break;
-            case Clone:
-                WhiteboardUtils.cloneElement(whiteboard, ccd);
-                break;
-            case Move:
-                WhiteboardUtils.moveElement(whiteboard, ccd);
-                break;
-            case BringToFront:
-                WhiteboardUtils.bringToFront(whiteboard, ccd);
-                break;
-            case BringToBack:
-                WhiteboardUtils.bringToBack(whiteboard, ccd);
-                break;
-            case Clear:
-                WhiteboardUtils.clearWhiteboard(whiteboard, ccd);
-                break;
-            case Resize:
-                WhiteboardUtils.resizeWhiteboard(whiteboard, ccd);
-                break;
-            default:
-                LOG.warning("Unknown client action!");
-                break;
-        }
-
-        whiteboardsManager.updateWhiteboard(whiteboard);
-
-        //WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false)
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + UUID.randomUUID().toString() + ".topic");
     }
 }
