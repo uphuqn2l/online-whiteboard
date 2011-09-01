@@ -5,7 +5,7 @@
 
 package com.googlecode.whiteboard.model.base;
 
-public abstract class Line extends AbstractElement
+public abstract class Line extends Rotatable
 {
     private String path;
     private String color;

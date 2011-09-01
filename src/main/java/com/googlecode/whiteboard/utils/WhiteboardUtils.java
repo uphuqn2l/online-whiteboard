@@ -11,7 +11,10 @@ import com.googlecode.whiteboard.model.Whiteboard;
 import com.googlecode.whiteboard.model.base.AbstractElement;
 import com.googlecode.whiteboard.model.base.Line;
 import com.googlecode.whiteboard.model.base.Positionable;
-import com.googlecode.whiteboard.model.transfer.ClientChangedData;
+import com.googlecode.whiteboard.model.element.FreeLine;
+import com.googlecode.whiteboard.model.element.StraightLine;
+import com.googlecode.whiteboard.model.element.Text;
+import com.googlecode.whiteboard.model.transfer.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -35,51 +38,49 @@ public class WhiteboardUtils
     }
 
     public static synchronized String updateWhiteboardFromJson(HttpServletRequest request, String transferedJsonData) {
-        //System.out.println(transferedJsonData);
         if (request == null) {
             LOG.severe("Current HTTP request not found (null) ==> no whiteboard update!");
-            return "{}";
+            return "";
         }
-
-        String message = null;
 
         // get DisplayWhiteboard bean
-        DisplayWhiteboard dw = (DisplayWhiteboard) request.getSession().getAttribute("beanName");
+        DisplayWhiteboard dw = (DisplayWhiteboard) request.getSession().getAttribute("displayWhiteboard");
         if (dw == null) {
-            LOG.severe("DisplayWhiteboard not found (null) ==> no whiteboard update!");
-            return "{}";
+            LOG.severe("Managed bean DisplayWhiteboard not found (null) ==> no whiteboard update!");
+            return "";
         }
 
+        ServerChangedData scd = null;
         Whiteboard whiteboard = dw.getWhiteboard();
 
-        // create Java object with all changed data
+        // create Java object from JSON with all changed data
         ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
         ccd.setUser(dw.getUser());
 
         switch (ccd.getAction()) {
             case Create:
-                message = WhiteboardUtils.createElement(whiteboard, ccd);
+                scd = WhiteboardUtils.createElement(whiteboard, ccd);
                 break;
             case Remove:
-                message = WhiteboardUtils.removeElement(whiteboard, ccd);
+                scd = WhiteboardUtils.removeElement(whiteboard, ccd);
                 break;
             case Clone:
-                message = WhiteboardUtils.cloneElement(whiteboard, ccd);
+                scd = WhiteboardUtils.cloneElement(whiteboard, ccd);
                 break;
             case Move:
-                message = WhiteboardUtils.moveElement(whiteboard, ccd);
+                scd = WhiteboardUtils.moveElement(whiteboard, ccd);
                 break;
             case BringToFront:
-                message = WhiteboardUtils.bringToFront(whiteboard, ccd);
+                scd = WhiteboardUtils.bringToFront(whiteboard, ccd);
                 break;
             case BringToBack:
-                message = WhiteboardUtils.bringToBack(whiteboard, ccd);
+                scd = WhiteboardUtils.bringToBack(whiteboard, ccd);
                 break;
             case Clear:
-                message = WhiteboardUtils.clearWhiteboard(whiteboard, ccd);
+                scd = WhiteboardUtils.clearWhiteboard(whiteboard, ccd);
                 break;
             case Resize:
-                message = WhiteboardUtils.resizeWhiteboard(whiteboard, ccd);
+                scd = WhiteboardUtils.resizeWhiteboard(whiteboard, ccd);
                 break;
             default:
                 LOG.warning("Unknown client action!");
@@ -89,88 +90,219 @@ public class WhiteboardUtils
         // update changed whiteboard
         dw.getWhiteboardsManager().updateWhiteboard(whiteboard);
 
-        return message;
+        if (scd == null) {
+            return "";
+        }
 
-        //WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false)
+        // generate output JSON for subscribed clients
+        return JsonConverter.getGson().toJson(scd);
     }
 
-    private static String createElement(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData createElement(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Create element: element is null");
+            return null;
         }
 
         whiteboard.addElement(ccd.getElement());
 
-        return "TODO";
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        scd.setElement(ccd.getElement());
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: created ");
+        message.append(getTextForElement(ccd.getElement()));
+        if (ccd.getElement() instanceof Positionable) {
+            message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ccd.getElement()).getX());
+            message.append(",");
+            message.append(((Positionable) ccd.getElement()).getY());
+            message.append(")");
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
     }
 
-    private static String removeElement(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData removeElement(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Remove element: element is null");
+            return null;
         }
 
-        whiteboard.removeElement(ccd.getElement());
+        AbstractElement ae = whiteboard.removeElement(ccd.getElement());
+        if (ae == null) {
+            // element doesn't exist more in this whiteboard
+            return null;
+        }
 
-        return "TODO";
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        AbstractElement ccdElement = ccd.getElement();
+        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: removed ");
+        message.append(getTextForElement(ae));
+        if (ae instanceof Positionable) {
+            message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ae).getX());
+            message.append(",");
+            message.append(((Positionable) ae).getY());
+            message.append(")");
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
     }
 
-    private static String cloneElement(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData cloneElement(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Clone element: element is null");
+            return null;
         }
 
         whiteboard.addElement(ccd.getElement());
 
-        return "TODO";
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        scd.setElement(ccd.getElement());
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: cloned ");
+        message.append(getTextForElement(ccd.getElement()));
+        if (ccd.getElement() instanceof Positionable) {
+            message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ccd.getElement()).getX());
+            message.append(",");
+            message.append(((Positionable) ccd.getElement()).getY());
+            message.append(")");
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
     }
 
-    private static String moveElement(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData moveElement(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Move element: element is null");
+            return null;
         }
 
         AbstractElement ae = whiteboard.getElement(ccd.getElement().getUuid());
         if (ae == null) {
             // element doesn't exist more in this whiteboard
-            return "{}";
+            return null;
         }
+
+        String position = null;
+        AbstractElement ccdElement = ccd.getElement();
+        TruncatedElement tElement = null;
 
         if (ae instanceof Positionable) {
-            ((Positionable) ae).setX(((Positionable) ccd.getElement()).getX());
-            ((Positionable) ae).setY(((Positionable) ccd.getElement()).getY());
+            int posX = ((Positionable) ccdElement).getX();
+            int posY = ((Positionable) ccdElement).getY();
+            ((Positionable) ae).setX(posX);
+            ((Positionable) ae).setY(posY);
+            position = "(" + posX + "," + posY + ")";
+            tElement = new TruncatedPositionable(ccdElement.getUuid(), ccdElement.getClass().getSimpleName(), posX, posY);
         } else if (ae instanceof Line) {
-            ((Line) ae).setPath(((Line) ccd.getElement()).getPath());
+            String path = ((Line) ccdElement).getPath();
+            ((Line) ae).setPath(path);
+            tElement = new TruncatedLine(ccdElement.getUuid(), ccdElement.getClass().getSimpleName(), path);
         }
 
-        return "TODO";
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        scd.setElement(tElement);
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: moved ");
+        message.append(getTextForElement(ae));
+        if (position != null) {
+            message.append(" to position ");
+            message.append(position);
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
     }
 
-    private static String bringToFront(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData bringToFront(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Bring to top: element is null");
+            return null;
         }
 
         AbstractElement ae = whiteboard.removeElement(ccd.getElement());
         if (ae == null) {
             // element doesn't exist more in this whiteboard
-            return "{}";
+            return null;
         }
 
         whiteboard.addElement(ae);
 
-        return "TODO";
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        AbstractElement ccdElement = ccd.getElement();
+        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: brought ");
+        message.append(getTextForElement(ae));
+        message.append(" to front (in front of other elements)");
+        if (ae instanceof Positionable) {
+            message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ae).getX());
+            message.append(",");
+            message.append(((Positionable) ae).getY());
+            message.append(")");
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
     }
 
-    private static String bringToBack(Whiteboard whiteboard, ClientChangedData ccd) {
+    private static ServerChangedData bringToBack(Whiteboard whiteboard, ClientChangedData ccd) {
         if (ccd.getElement() == null) {
             LOG.warning("Bring to back: element is null");
+            return null;
         }
 
         AbstractElement ae = whiteboard.removeElement(ccd.getElement());
         if (ae == null) {
             // element doesn't exist more in this whiteboard
-            return "{}";
+            return null;
         }
 
         Map<String, AbstractElement> elements = new LinkedHashMap<String, AbstractElement>();
@@ -178,23 +310,97 @@ public class WhiteboardUtils
         elements.putAll(whiteboard.getElements());
         whiteboard.setElements(elements);
 
-        return "TODO";
-    }
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        AbstractElement ccdElement = ccd.getElement();
+        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
-    private static String clearWhiteboard(Whiteboard whiteboard, ClientChangedData ccd) {
-        whiteboard.clearElements();
-
-        return "TODO";
-    }
-
-    private static String resizeWhiteboard(Whiteboard whiteboard, ClientChangedData ccd) {
-        if (ccd.getParameters() == null || ccd.getParameters().isEmpty()) {
-            LOG.warning("Resize whiteboard: no parameters passed");
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: brought ");
+        message.append(getTextForElement(ae));
+        message.append(" to back (behind other elements)");
+        if (ae instanceof Positionable) {
+            message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ae).getX());
+            message.append(",");
+            message.append(((Positionable) ae).getY());
+            message.append(")");
         }
 
-        whiteboard.setWidth(Integer.valueOf(ccd.getParameters().get("width")));
-        whiteboard.setHeight(Integer.valueOf(ccd.getParameters().get("height")));
+        scd.setMessage(message.toString());
 
-        return "TODO";
+        return scd;
+    }
+
+    private static ServerChangedData clearWhiteboard(Whiteboard whiteboard, ClientChangedData ccd) {
+        whiteboard.clearElements();
+
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        AbstractElement ccdElement = ccd.getElement();
+        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: cleared this Whiteboard");
+
+        scd.setMessage(message.toString());
+
+        return scd;
+    }
+
+    private static ServerChangedData resizeWhiteboard(Whiteboard whiteboard, ClientChangedData ccd) {
+        if (ccd.getParameters() == null || ccd.getParameters().isEmpty()) {
+            LOG.warning("Resize whiteboard: no parameters passed");
+            return null;
+        }
+
+        int width = Integer.valueOf(ccd.getParameters().get("width"));
+        int height = Integer.valueOf(ccd.getParameters().get("height"));
+        whiteboard.setWidth(width);
+        whiteboard.setHeight(height);
+
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        AbstractElement ccdElement = ccd.getElement();
+        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
+
+        scd.addParameter("width", ccd.getParameters().get("width"));
+        scd.addParameter("height", ccd.getParameters().get("height"));
+
+        StringBuffer message = new StringBuffer();
+        message.append("Timestamp: ");
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(", User: ");
+        message.append(ccd.getUser());
+        message.append(", Action: resized this Whiteboard to (");
+        message.append(width);
+        message.append(",");
+        message.append(height);
+        message.append(") px");
+
+        scd.setMessage(message.toString());
+
+        return scd;
+    }
+
+    private static String getTextForElement(AbstractElement ae) {
+        if (ae instanceof Text) {
+            return "Text '" + ((Text) ae).getText() + "'";
+        } else if (ae instanceof FreeLine) {
+            return "Free Line";
+        } else if (ae instanceof StraightLine) {
+            return "Straight Line";
+        } else {
+            return ae.getClass().getSimpleName();
+        }
     }
 }

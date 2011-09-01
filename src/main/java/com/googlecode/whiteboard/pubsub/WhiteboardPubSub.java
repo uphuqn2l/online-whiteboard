@@ -57,7 +57,7 @@ public class WhiteboardPubSub
         // process current message (JSON) and create a new one (JSON) for subscribed client
         String newMessage = WhiteboardUtils.updateWhiteboardFromJson(curReq, message);
 
-        // broadcast subscribed clients
+        // broadcast subscribed clients except sender
         topic.broadcast(newMessage, arsSubset);
 
         return "";

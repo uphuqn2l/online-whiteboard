@@ -11,12 +11,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public abstract class AbstractElement
 {
     private String uuid;
-    private int rotationDegree;
 
-    public AbstractElement updateFromJson(String jsonString) {
-        // TODO
+    public AbstractElement() {
+    }
 
-        return null;
+    public AbstractElement(String uuid) {
+        this.uuid = uuid;
     }
 
     public void setUuid(String uuid) {
@@ -25,14 +25,6 @@ public abstract class AbstractElement
 
     public String getUuid() {
         return uuid;
-    }
-
-    public int getRotationDegree() {
-        return rotationDegree;
-    }
-
-    public void setRotationDegree(int rotationDegree) {
-        this.rotationDegree = rotationDegree;
     }
 
     public boolean equals(Object obj) {
