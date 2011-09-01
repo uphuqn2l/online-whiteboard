@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 public class DisplayWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
+
     private static final Logger LOG = Logger.getLogger(DisplayWhiteboard.class.getName());
 
     private Whiteboard whiteboard;
@@ -33,7 +34,7 @@ public class DisplayWhiteboard implements Serializable
 
     public void init(Whiteboard whiteboard, String user, String pubSubTransport) {
         this.whiteboard = whiteboard;
-        this.user = user;
+        this.user = user.replace("'", "\\\'");
         this.pubSubTransport = pubSubTransport;
         pinned = true;
     }
@@ -148,9 +149,9 @@ public class DisplayWhiteboard implements Serializable
 
         List<String> users = whiteboard.getUsers();
         if (users.size() < 2) {
-            return "User " + getCreator() + " has created this whiteboard.";
+            return "Hello " + getCreator() + "!. You have created this whiteboard.";
         } else {
-            return "User " + users.get(users.size() - 1) + " has joined this whiteboard.";
+            return "Hello " + users.get(users.size() - 1) + "!. You have joined this whiteboard.";
         }
     }
 

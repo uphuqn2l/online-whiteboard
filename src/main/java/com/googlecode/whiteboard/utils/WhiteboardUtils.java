@@ -15,6 +15,7 @@ import com.googlecode.whiteboard.model.element.FreeLine;
 import com.googlecode.whiteboard.model.element.StraightLine;
 import com.googlecode.whiteboard.model.element.Text;
 import com.googlecode.whiteboard.model.transfer.*;
+import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -55,11 +56,13 @@ public class WhiteboardUtils
 
         // create Java object from JSON with all changed data
         ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
-        ccd.setUser(dw.getUser());
 
         switch (ccd.getAction()) {
             case Create:
                 scd = WhiteboardUtils.createElement(whiteboard, ccd);
+                break;
+            case Update:
+                scd = WhiteboardUtils.updateElement(whiteboard, ccd);
                 break;
             case Remove:
                 scd = WhiteboardUtils.removeElement(whiteboard, ccd);
@@ -111,14 +114,58 @@ public class WhiteboardUtils
         scd.setElement(ccd.getElement());
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: created ");
+        message.append(" has created ");
         message.append(getTextForElement(ccd.getElement()));
         if (ccd.getElement() instanceof Positionable) {
             message.append(" at position ");
+            message.append("(");
+            message.append(((Positionable) ccd.getElement()).getX());
+            message.append(",");
+            message.append(((Positionable) ccd.getElement()).getY());
+            message.append(")");
+        }
+
+        scd.setMessage(message.toString());
+
+        return scd;
+    }
+
+    private static ServerChangedData updateElement(Whiteboard whiteboard, ClientChangedData ccd) {
+        if (ccd.getElement() == null) {
+            LOG.warning("Update element: element is null");
+            return null;
+        }
+
+        AbstractElement ae = whiteboard.getElement(ccd.getElement().getUuid());
+        if (ae == null) {
+            // element doesn't exist more in this whiteboard
+            return null;
+        }
+
+        AbstractElement ccdElement = ccd.getElement();
+
+        // copy all properties to be updated
+        try {
+            BeanUtils.copyProperties(ae, ccdElement);
+        } catch (Exception e) {
+            LOG.warning("Properties of element " + ccd.getElement().toString() + " could not be updated successfully. Exception: " + e.getLocalizedMessage());
+        }
+
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+        scd.setElement(ae);
+
+        StringBuffer message = new StringBuffer();
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(": User ");
+        message.append(ccd.getUser());
+        message.append(" has updated properties of ");
+        message.append(getTextForElement(ccd.getElement()));
+        if (ccd.getElement() instanceof Positionable) {
+            message.append(" at current position ");
             message.append("(");
             message.append(((Positionable) ccd.getElement()).getX());
             message.append(",");
@@ -149,11 +196,10 @@ public class WhiteboardUtils
         scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: removed ");
+        message.append(" has removed ");
         message.append(getTextForElement(ae));
         if (ae instanceof Positionable) {
             message.append(" at position ");
@@ -182,11 +228,10 @@ public class WhiteboardUtils
         scd.setElement(ccd.getElement());
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: cloned ");
+        message.append(" has cloned ");
         message.append(getTextForElement(ccd.getElement()));
         if (ccd.getElement() instanceof Positionable) {
             message.append(" at position ");
@@ -236,11 +281,10 @@ public class WhiteboardUtils
         scd.setElement(tElement);
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: moved ");
+        message.append(" has moved ");
         message.append(getTextForElement(ae));
         if (position != null) {
             message.append(" to position ");
@@ -272,11 +316,10 @@ public class WhiteboardUtils
         scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: brought ");
+        message.append(" has brought ");
         message.append(getTextForElement(ae));
         message.append(" to front (in front of other elements)");
         if (ae instanceof Positionable) {
@@ -316,11 +359,10 @@ public class WhiteboardUtils
         scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: brought ");
+        message.append(" has brought ");
         message.append(getTextForElement(ae));
         message.append(" to back (behind other elements)");
         if (ae instanceof Positionable) {
@@ -342,15 +384,12 @@ public class WhiteboardUtils
 
         ServerChangedData scd = new ServerChangedData();
         scd.setAction(ccd.getAction());
-        AbstractElement ccdElement = ccd.getElement();
-        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: cleared this Whiteboard");
+        message.append(" has cleared this Whiteboard");
 
         scd.setMessage(message.toString());
 
@@ -370,18 +409,15 @@ public class WhiteboardUtils
 
         ServerChangedData scd = new ServerChangedData();
         scd.setAction(ccd.getAction());
-        AbstractElement ccdElement = ccd.getElement();
-        scd.setElement(new TruncatedElement(ccdElement.getUuid(), ccdElement.getClass().getSimpleName()));
 
         scd.addParameter("width", ccd.getParameters().get("width"));
         scd.addParameter("height", ccd.getParameters().get("height"));
 
         StringBuffer message = new StringBuffer();
-        message.append("Timestamp: ");
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
-        message.append(", User: ");
+        message.append(": User ");
         message.append(ccd.getUser());
-        message.append(", Action: resized this Whiteboard to (");
+        message.append(" has resized this Whiteboard to (");
         message.append(width);
         message.append(",");
         message.append(height);

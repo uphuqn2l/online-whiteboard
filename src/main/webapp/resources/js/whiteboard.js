@@ -1,4 +1,4 @@
-function initWhiteboard(jsWhiteboard, pubSubUrl, pubSubTransport) {
+function initWhiteboard(jsWhiteboard, user, pubSubUrl, pubSubTransport) {
     // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
 
@@ -127,7 +127,7 @@ function initWhiteboard(jsWhiteboard, pubSubUrl, pubSubTransport) {
     });
 
     // create a global whiteboard designer instance
-    whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig(), pubSubUrl, pubSubTransport);
+    whiteboardDesigner = new WhiteboardDesigner(new WhiteboardConfig(), user, pubSubUrl, pubSubTransport);
 
     // restore existing whiteboard if any exists
     if (!isBlankObject(jsWhiteboard)) {

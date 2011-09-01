@@ -7,7 +7,7 @@ package com.googlecode.whiteboard.model.transfer;
 
 public enum ClientAction
 {
-    Create("create"), Update("update"), Remove("remove"), Clone("clone"), Move("move"), BringToFront("toFront"), BringToBack("toBack"), Clear("clear"), Resize("resize");
+    Join("join"), Create("create"), Update("update"), Remove("remove"), Clone("clone"), Move("move"), BringToFront("toFront"), BringToBack("toBack"), Clear("clear"), Resize("resize");
 
     private String action;
 

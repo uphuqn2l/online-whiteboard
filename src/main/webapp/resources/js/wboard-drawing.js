@@ -1,8 +1,9 @@
 /**
  * Whiteboard designer class for element drawing.
  */
-WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
+WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport) {
     this.config = witeboardConfig;
+    this.user = user;
     this.pubSubUrl = pubSubUrl;
     this.pubSubTransport = pubSubTransport;
 
@@ -829,7 +830,7 @@ WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
             var data = response.responseBody;
             if (data.length > 0) {
                 // TODO
-
+                console.log(data);
             }
         }
     }
@@ -839,6 +840,10 @@ WhiteboardDesigner = function(witeboardConfig, pubSubUrl, pubSubTransport) {
         var curDate = new Date();
         jsObject.timestamp = curDate.getTime() + curDate.getTimezoneOffset() * 60000;
 
+        // set user
+        jsObject.user = this.user;
+
+        // send changes to all subscribed clients
         this.connectedEndpoint.push(this.pubSubUrl, null, jQuery.atmosphere.request = {data: 'message=' + JSON.stringify(jsObject)});
 
         // set data in hidden field
