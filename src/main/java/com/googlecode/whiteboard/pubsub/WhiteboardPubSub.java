@@ -13,6 +13,7 @@ import org.atmosphere.jersey.SuspendResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class WhiteboardPubSub
 
     @POST
     @Broadcast
-    public String publish(@FormParam("message") String message, @PathParam("sender") String sender) {
+    public String publish(@FormParam("message") String message, @PathParam("sender") String sender, @Context AtmosphereResource resource) {
         // find current sender in all suspended resources and remove it from the notification
         Collection<AtmosphereResource<?, ?>> ars = topic.getAtmosphereResources();
         if (ars == null) {
@@ -52,6 +53,10 @@ public class WhiteboardPubSub
                     curReq = (HttpServletRequest)req;
                 }
             }
+        }
+
+        if (curReq == null) {
+            curReq = (HttpServletRequest)resource.getRequest();
         }
 
         // process current message (JSON) and create a new one (JSON) for subscribed client

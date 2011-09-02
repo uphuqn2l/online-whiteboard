@@ -814,7 +814,7 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
             }
         }
 
-        jQuery("<p style='margin: 2px 0 2px 0'>" + jsWhiteboard["message"] + "</p>").appendTo(".monitoringGroup");
+        prependMessage(jsWhiteboard["message"]);
     }
 
     // subscribe to bidirectional channel
@@ -829,10 +829,24 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
         if (response.transport != 'polling' && response.state != 'connected' && response.state != 'closed' && response.status == 200) {
             var data = response.responseBody;
             if (data.length > 0) {
-                // TODO
-                console.log(data);
+                var jsData = JSON.parse(data);
+                
+                if (jsData.action == "join") {
+                    prependMessage(jsData.message);
+                    jQuery("#usersCount").html(jsData.parameters.usersCount);
+                }
             }
         }
+    }
+
+    this.joinUser = function(usersCount) {
+        // send changes to server
+        this.sendChanges({
+            "action": "join",
+            "parameters": {
+                "usersCount": usersCount
+            }
+        });
     }
 
     this.sendChanges = function(jsObject) {
@@ -1376,6 +1390,10 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
         }
 
         return "No";
+    }
+
+    var prependMessage = function(msg) {
+        jQuery("<p style='margin: 2px 0 2px 0'>" + msg + "</p>").prependTo(".monitoringGroup");
     }
 
     // initialize whiteboard
