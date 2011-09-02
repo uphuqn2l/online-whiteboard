@@ -16,7 +16,10 @@
                 <h:graphicImage library="img" name="calendar.png"/>
                 <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.creator}"/>
                 <h:graphicImage library="img" name="userInfo.png"/>
-                <h:outputText id="activeUsers" value="Active users: #{displayWhiteboard.usersCount}"/>
+                <h:panelGroup>
+                    <h:outputText id="activeUsers" value="Active users: "/>
+                    <h:outputText id="usersCount" value="#{displayWhiteboard.usersCount}"/>
+                </h:panelGroup>
                 <h:graphicImage library="img" name="sendLink.png"/>
                 <p:commandLink value="Invite people" ajax="false" style="display: block;"
                                onclick="inviteWidget.show(); return false;"/>
@@ -137,7 +140,7 @@
         <script type="text/javascript">
             /* <![CDATA[ */
             jQuery(function() {
-                initWhiteboard(#{displayWhiteboard.elementsAsJson}, '#{displayWhiteboard.user}', '#{displayWhiteboard.pubSubUrl}', '#{displayWhiteboard.pubSubTransport}');
+                initWhiteboard(#{displayWhiteboard.elementsAsJson},'#{displayWhiteboard.user}',#{displayWhiteboard.usersCount},'#{displayWhiteboard.pubSubUrl}','#{displayWhiteboard.pubSubTransport}');
             });
             /* ]]> */
         </script>

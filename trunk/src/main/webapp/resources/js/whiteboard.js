@@ -1,4 +1,4 @@
-function initWhiteboard(jsWhiteboard, user, pubSubUrl, pubSubTransport) {
+function initWhiteboard(jsWhiteboard, user, usersCount, pubSubUrl, pubSubTransport) {
     // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
 
@@ -136,6 +136,11 @@ function initWhiteboard(jsWhiteboard, user, pubSubUrl, pubSubTransport) {
 
     // subscribe to bidirectional channel
     whiteboardDesigner.subscribePubSub();
+
+    if (usersCount > 1) {
+        // notificate subscribers about new user
+        setTimeout(function() {whiteboardDesigner.joinUser(usersCount);}, 1000);
+    }
 }
 
 function isBlankObject(obj) {

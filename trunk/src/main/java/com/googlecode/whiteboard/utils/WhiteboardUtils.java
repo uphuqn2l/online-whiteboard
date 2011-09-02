@@ -85,6 +85,9 @@ public class WhiteboardUtils
             case Resize:
                 scd = WhiteboardUtils.resizeWhiteboard(whiteboard, ccd);
                 break;
+            case Join:
+                scd = WhiteboardUtils.joinUser(whiteboard, ccd);
+                break;
             default:
                 LOG.warning("Unknown client action!");
                 break;
@@ -422,6 +425,30 @@ public class WhiteboardUtils
         message.append(",");
         message.append(height);
         message.append(") px");
+
+        scd.setMessage(message.toString());
+
+        return scd;
+    }
+
+    private static ServerChangedData joinUser(Whiteboard whiteboard, ClientChangedData ccd) {
+        if (ccd.getParameters() == null || ccd.getParameters().isEmpty()) {
+            LOG.warning("Join user: no parameters passed");
+            return null;
+        }
+
+        int usersCount = Integer.valueOf(ccd.getParameters().get("usersCount"));
+
+        ServerChangedData scd = new ServerChangedData();
+        scd.setAction(ccd.getAction());
+
+        scd.addParameter("usersCount", ccd.getParameters().get("usersCount"));
+
+        StringBuffer message = new StringBuffer();
+        message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
+        message.append(": User ");
+        message.append(ccd.getUser());
+        message.append(" has joined this whiteboard");
 
         scd.setMessage(message.toString());
 

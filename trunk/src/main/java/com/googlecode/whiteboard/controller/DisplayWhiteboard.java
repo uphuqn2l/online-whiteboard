@@ -149,9 +149,9 @@ public class DisplayWhiteboard implements Serializable
 
         List<String> users = whiteboard.getUsers();
         if (users.size() < 2) {
-            return "Hello " + getCreator() + "!. You have created this whiteboard.";
+            return "Hello " + getCreator() + "! You have created this whiteboard.";
         } else {
-            return "Hello " + users.get(users.size() - 1) + "!. You have joined this whiteboard.";
+            return "Hello " + users.get(users.size() - 1) + "! You have joined this whiteboard.";
         }
     }
 
