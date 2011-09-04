@@ -139,7 +139,9 @@ function initWhiteboard(jsWhiteboard, whiteboardId, user, usersCount, pubSubUrl,
 
     if (usersCount > 1) {
         // notificate subscribers about new user
-        setTimeout(function() {whiteboardDesigner.joinUser(usersCount);}, 1000);
+        setTimeout(function() {
+            whiteboardDesigner.joinUser(usersCount);
+        }, 1000);
     }
 }
 
@@ -250,4 +252,8 @@ function colorToHex(color) {
 
     var rgb = blue | (green << 8) | (red << 16);
     return digits[1] + '#' + rgb.toString(16);
+}
+
+function sendPropertiesChanges(type) {
+    whiteboardDesigner.sendPropertiesChanges(type);
 }

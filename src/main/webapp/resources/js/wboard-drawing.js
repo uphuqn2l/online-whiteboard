@@ -819,6 +819,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    this.sendPropertiesChanges = function(type) {
+        console.log(type);
+    }
+
     // subscribe to bidirectional channel
     this.subscribePubSub = function() {
         jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {

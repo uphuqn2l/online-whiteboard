@@ -10,29 +10,31 @@
     <h:panelGrid columns="2" styleClass="editPropsTable" columnClasses="editPropsCol1,editPropsCol2"
                  footerClass="editPropsFooter">
         <h:outputLabel for="textCx" value="X coordinate (centre)"/>
-        <cc:numericInput id="textCx"/>
+        <cc:numericInput id="textCx" type="Text"/>
         <h:outputLabel for="textCy" value="Y coordinate (centre)"/>
-        <cc:numericInput id="textCy"/>
+        <cc:numericInput id="textCy" type="Text"/>
         <h:outputLabel for="fontFamily" value="Font family"/>
-        <h:selectOneMenu id="fontFamily">
+        <h:selectOneMenu id="fontFamily" onchange="sendPropertiesChanges('Text')">
             <f:selectItems value="#{displayWhiteboard.fontFamilies}"/>
         </h:selectOneMenu>
         <h:outputLabel for="fontSize" value="Font size"/>
-        <p:spinner id="fontSize" min="6" max="96" maxlength="2"/>
+        <p:spinner id="fontSize" min="6" max="96" maxlength="2" onchange="sendPropertiesChanges('Text')"/>
         <h:outputLabel for="fontWeight" value="Font weight"/>
-        <h:selectOneRadio id="fontWeight" layout="lineDirection" styleClass="radioButtons">
+        <h:selectOneRadio id="fontWeight" layout="lineDirection" styleClass="radioButtons"
+                          onclick="sendPropertiesChanges('Text')">
             <f:selectItem itemLabel="Normal" itemValue="normal"/>
             <f:selectItem itemLabel="Bold" itemValue="bold"/>
         </h:selectOneRadio>
         <h:outputLabel for="fontStyle" value="Font style"/>
-        <h:selectOneRadio id="fontStyle" layout="lineDirection" styleClass="radioButtons">
+        <h:selectOneRadio id="fontStyle" layout="lineDirection" styleClass="radioButtons"
+                          onclick="sendPropertiesChanges('Text')">
             <f:selectItem itemLabel="Normal" itemValue="normal"/>
             <f:selectItem itemLabel="Italic" itemValue="italic"/>
         </h:selectOneRadio>
         <h:outputLabel for="textColor" value="Color"/>
-        <cc:colorPicker id="textColor"/>
+        <cc:colorPicker id="textColor" type="Text"/>
         <h:outputLabel for="textRotation" value="Rotate (0-360&deg;)"/>
-        <p:spinner id="textRotation" min="0" max="360" maxlength="3"/>
+        <p:spinner id="textRotation" min="0" max="360" maxlength="3" onchange="sendPropertiesChanges('Text')"/>
         <ui:include src="/sections/defbutton.xhtml">
             <ui:param name="properties" value="text"/>
         </ui:include>
