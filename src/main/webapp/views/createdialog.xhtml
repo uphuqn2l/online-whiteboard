@@ -33,6 +33,10 @@
                             <w:pixelConverter/>
                         </p:spinner>
                     </h:panelGroup>
+                    <h:outputLabel for="transport" value="Select transport"/>
+                    <h:selectOneMenu id="transport" value="#{createWhiteboard.pubSubTransport}" style="width: 110px;">
+                        <f:selectItems value="#{createWhiteboard.transports}"/>
+                    </h:selectOneMenu>
                     <f:facet name="footer">
                         <!--
                         <p:captcha label="Captcha"/>
