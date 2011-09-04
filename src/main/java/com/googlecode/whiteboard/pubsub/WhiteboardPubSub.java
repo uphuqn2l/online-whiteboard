@@ -50,13 +50,13 @@ public class WhiteboardPubSub
                 if (!sender.equals(resSender)) {
                     arsSubset.add(ar);
                 } else {
-                    curReq = (HttpServletRequest)req;
+                    curReq = (HttpServletRequest) req;
                 }
             }
         }
 
         if (curReq == null) {
-            curReq = (HttpServletRequest)resource.getRequest();
+            curReq = (HttpServletRequest) resource.getRequest();
         }
 
         // process current message (JSON) and create a new one (JSON) for subscribed client

@@ -1,0 +1,28 @@
+/*
+* @author  Oleg Varaksin (ovaraksin@googlemail.com)
+* $$Id$$
+*/
+
+package com.googlecode.whiteboard.controller;
+
+public class WhiteboardIdentifiers
+{
+    private String whiteboardId;
+    private String senderId;
+
+    public String getWhiteboardId() {
+        return whiteboardId;
+    }
+
+    public void setWhiteboardId(String whiteboardId) {
+        this.whiteboardId = whiteboardId;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+}

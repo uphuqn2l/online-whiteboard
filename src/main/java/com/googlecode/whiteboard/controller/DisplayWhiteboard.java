@@ -5,19 +5,23 @@
 
 package com.googlecode.whiteboard.controller;
 
+import com.googlecode.whiteboard.errorhandler.DefaultExceptionHandler;
 import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
+import com.googlecode.whiteboard.model.attribute.StrokeStyle;
 import com.googlecode.whiteboard.model.base.AbstractElement;
 import com.googlecode.whiteboard.model.transfer.RestoredElements;
+import com.googlecode.whiteboard.utils.FacesAccessor;
 import com.googlecode.whiteboard.utils.WhiteboardUtils;
 
+import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DisplayWhiteboard implements Serializable
@@ -28,15 +32,31 @@ public class DisplayWhiteboard implements Serializable
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
-    private String user;
-    private boolean pinned;
-    private String pubSubTransport;
+    private String senderId;
+    private List<SelectItem> fontFamilies;
+    private List<SelectItem> lineStyles;
 
-    public void init(Whiteboard whiteboard, String user, String pubSubTransport) {
-        this.whiteboard = whiteboard;
-        this.user = user.replace("'", "\\\'");
-        this.pubSubTransport = pubSubTransport;
-        pinned = true;
+    @PostConstruct
+    protected void initialize() {
+        String whiteboardId = FacesAccessor.getRequestParameter("whiteboardId");
+
+        if (whiteboardId != null) {
+            whiteboard = whiteboardsManager.getWhiteboard(whiteboardId);
+        } else {
+            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=601");
+            return;
+        }
+
+        if (whiteboard == null) {
+            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=602");
+            return;
+        }
+
+        senderId = FacesAccessor.getRequestParameter("senderId");
+
+        if (senderId == null) {
+            DefaultExceptionHandler.doRedirect(FacesContext.getCurrentInstance(), "/views/error.jsf?statusCode=603");
+        }
     }
 
     public Whiteboard getWhiteboard() {
@@ -52,27 +72,19 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getUser() {
-        return user;
-    }
+        if (whiteboard == null) {
+            return "";
+        }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public boolean isPinned() {
-        return pinned;
-    }
-
-    public void setPinned(boolean pinned) {
-        this.pinned = pinned;
+        return whiteboard.getUserData(senderId).getUserName();
     }
 
     public String getPubSubTransport() {
-        return pubSubTransport;
-    }
+        if (whiteboard == null) {
+            return "";
+        }
 
-    public void setPubSubTransport(String pubSubTransport) {
-        this.pubSubTransport = pubSubTransport;
+        return whiteboard.getPubSubTransport();
     }
 
     public String getTitle() {
@@ -116,7 +128,7 @@ public class DisplayWhiteboard implements Serializable
             return 0;
         }
 
-        return whiteboard.getUsers().size();
+        return whiteboard.getUserData().size();
     }
 
     public String getMailto() {
@@ -139,7 +151,7 @@ public class DisplayWhiteboard implements Serializable
             serverPort = "";
         }
 
-        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/views/joindialog.jsf?uuid=" + whiteboard.getUuid());
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/whiteboard/join/" + whiteboard.getUuid() + "/");
     }
 
     public String getMonitoringMessage() {
@@ -147,16 +159,11 @@ public class DisplayWhiteboard implements Serializable
             return "";
         }
 
-        List<String> users = whiteboard.getUsers();
-        if (users.size() < 2) {
+        if (whiteboard.getUserData().size() < 2) {
             return "Hello " + getCreator() + "! You have created this whiteboard.";
         } else {
-            return "Hello " + users.get(users.size() - 1) + "! You have joined this whiteboard.";
+            return "Hello " + getUser() + "! You have joined or refreshed this whiteboard.";
         }
-    }
-
-    public void tooglePinUnpin(ActionEvent e) {
-        pinned = !pinned;
     }
 
     public String getElementsAsJson() {
@@ -195,6 +202,53 @@ public class DisplayWhiteboard implements Serializable
             serverPort = "";
         }
 
-        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + UUID.randomUUID().toString() + ".topic");
+        return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + senderId + ".topic");
+    }
+
+    public List getFontFamilies() {
+        if (fontFamilies == null) {
+            fontFamilies = new ArrayList<SelectItem>();
+            fontFamilies.add(new SelectItem("Arial", "Arial"));
+            fontFamilies.add(new SelectItem("Arial Black", "Arial Black"));
+            fontFamilies.add(new SelectItem("Book Antiqua", "Book Antiqua"));
+            fontFamilies.add(new SelectItem("Century Gothic", "Century Gothic"));
+            fontFamilies.add(new SelectItem("Comic Sans MS", "Comic Sans MS"));
+            fontFamilies.add(new SelectItem("Courier", "Courier"));
+            fontFamilies.add(new SelectItem("Courier New", "Courier New"));
+            fontFamilies.add(new SelectItem("Garamond", "Garamond"));
+            fontFamilies.add(new SelectItem("Geneva", "Geneva"));
+            fontFamilies.add(new SelectItem("Georgia", "Georgia"));
+            fontFamilies.add(new SelectItem("Helvetica", "Helvetica"));
+            fontFamilies.add(new SelectItem("Impact", "Impact"));
+            fontFamilies.add(new SelectItem("Lucida Console", "Lucida Console"));
+            fontFamilies.add(new SelectItem("Lucida Sans Unicode", "Lucida Sans Unicode"));
+            fontFamilies.add(new SelectItem("Palatino Linotype", "Palatino Linotype"));
+            fontFamilies.add(new SelectItem("Sans-Serif", "Sans-Serif"));
+            fontFamilies.add(new SelectItem("Tahoma", "Tahoma"));
+            fontFamilies.add(new SelectItem("Times New Roman", "Times New Roman"));
+            fontFamilies.add(new SelectItem("Trebuchet MS", "Trebuchet MS"));
+            fontFamilies.add(new SelectItem("Verdana", "Verdana"));
+        }
+
+        return fontFamilies;
+    }
+
+    public List getLineStyles() {
+        if (lineStyles == null) {
+            lineStyles = new ArrayList<SelectItem>();
+            lineStyles.add(new SelectItem(StrokeStyle.No.name(), StrokeStyle.No.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.Dash.name(), StrokeStyle.Dash.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.Dot.name(), StrokeStyle.Dot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDot.name(), StrokeStyle.DashDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDotDot.name(), StrokeStyle.DashDotDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DotBlank.name(), StrokeStyle.DotBlank.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashBlank.name(), StrokeStyle.DashBlank.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDash.name(), StrokeStyle.DashDash.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashBlankDot.name(), StrokeStyle.DashBlankDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDashDot.name(), StrokeStyle.DashDashDot.getStyle()));
+            lineStyles.add(new SelectItem(StrokeStyle.DashDashDotDot.name(), StrokeStyle.DashDashDotDot.getStyle()));
+        }
+
+        return lineStyles;
     }
 }

@@ -17,10 +17,11 @@ public class Whiteboard implements Serializable
     private String uuid;
     private String title;
     private String creator;
+    private String pubSubTransport;  // websocket, streaming, long-polling
     private int width = 800;
     private int height = 500;
     private Date creationDate = new Date();
-    private List<String> users = new ArrayList<String>();
+    private Map<String, UserData> userData = new HashMap<String, UserData>();
     private Map<String, AbstractElement> elements = new LinkedHashMap<String, AbstractElement>();
 
     public Whiteboard() {
@@ -51,6 +52,14 @@ public class Whiteboard implements Serializable
         this.creator = creator;
     }
 
+    public String getPubSubTransport() {
+        return pubSubTransport;
+    }
+
+    public void setPubSubTransport(String pubSubTransport) {
+        this.pubSubTransport = pubSubTransport;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -75,12 +84,16 @@ public class Whiteboard implements Serializable
         this.creationDate = creationDate;
     }
 
-    public void addUser(String user) {
-        users.add(user);
+    public void addUserData(UserData userData) {
+        this.userData.put(userData.getSenderId(), userData);
     }
 
-    public List<String> getUsers() {
-        return users;
+    public Collection<UserData> getUserData() {
+        return userData.values();
+    }
+
+    public UserData getUserData(String senderId) {
+        return userData.get(senderId);
     }
 
     public Map<String, AbstractElement> getElements() {
