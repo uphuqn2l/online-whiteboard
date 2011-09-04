@@ -6,10 +6,12 @@
       xmlns:composite="http://java.sun.com/jsf/composite">
 <composite:interface>
     <composite:attribute name="allowNegative" required="false" default="true"/>
+    <composite:attribute name="type" required="true" default="unknown"/>
 </composite:interface>
 <composite:implementation>
     <h:outputScript library="js" name="jquery.numeric.js" target="head"/>
-    <input id="#{cc.clientId}" name="#{cc.clientId}" type="text" maxlength="4"/>
+    <input id="#{cc.clientId}" name="#{cc.clientId}" type="text" maxlength="4"
+           onblur="sendPropertiesChanges('#{cc.attrs.type}')"/>
     <script type="text/javascript">
         /* <![CDATA[ */
         jQuery("##{cc.clientId}").numeric({decimal: false, negative: #{cc.attrs.allowNegative}});
