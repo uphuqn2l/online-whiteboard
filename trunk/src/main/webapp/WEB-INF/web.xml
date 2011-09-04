@@ -63,6 +63,19 @@
         <param-value>/WEB-INF/facelet.taglib.xml</param-value>
     </context-param>
 
+    <!-- PrettyFaces Filter -->
+    <filter>
+        <filter-name>Pretty Filter</filter-name>
+        <filter-class>com.ocpsoft.pretty.PrettyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Pretty Filter</filter-name>
+        <url-pattern>/whiteboard/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+
     <!-- Faces Servlet -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -103,10 +116,12 @@
             <param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
             <param-value>org.atmosphere.client.JavascriptClientFilter</param-value>
         </init-param>
+        <!--
         <init-param>
             <param-name>org.atmosphere.cpr.broadcasterCacheClass</param-name>
             <param-value>org.atmosphere.cache.HeaderBroadcasterCache</param-value>
         </init-param>
+        -->
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>

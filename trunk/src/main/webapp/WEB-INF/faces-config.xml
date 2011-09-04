@@ -35,6 +35,18 @@
     </managed-bean>
 
     <managed-bean>
+        <managed-bean-name>whiteboardIdentifiers</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.WhiteboardIdentifiers</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>panelsState</managed-bean-name>
+        <managed-bean-class>com.googlecode.whiteboard.controller.PanelsState</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
         <managed-bean-name>createWhiteboard</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.CreateWhiteboard</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
@@ -57,7 +69,7 @@
     <managed-bean>
         <managed-bean-name>displayWhiteboard</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.DisplayWhiteboard</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-bean-scope>view</managed-bean-scope>
         <managed-property>
             <property-name>whiteboardsManager</property-name>
             <value>#{whiteboardsManager}</value>

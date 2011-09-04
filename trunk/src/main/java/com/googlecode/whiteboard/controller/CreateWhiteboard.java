@@ -5,8 +5,8 @@
 
 package com.googlecode.whiteboard.controller;
 
+import com.googlecode.whiteboard.model.UserData;
 import com.googlecode.whiteboard.model.Whiteboard;
-import com.googlecode.whiteboard.model.attribute.StrokeStyle;
 import com.googlecode.whiteboard.utils.FacesAccessor;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class CreateWhiteboard implements Serializable
 {
@@ -22,9 +23,8 @@ public class CreateWhiteboard implements Serializable
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
-    private List<SelectItem> fontFamilies;
-    private List<SelectItem> lineStyles;
-    private String pubSubTransport = "long-polling"; // TODO
+    private String pubSubTransport = "streaming";
+    private List<SelectItem> pubSubTransports;
 
     @PostConstruct
     protected void initialize() {
@@ -76,61 +76,37 @@ public class CreateWhiteboard implements Serializable
         this.pubSubTransport = pubSubTransport;
     }
 
+    public String getWhiteboardId() {
+        return whiteboard.getUuid();
+    }
+
+    public void setWhiteboardId(String whiteboardId) {
+        this.whiteboard.setUuid(whiteboardId);
+    }
+
     public String create() {
+        String senderId = UUID.randomUUID().toString();
+
         whiteboard.setCreationDate(new Date());
-        whiteboard.addUser(getCreator());
+        whiteboard.addUserData(new UserData(senderId, getCreator()));
+        whiteboard.setPubSubTransport(pubSubTransport);
         whiteboardsManager.addWhiteboard(whiteboard);
 
-        DisplayWhiteboard displayWhiteboard = ((DisplayWhiteboard) FacesAccessor.getManagedBean("displayWhiteboard"));
-        displayWhiteboard.init(whiteboard, getCreator(), pubSubTransport);
+        WhiteboardIdentifiers wi = ((WhiteboardIdentifiers) FacesAccessor.getManagedBean("whiteboardIdentifiers"));
+        wi.setSenderId(senderId);
+        wi.setWhiteboardId(whiteboard.getUuid());
 
-        return "/views/whiteboard?faces-redirect=true";
+        return "pretty:wbWorkplace";
     }
 
-    public List getFontFamilies() {
-        if (fontFamilies == null) {
-            fontFamilies = new ArrayList<SelectItem>();
-            fontFamilies.add(new SelectItem("Arial", "Arial"));
-            fontFamilies.add(new SelectItem("Arial Black", "Arial Black"));
-            fontFamilies.add(new SelectItem("Book Antiqua", "Book Antiqua"));
-            fontFamilies.add(new SelectItem("Century Gothic", "Century Gothic"));
-            fontFamilies.add(new SelectItem("Comic Sans MS", "Comic Sans MS"));
-            fontFamilies.add(new SelectItem("Courier", "Courier"));
-            fontFamilies.add(new SelectItem("Courier New", "Courier New"));
-            fontFamilies.add(new SelectItem("Garamond", "Garamond"));
-            fontFamilies.add(new SelectItem("Geneva", "Geneva"));
-            fontFamilies.add(new SelectItem("Georgia", "Georgia"));
-            fontFamilies.add(new SelectItem("Helvetica", "Helvetica"));
-            fontFamilies.add(new SelectItem("Impact", "Impact"));
-            fontFamilies.add(new SelectItem("Lucida Console", "Lucida Console"));
-            fontFamilies.add(new SelectItem("Lucida Sans Unicode", "Lucida Sans Unicode"));
-            fontFamilies.add(new SelectItem("Palatino Linotype", "Palatino Linotype"));
-            fontFamilies.add(new SelectItem("Sans-Serif", "Sans-Serif"));
-            fontFamilies.add(new SelectItem("Tahoma", "Tahoma"));
-            fontFamilies.add(new SelectItem("Times New Roman", "Times New Roman"));
-            fontFamilies.add(new SelectItem("Trebuchet MS", "Trebuchet MS"));
-            fontFamilies.add(new SelectItem("Verdana", "Verdana"));
+    public List getTransports() {
+        if (pubSubTransports == null) {
+            pubSubTransports = new ArrayList<SelectItem>();
+            pubSubTransports.add(new SelectItem("websocket", "WebSocket"));
+            pubSubTransports.add(new SelectItem("long-polling", "Long-Polling"));
+            pubSubTransports.add(new SelectItem("streaming", "Streaming"));
         }
 
-        return fontFamilies;
-    }
-
-    public List getLineStyles() {
-        if (lineStyles == null) {
-            lineStyles = new ArrayList<SelectItem>();
-            lineStyles.add(new SelectItem(StrokeStyle.No.name(), StrokeStyle.No.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.Dash.name(), StrokeStyle.Dash.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.Dot.name(), StrokeStyle.Dot.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashDot.name(), StrokeStyle.DashDot.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashDotDot.name(), StrokeStyle.DashDotDot.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DotBlank.name(), StrokeStyle.DotBlank.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashBlank.name(), StrokeStyle.DashBlank.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashDash.name(), StrokeStyle.DashDash.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashBlankDot.name(), StrokeStyle.DashBlankDot.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashDashDot.name(), StrokeStyle.DashDashDot.getStyle()));
-            lineStyles.add(new SelectItem(StrokeStyle.DashDashDotDot.name(), StrokeStyle.DashDashDotDot.getStyle()));
-        }
-
-        return lineStyles;
+        return pubSubTransports;
     }
 }

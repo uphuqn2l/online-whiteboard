@@ -5,7 +5,7 @@
 
 package com.googlecode.whiteboard.utils;
 
-import com.googlecode.whiteboard.controller.DisplayWhiteboard;
+import com.googlecode.whiteboard.controller.WhiteboardsManager;
 import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
 import com.googlecode.whiteboard.model.base.AbstractElement;
@@ -17,6 +17,7 @@ import com.googlecode.whiteboard.model.element.Text;
 import com.googlecode.whiteboard.model.transfer.*;
 import org.apache.commons.beanutils.BeanUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,18 +45,24 @@ public class WhiteboardUtils
             return "";
         }
 
-        // get DisplayWhiteboard bean
-        DisplayWhiteboard dw = (DisplayWhiteboard) request.getSession().getAttribute("displayWhiteboard");
-        if (dw == null) {
-            LOG.severe("Managed bean DisplayWhiteboard not found (null) ==> no whiteboard update!");
+        // get WhiteboardsManager bean
+        ServletContext servletContext = ((HttpServletRequest) request).getSession().getServletContext();
+        WhiteboardsManager manager = (WhiteboardsManager) servletContext.getAttribute("whiteboardsManager");
+        if (manager == null) {
+            LOG.severe("Managed bean WhiteboardsManager not found (null) ==> no whiteboard update!");
+            return "";
+        }
+
+        // create Java object from JSON
+        ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
+        Whiteboard whiteboard = manager.getWhiteboard(ccd.getWhiteboardId());
+
+        if (whiteboard == null) {
+            LOG.severe("Whiteboard object not found (null) ==> no whiteboard update!");
             return "";
         }
 
         ServerChangedData scd = null;
-        Whiteboard whiteboard = dw.getWhiteboard();
-
-        // create Java object from JSON with all changed data
-        ClientChangedData ccd = JsonConverter.getGson().fromJson(transferedJsonData, ClientChangedData.class);
 
         switch (ccd.getAction()) {
             case Create:
@@ -94,7 +101,7 @@ public class WhiteboardUtils
         }
 
         // update changed whiteboard
-        dw.getWhiteboardsManager().updateWhiteboard(whiteboard);
+        manager.updateWhiteboard(whiteboard);
 
         if (scd == null) {
             return "";
@@ -448,7 +455,7 @@ public class WhiteboardUtils
         message.append(WhiteboardUtils.formatDate(new Date(ccd.getTimestamp()), false));
         message.append(": User ");
         message.append(ccd.getUser());
-        message.append(" has joined this whiteboard");
+        message.append(" has joined or refreshed this whiteboard");
 
         scd.setMessage(message.toString());
 

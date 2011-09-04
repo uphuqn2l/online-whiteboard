@@ -1,8 +1,9 @@
 /**
  * Whiteboard designer class for element drawing.
  */
-WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport) {
+WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pubSubTransport) {
     this.config = witeboardConfig;
+    this.whiteboardId = whiteboardId;
     this.user = user;
     this.pubSubUrl = pubSubUrl;
     this.pubSubTransport = pubSubTransport;
@@ -703,118 +704,119 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
         var arrElements = jsWhiteboard["elements"];
         for (var i = 0; i < arrElements.length; i++) {
             var objElement = arrElements[i];
-            var classType = objElement.type;
-            var props = objElement.properties;
-            var hb;
-
-            switch (classType) {
-                case this.config.classTypes.text :
-                    var textElement = paper.text(props.x, props.y, props.text);
-                    setDefaultProperties(textElement, {
-                        "font-family" : props.fontFamily,
-                        "font-size" : props.fontSize,
-                        "font-weight" : props.fontWeight,
-                        "font-style" : props.fontStyle,
-                        "fill" : props.color
-                    });
-                    hb = drawHelperBox(textElement, this.config.classTypes.text, props.rotationDegree, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.freeLine :
-                    var freeLine = paper.path(props.path);
-                    setDefaultProperties(freeLine, {
-                        "stroke" : props.color,
-                        "stroke-width" : props.lineWidth,
-                        "stroke-dasharray" : props.lineStyle,
-                        "stroke-opacity" : props.opacity
-                    });
-                    hb = drawHelperBox(freeLine, this.config.classTypes.freeLine, props.rotation, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.straightLine :
-                    var straightLine = paper.path(props.path);
-                    setDefaultProperties(straightLine, {
-                        "stroke" : props.color,
-                        "stroke-width" : props.lineWidth,
-                        "stroke-dasharray" : props.lineStyle,
-                        "stroke-opacity" : props.opacity
-                    });
-                    hb = drawHelperBox(straightLine, this.config.classTypes.straightLine, props.rotation, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.rectangle :
-                    var rectElement = paper.rect(props.x, props.y, props.width, props.height, props.cornerRadius);
-                    rectElement.scale(1, 1);  // workaround for webkit based browsers
-                    setDefaultProperties(rectElement, {
-                        "fill" : props.backgroundColor,
-                        "stroke" : props.borderColor,
-                        "stroke-width" : props.borderWidth,
-                        "stroke-dasharray" : props.borderStyle,
-                        "fill-opacity" : props.backgroundOpacity,
-                        "stroke-opacity" : props.borderOpacity
-                    });
-                    hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, props.rotationDegree, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.circle :
-                    var circleElement = paper.circle(props.x, props.y, props.radius);
-                    circleElement.scale(1, 1);  // workaround for webkit based browsers
-                    setDefaultProperties(circleElement, {
-                        "fill" : props.backgroundColor,
-                        "stroke" : props.borderColor,
-                        "stroke-width" : props.borderWidth,
-                        "stroke-dasharray" : props.borderStyle,
-                        "fill-opacity" : props.backgroundOpacity,
-                        "stroke-opacity" : props.borderOpacity
-                    });
-                    hb = drawHelperBox(circleElement, this.config.classTypes.circle, props.rotationDegree, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.ellipse :
-                    var ellipseElement = paper.ellipse(props.x, props.y, props.hRadius, props.vRadius);
-                    ellipseElement.scale(1, 1);  // workaround for webkit based browsers
-                    setDefaultProperties(ellipseElement, {
-                        "fill" : props.backgroundColor,
-                        "stroke" : props.borderColor,
-                        "stroke-width" : props.borderWidth,
-                        "stroke-dasharray" : props.borderStyle,
-                        "fill-opacity" : props.backgroundOpacity,
-                        "stroke-opacity" : props.borderOpacity
-                    });
-                    hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, props.rotationDegree, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.image :
-                    var imageElement = paper.image(props.url, props.x, props.y, props.width, props.height);
-                    hb = drawHelperBox(imageElement, this.config.classTypes.image, props.rotationDegree, null, false, props.uuid);
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                case this.config.classTypes.icon :
-                    var iconElement = paper.path(this.config.svgIconSet[props.name]).attr({fill: "#000", stroke: "none"});
-                    iconElement.scale(props.scaleFactor, props.scaleFactor);
-                    var bbox = iconElement.getBBox();
-                    // at first bring to 0,0 position after scale
-                    iconElement.translate(0 - bbox.x, 0 - bbox.y);
-                    // at second move to given position
-                    iconElement.translate(props.x, props.y);
-                    // and remains
-                    hb = drawHelperBox(iconElement, this.config.classTypes.icon, props.rotationDegree, null, false, props.uuid);
-                    hb.iconName = props.name;
-                    wbElements[hb.uuid] = hb;
-
-                    break;
-                default :
-            }
+            this.createElement(objElement.properties, objElement.type);
         }
 
         prependMessage(jsWhiteboard["message"]);
+    }
+
+    this.createElement = function(props, classType) {
+        var hb;
+        switch (classType) {
+            case this.config.classTypes.text :
+                var textElement = paper.text(props.x, props.y, props.text);
+                setDefaultProperties(textElement, {
+                    "font-family" : props.fontFamily,
+                    "font-size" : props.fontSize,
+                    "font-weight" : props.fontWeight,
+                    "font-style" : props.fontStyle,
+                    "fill" : props.color
+                });
+                hb = drawHelperBox(textElement, this.config.classTypes.text, props.rotationDegree, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.freeLine :
+                var freeLine = paper.path(props.path);
+                setDefaultProperties(freeLine, {
+                    "stroke" : props.color,
+                    "stroke-width" : props.lineWidth,
+                    "stroke-dasharray" : props.lineStyle,
+                    "stroke-opacity" : props.opacity
+                });
+                hb = drawHelperBox(freeLine, this.config.classTypes.freeLine, props.rotation, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.straightLine :
+                var straightLine = paper.path(props.path);
+                setDefaultProperties(straightLine, {
+                    "stroke" : props.color,
+                    "stroke-width" : props.lineWidth,
+                    "stroke-dasharray" : props.lineStyle,
+                    "stroke-opacity" : props.opacity
+                });
+                hb = drawHelperBox(straightLine, this.config.classTypes.straightLine, props.rotation, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.rectangle :
+                var rectElement = paper.rect(props.x, props.y, props.width, props.height, props.cornerRadius);
+                rectElement.scale(1, 1);  // workaround for webkit based browsers
+                setDefaultProperties(rectElement, {
+                    "fill" : props.backgroundColor,
+                    "stroke" : props.borderColor,
+                    "stroke-width" : props.borderWidth,
+                    "stroke-dasharray" : props.borderStyle,
+                    "fill-opacity" : props.backgroundOpacity,
+                    "stroke-opacity" : props.borderOpacity
+                });
+                hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, props.rotationDegree, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.circle :
+                var circleElement = paper.circle(props.x, props.y, props.radius);
+                circleElement.scale(1, 1);  // workaround for webkit based browsers
+                setDefaultProperties(circleElement, {
+                    "fill" : props.backgroundColor,
+                    "stroke" : props.borderColor,
+                    "stroke-width" : props.borderWidth,
+                    "stroke-dasharray" : props.borderStyle,
+                    "fill-opacity" : props.backgroundOpacity,
+                    "stroke-opacity" : props.borderOpacity
+                });
+                hb = drawHelperBox(circleElement, this.config.classTypes.circle, props.rotationDegree, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.ellipse :
+                var ellipseElement = paper.ellipse(props.x, props.y, props.hRadius, props.vRadius);
+                ellipseElement.scale(1, 1);  // workaround for webkit based browsers
+                setDefaultProperties(ellipseElement, {
+                    "fill" : props.backgroundColor,
+                    "stroke" : props.borderColor,
+                    "stroke-width" : props.borderWidth,
+                    "stroke-dasharray" : props.borderStyle,
+                    "fill-opacity" : props.backgroundOpacity,
+                    "stroke-opacity" : props.borderOpacity
+                });
+                hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, props.rotationDegree, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.image :
+                var imageElement = paper.image(props.url, props.x, props.y, props.width, props.height);
+                hb = drawHelperBox(imageElement, this.config.classTypes.image, props.rotationDegree, null, false, props.uuid);
+                wbElements[hb.uuid] = hb;
+
+                break;
+            case this.config.classTypes.icon :
+                var iconElement = paper.path(this.config.svgIconSet[props.name]).attr({fill: "#000", stroke: "none"});
+                iconElement.scale(props.scaleFactor, props.scaleFactor);
+                var bbox = iconElement.getBBox();
+                // at first bring to 0,0 position after scale
+                iconElement.translate(0 - bbox.x, 0 - bbox.y);
+                // at second move to given position
+                iconElement.translate(props.x, props.y);
+                // and remains
+                hb = drawHelperBox(iconElement, this.config.classTypes.icon, props.rotationDegree, null, false, props.uuid);
+                hb.iconName = props.name;
+                wbElements[hb.uuid] = hb;
+
+                break;
+            default :
+        }
     }
 
     // subscribe to bidirectional channel
@@ -830,10 +832,21 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
             var data = response.responseBody;
             if (data.length > 0) {
                 var jsData = JSON.parse(data);
-                
-                if (jsData.action == "join") {
-                    prependMessage(jsData.message);
-                    jQuery("#usersCount").html(jsData.parameters.usersCount);
+                var action = jsData.action;
+
+                switch (action) {
+                    case "join" :
+                        prependMessage(jsData.message);
+                        jQuery("#usersCount").html(jsData.parameters.usersCount);
+
+                        break;
+                    case "create" :
+                    case "clone" :
+                        _self.createElement(jsData.element.properties, jsData.element.type);
+                        prependMessage(jsData.message);
+
+                        break;
+                    default:
                 }
             }
         }
@@ -856,6 +869,9 @@ WhiteboardDesigner = function(witeboardConfig, user, pubSubUrl, pubSubTransport)
 
         // set user
         jsObject.user = this.user;
+
+        // set whiteboard Id
+        jsObject.whiteboardId = this.whiteboardId;
 
         // send changes to all subscribed clients
         this.connectedEndpoint.push(this.pubSubUrl, null, jQuery.atmosphere.request = {data: 'message=' + JSON.stringify(jsObject)});

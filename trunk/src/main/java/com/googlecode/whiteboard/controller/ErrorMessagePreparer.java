@@ -35,9 +35,11 @@ public class ErrorMessagePreparer
                 message = "View is expired (probably session timeout). Try again please.";
             }
         } else if ("601".equals(messageKey)) {
-            message = "Whiteboard object could not be found (URL is probably wrong)!";
+            message = "Whiteboard object could not be retrieved from request parameter!";
         } else if ("602".equals(messageKey)) {
             message = "Whiteboard object could not be found (UUID is probably invalid)!";
+        } else if ("603".equals(messageKey)) {
+            message = "Sender Id could not be retrieved from request parameter!";
         } else if ("699".equals(messageKey)) {
             message = "An unexpected error occurred. Try again please.";
             detail = (String) fc.getExternalContext().getSessionMap().get(DefaultExceptionHandler.MESSAGE_DETAIL_KEY);

@@ -13,6 +13,7 @@ import java.util.Map;
 public class ClientChangedData
 {
     private ClientAction action;
+    private String whiteboardId;
     private AbstractElement element;
     private String user;
     private long timestamp;
@@ -24,6 +25,14 @@ public class ClientChangedData
 
     public void setAction(ClientAction action) {
         this.action = action;
+    }
+
+    public String getWhiteboardId() {
+        return whiteboardId;
+    }
+
+    public void setWhiteboardId(String whiteboardId) {
+        this.whiteboardId = whiteboardId;
     }
 
     public AbstractElement getElement() {
