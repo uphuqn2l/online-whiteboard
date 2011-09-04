@@ -70,7 +70,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
     this.drawFreeLineBegin = function(x, y) {
         whiteboard.lineEl.path = paper.path("M" + (x - offsetLeft) + "," + (y - offsetTop));
-        setDefaultProperties(whiteboard.lineEl.path, this.config.properties.freeLine);
+        setElementProperties(whiteboard.lineEl.path, this.config.properties.freeLine);
         whiteboard.bind("mousemove.mmu", mousemoveHandler);
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
@@ -79,7 +79,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         whiteboard.lineEl.pathArray = [];
         whiteboard.lineEl.pathArray[0] = ["M", x - offsetLeft, y - offsetTop];
         whiteboard.lineEl.path = paper.path(whiteboard.lineEl.pathArray);
-        setDefaultProperties(whiteboard.lineEl.path, this.config.properties.straightLine);
+        setElementProperties(whiteboard.lineEl.path, this.config.properties.straightLine);
         whiteboard.bind("mousemove.mmu", mousemoveHandler);
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
@@ -87,7 +87,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.drawText = function(inputText) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
-            setDefaultProperties(textElement, this.config.properties.text);
+            setElementProperties(textElement, this.config.properties.text);
             var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
 
@@ -151,7 +151,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.drawRectangle = function(x, y) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
         rectElement.scale(1, 1);  // workaround for webkit based browsers
-        setDefaultProperties(rectElement, this.config.properties.rectangle);
+        setElementProperties(rectElement, this.config.properties.rectangle);
         var hb = drawHelperBox(rectElement, this.config.classTypes.rectangle, this.config.properties.rectangle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
 
@@ -185,7 +185,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.drawCircle = function(x, y) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
         circleElement.scale(1, 1);  // workaround for webkit based browsers
-        setDefaultProperties(circleElement, this.config.properties.circle);
+        setElementProperties(circleElement, this.config.properties.circle);
         var hb = drawHelperBox(circleElement, this.config.classTypes.circle, this.config.properties.circle.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
 
@@ -217,7 +217,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.drawEllipse = function(x, y) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
         ellipseElement.scale(1, 1);  // workaround for webkit based browsers
-        setDefaultProperties(ellipseElement, this.config.properties.ellipse);
+        setElementProperties(ellipseElement, this.config.properties.ellipse);
         var hb = drawHelperBox(ellipseElement, this.config.classTypes.ellipse, this.config.properties.ellipse.rotation, null, true, null);
         wbElements[hb.uuid] = hb;
 
@@ -629,8 +629,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
     this.makeAsDefault = function(properties) {
         var classType = properties.charAt(0).toUpperCase() + properties.slice(1);
-        var props = this.config.properties[properties];
+        this.propagateProperties(classType, this.config.properties[properties]);
+    }
 
+    this.propagateProperties = function(classType, props) {
         switch (classType) {
             case this.config.classTypes.text :
                 props["font-family"] = jQuery(idSubviewProperties + "_fontFamily option:selected").val();
@@ -698,6 +700,8 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                 break;
             default :
         }
+
+        return props;
     }
 
     this.restoreWhiteboard = function(jsWhiteboard) {
@@ -715,7 +719,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         switch (classType) {
             case this.config.classTypes.text :
                 var textElement = paper.text(props.x, props.y, props.text);
-                setDefaultProperties(textElement, {
+                setElementProperties(textElement, {
                     "font-family" : props.fontFamily,
                     "font-size" : props.fontSize,
                     "font-weight" : props.fontWeight,
@@ -728,7 +732,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                 break;
             case this.config.classTypes.freeLine :
                 var freeLine = paper.path(props.path);
-                setDefaultProperties(freeLine, {
+                setElementProperties(freeLine, {
                     "stroke" : props.color,
                     "stroke-width" : props.lineWidth,
                     "stroke-dasharray" : props.lineStyle,
@@ -740,7 +744,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                 break;
             case this.config.classTypes.straightLine :
                 var straightLine = paper.path(props.path);
-                setDefaultProperties(straightLine, {
+                setElementProperties(straightLine, {
                     "stroke" : props.color,
                     "stroke-width" : props.lineWidth,
                     "stroke-dasharray" : props.lineStyle,
@@ -753,7 +757,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
             case this.config.classTypes.rectangle :
                 var rectElement = paper.rect(props.x, props.y, props.width, props.height, props.cornerRadius);
                 rectElement.scale(1, 1);  // workaround for webkit based browsers
-                setDefaultProperties(rectElement, {
+                setElementProperties(rectElement, {
                     "fill" : props.backgroundColor,
                     "stroke" : props.borderColor,
                     "stroke-width" : props.borderWidth,
@@ -768,7 +772,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
             case this.config.classTypes.circle :
                 var circleElement = paper.circle(props.x, props.y, props.radius);
                 circleElement.scale(1, 1);  // workaround for webkit based browsers
-                setDefaultProperties(circleElement, {
+                setElementProperties(circleElement, {
                     "fill" : props.backgroundColor,
                     "stroke" : props.borderColor,
                     "stroke-width" : props.borderWidth,
@@ -783,7 +787,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
             case this.config.classTypes.ellipse :
                 var ellipseElement = paper.ellipse(props.x, props.y, props.hRadius, props.vRadius);
                 ellipseElement.scale(1, 1);  // workaround for webkit based browsers
-                setDefaultProperties(ellipseElement, {
+                setElementProperties(ellipseElement, {
                     "fill" : props.backgroundColor,
                     "stroke" : props.borderColor,
                     "stroke-width" : props.borderWidth,
@@ -819,8 +823,159 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    // TODO don't call this method for numericInput on onblur only (w/o changes)
     this.sendPropertiesChanges = function(type) {
-        console.log(type);
+        if (selectedObj == null) {
+            return;
+        }
+
+        var classType = type.charAt(0).toUpperCase() + type.slice(1);
+        var props = this.propagateProperties(classType, {});
+        var rotationDegree = props["rotation"];
+        var sendProps = {};
+        var oldDim = {};
+
+        // update element
+        setElementProperties(selectedObj.element, props);
+
+        // resize helpers
+        // TODO only resize if font, radius, etc, changed (pass as parameter in this function)
+        var bbox = selectedObj.element.getBBox();
+        var bboxWidth = parseFloat(bbox.width);
+        var bboxHeight = parseFloat(bbox.height);
+        selectedObj.attr("x", bbox.x - 1);
+        selectedObj.attr("y", bbox.y - 1);
+        selectedObj.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
+        selectedObj.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
+        // TODO redraw circleSet
+
+        // rotate
+        // TODO only rotate if rotation spinner fired (pass as parameter)
+        var bbox2 = selectedObj.element.getBBox();
+        var bboxWidth2 = parseFloat(bbox2.width);
+        var bboxHeight2 = parseFloat(bbox2.height);
+        selectedObj.element.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+        selectedObj.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+        selectedObj.circleSet.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+        selectedObj.element.attr("rotation", rotationDegree);
+
+        // extend properties to coordinates
+        switch (classType) {
+            case this.config.classTypes.text :
+                sendProps.text = selectedObj.element.attr("text");
+                sendProps.fontFamily = props["font-family"];
+                sendProps.fontSize = props["font-size"];
+                sendProps.fontWeight = props["font-weight"];
+                sendProps.fontStyle = props["font-style"];
+                sendProps.color = props["fill"];
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_textCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_textCy").val());
+                oldDim.x = selectedObj.element.attr("x");
+                oldDim.y = selectedObj.element.attr("y");
+
+                break;
+            case this.config.classTypes.freeLine :
+            case this.config.classTypes.straightLine :
+                sendProps.path = selectedObj.element.attr("path") + '';
+                sendProps.color = props["stroke"];
+                sendProps.lineWidth = props["stroke-width"];
+                sendProps.lineStyle = props["stroke-dasharray"];
+                sendProps.opacity = props["stroke-opacity"];
+
+                break;
+            case this.config.classTypes.rectangle :
+                sendProps.width = props["width"];
+                sendProps.height = props["height"];
+                sendProps.cornerRadius = props["r"];
+                sendProps.backgroundColor = props["fill"];
+                sendProps.borderColor = props["stroke"];
+                sendProps.borderWidth = props["stroke-width"];
+                sendProps.borderStyle = props["stroke-dasharray"];
+                sendProps.backgroundOpacity = props["fill-opacity"];
+                sendProps.borderOpacity = props["stroke-opacity"];
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_rectCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_rectCy").val());
+                oldDim.x = selectedObj.element.attr("x");
+                oldDim.y = selectedObj.element.attr("y");
+                break;
+            case this.config.classTypes.circle :
+                sendProps.radius = props["r"];
+                sendProps.backgroundColor = props["fill"];
+                sendProps.borderColor = props["stroke"];
+                sendProps.borderWidth = props["stroke-width"];
+                sendProps.borderStyle = props["stroke-dasharray"];
+                sendProps.backgroundOpacity = props["fill-opacity"];
+                sendProps.borderOpacity = props["stroke-opacity"];
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_circleCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_circleCy").val());
+                oldDim.x = selectedObj.element.attr("cx");
+                oldDim.y = selectedObj.element.attr("cy");
+                break;
+            case this.config.classTypes.ellipse :
+                sendProps.hRadius = props["rx"];
+                sendProps.vRadius = props["ry"];
+                sendProps.backgroundColor = props["fill"];
+                sendProps.borderColor = props["stroke"];
+                sendProps.borderWidth = props["stroke-width"];
+                sendProps.borderStyle = props["stroke-dasharray"];
+                sendProps.backgroundOpacity = props["fill-opacity"];
+                sendProps.borderOpacity = props["stroke-opacity"];
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_ellipseCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_ellipseCy").val());
+                oldDim.x = selectedObj.element.attr("cx");
+                oldDim.y = selectedObj.element.attr("cy");
+                break;
+            case this.config.classTypes.image :
+                sendProps.url = selectedObj.element.attr("src");
+                sendProps.width = props["width"];
+                sendProps.height = props["height"];
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_imageCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_imageCy").val());
+                oldDim.x = selectedObj.element.attr("x");
+                oldDim.y = selectedObj.element.attr("y");
+                break;
+            case this.config.classTypes.icon :
+                var scaleFactor = props["scale"].toFixed(1);
+                sendProps.name = selectedObj.iconName;
+                sendProps.scaleFactor = scaleFactor;
+
+                sendProps.x = parseInt(jQuery(idSubviewProperties + "_iconCx").val());
+                sendProps.y = parseInt(jQuery(idSubviewProperties + "_iconCy").val());
+                oldDim.x = Math.round(selectedObj.attr("x") + 1);
+                oldDim.y = Math.round(selectedObj.attr("y") + 1);
+
+                selectedObj.element.scale(scaleFactor, scaleFactor);
+                selectedObj.scale(scaleFactor, scaleFactor);
+                // TODO redraw circleSet
+                break;
+            default :
+        }
+
+        // move element and helpers if needed
+        var diffX = sendProps.x - oldDim.x;
+        var diffY = sendProps.y - oldDim.y;
+        if (diffX != 0 || diffY != 0) {
+            selectedObj.element.translate(diffX, diffY);
+            selectedObj.translate(diffX, diffY);
+            selectedObj.circleSet.translate(diffX, diffY);
+        }
+
+        sendProps.uuid = selectedObj.uuid;
+        sendProps.rotationDegree = rotationDegree;
+
+        // send changes
+        this.sendChanges({
+            "action": "update",
+            "element": {
+                "type": classType,
+                "properties": sendProps
+            }
+        });
     }
 
     // subscribe to bidirectional channel
@@ -1377,7 +1532,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
-    var setDefaultProperties = function(el, propsObj) {
+    var setElementProperties = function(el, propsObj) {
         for (prop in propsObj) {
             if (prop != "rotation") {
                 if (prop == "stroke-dasharray") {
