@@ -43,7 +43,7 @@
     <managed-bean>
         <managed-bean-name>panelsState</managed-bean-name>
         <managed-bean-class>com.googlecode.whiteboard.controller.PanelsState</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
