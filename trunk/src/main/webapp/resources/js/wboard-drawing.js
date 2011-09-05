@@ -823,8 +823,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
-    // TODO don't call this method for numericInput on onblur only (w/o changes)
-    this.sendPropertiesChanges = function(type) {
+    this.sendPropertiesChanges = function(type, resize, rotate) {
         if (selectedObj == null) {
             return;
         }
@@ -839,25 +838,38 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         setElementProperties(selectedObj.element, props);
 
         // resize helpers
-        // TODO only resize if font, radius, etc, changed (pass as parameter in this function)
-        var bbox = selectedObj.element.getBBox();
-        var bboxWidth = parseFloat(bbox.width);
-        var bboxHeight = parseFloat(bbox.height);
-        selectedObj.attr("x", bbox.x - 1);
-        selectedObj.attr("y", bbox.y - 1);
-        selectedObj.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
-        selectedObj.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
-        // TODO redraw circleSet
+        if (resize != null && resize) {
+            var bbox = selectedObj.element.getBBox();
+            var bboxWidth = parseFloat(bbox.width);
+            var bboxHeight = parseFloat(bbox.height);
+            selectedObj.attr("x", bbox.x - 1);
+            selectedObj.attr("y", bbox.y - 1);
+            selectedObj.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
+            selectedObj.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
+
+            // redraw circleSet
+            selectedObj.circleSet.remove();
+            selectedObj.circleSet = null;
+            delete selectedObj.circleSet;
+            var circleSet = drawCircleSet(bbox.x, bbox.y, bboxWidth, bboxHeight);
+            circleSet.attr(this.config.attributes.circleSet);
+            if (selectedObj.visibleSelect) {
+                circleSet.attr(this.config.attributes.opacityVisible);
+            }
+            selectedObj.circleSet = circleSet;
+            rotate = true;
+        }
 
         // rotate
-        // TODO only rotate if rotation spinner fired (pass as parameter)
-        var bbox2 = selectedObj.element.getBBox();
-        var bboxWidth2 = parseFloat(bbox2.width);
-        var bboxHeight2 = parseFloat(bbox2.height);
-        selectedObj.element.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
-        selectedObj.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
-        selectedObj.circleSet.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
-        selectedObj.element.attr("rotation", rotationDegree);
+        if (rotate != null && rotate) {
+            var bbox2 = selectedObj.element.getBBox();
+            var bboxWidth2 = parseFloat(bbox2.width);
+            var bboxHeight2 = parseFloat(bbox2.height);
+            selectedObj.element.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+            selectedObj.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+            selectedObj.circleSet.rotate(rotationDegree, bbox2.x + bboxWidth2 / 2, bbox2.y + bboxHeight2 / 2, true);
+            selectedObj.element.attr("rotation", rotationDegree);
+        }
 
         // extend properties to coordinates
         switch (classType) {
@@ -940,29 +952,26 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                 oldDim.y = selectedObj.element.attr("y");
                 break;
             case this.config.classTypes.icon :
-                var scaleFactor = props["scale"].toFixed(1);
                 sendProps.name = selectedObj.iconName;
-                sendProps.scaleFactor = scaleFactor;
+                sendProps.scaleFactor = props["scale"].toFixed(1);
 
                 sendProps.x = parseInt(jQuery(idSubviewProperties + "_iconCx").val());
                 sendProps.y = parseInt(jQuery(idSubviewProperties + "_iconCy").val());
                 oldDim.x = Math.round(selectedObj.attr("x") + 1);
                 oldDim.y = Math.round(selectedObj.attr("y") + 1);
-
-                selectedObj.element.scale(scaleFactor, scaleFactor);
-                selectedObj.scale(scaleFactor, scaleFactor);
-                // TODO redraw circleSet
                 break;
             default :
         }
 
         // move element and helpers if needed
-        var diffX = sendProps.x - oldDim.x;
-        var diffY = sendProps.y - oldDim.y;
-        if (diffX != 0 || diffY != 0) {
-            selectedObj.element.translate(diffX, diffY);
-            selectedObj.translate(diffX, diffY);
-            selectedObj.circleSet.translate(diffX, diffY);
+        if (typeof oldDim.x !== "undefined") {
+            var diffX = sendProps.x - oldDim.x;
+            var diffY = sendProps.y - oldDim.y;
+            if (diffX != 0 || diffY != 0) {
+                selectedObj.element.translate(diffX, diffY);
+                selectedObj.translate(diffX, diffY);
+                selectedObj.circleSet.translate(diffX, diffY);
+            }
         }
 
         sendProps.uuid = selectedObj.uuid;
@@ -981,7 +990,8 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     // subscribe to bidirectional channel
     this.subscribePubSub = function() {
         jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {
-            transport: this.pubSubTransport
+            transport: this.pubSubTransport,
+            maxRequest: 100000000
         });
         this.connectedEndpoint = jQuery.atmosphere.response;
     }
@@ -995,18 +1005,172 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
                 switch (action) {
                     case "join" :
-                        prependMessage(jsData.message);
                         jQuery("#usersCount").html(jsData.parameters.usersCount);
 
                         break;
                     case "create" :
                     case "clone" :
                         _self.createElement(jsData.element.properties, jsData.element.type);
-                        prependMessage(jsData.message);
 
+                        break;
+                    case "update" :
+                        // find element to be updated
+                        var sentProps = jsData.element.properties;
+                        var hb = wbElements[sentProps.uuid];
+                        if (hb == null) {
+                            // not found ==> nothing to do
+                            break;
+                        }
+
+                        var props = {}, oldDim = {}, newDim = {};
+
+                        switch (jsData.element.type) {
+                            case _self.config.classTypes.text :
+                                props["text"] = sentProps.text;
+                                props["font-family"] = sentProps.fontFamily;
+                                props["font-size"] = sentProps.fontSize;
+                                props["font-weight"] = sentProps.fontWeight;
+                                props["font-style"] = sentProps.fontStyle;
+                                props["fill"] = sentProps.color;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = hb.element.attr("x");
+                                oldDim.y = hb.element.attr("y");
+                                break;
+                            case _self.config.classTypes.freeLine :
+                            case _self.config.classTypes.straightLine :
+                                //props["path"] = sentProps.path;
+                                props["stroke"] = sentProps.color;
+                                props["stroke-width"] = sentProps.lineWidth;
+                                props["stroke-dasharray"] = sentProps.lineStyle;
+                                props["stroke-opacity"] = sentProps.opacity;
+                                break;
+                            case _self.config.classTypes.rectangle :
+                                props["width"] = sentProps.width;
+                                props["height"] = sentProps.height;
+                                props["r"] = sentProps.cornerRadius;
+                                props["fill"] = sentProps.backgroundColor;
+                                props["stroke"] = sentProps.borderColor;
+                                props["stroke-width"] = sentProps.borderWidth;
+                                props["stroke-dasharray"] = sentProps.borderStyle;
+                                props["fill-opacity"] = sentProps.backgroundOpacity;
+                                props["stroke-opacity"] = sentProps.borderOpacity;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = hb.element.attr("x");
+                                oldDim.y = hb.element.attr("y");
+                                break;
+                            case _self.config.classTypes.circle :
+                                props["r"] = sentProps.radius;
+                                props["fill"] = sentProps.backgroundColor;
+                                props["stroke"] = sentProps.borderColor;
+                                props["stroke-width"] = sentProps.borderWidth;
+                                props["stroke-dasharray"] = sentProps.borderStyle;
+                                props["fill-opacity"] = sentProps.backgroundOpacity;
+                                props["stroke-opacity"] = sentProps.borderOpacity;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = hb.element.attr("cx");
+                                oldDim.y = hb.element.attr("cy");
+                                break;
+                            case _self.config.classTypes.ellipse :
+                                props["rx"] = sentProps.hRadius;
+                                props["ry"] = sentProps.vRadius;
+                                props["fill"] = sentProps.backgroundColor;
+                                props["stroke"] = sentProps.borderColor;
+                                props["stroke-width"] = sentProps.borderWidth;
+                                props["stroke-dasharray"] = sentProps.borderStyle;
+                                props["fill-opacity"] = sentProps.backgroundOpacity;
+                                props["stroke-opacity"] = sentProps.borderOpacity;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = hb.element.attr("cx");
+                                oldDim.y = hb.element.attr("cy");
+                                break;
+                            case _self.config.classTypes.image :
+                                props["src"] = sentProps.url;
+                                props["width"] = sentProps.width;
+                                props["height"] = sentProps.height;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = hb.element.attr("x");
+                                oldDim.y = hb.element.attr("y");
+                                break;
+                            case _self.config.classTypes.icon :
+                                props["scale"] = sentProps.scaleFactor.toFixed(1);
+                                hb.iconName = sentProps.name;
+
+                                newDim.x = sentProps.x;
+                                newDim.y = sentProps.y;
+                                oldDim.x = Math.round(hb.attr("x") + 1);
+                                oldDim.y = Math.round(hb.attr("y") + 1);
+                                break;
+                            default :
+                        }
+
+                        props["rotation"] = sentProps.rotationDegree;
+
+                        // update element
+                        setElementProperties(hb.element, props);
+
+                        /* TODO Fix scale bug
+                        hb.element.scale(props["scale"], props["scale"]);
+                        var iconBbox = hb.element.getBBox();
+                        // at first bring to 0,0 position after scale
+                        hb.element.translate(0 - iconBbox.x, 0 - iconBbox.y);
+                        // at second move to given position
+                        hb.element.translate(iconBbox.x, iconBbox.y);
+                        */
+
+                        // resize helpers
+                        var bbox = hb.element.getBBox();
+                        var bboxWidth = parseFloat(bbox.width);
+                        var bboxHeight = parseFloat(bbox.height);
+                        hb.attr("x", bbox.x - 1);
+                        hb.attr("y", bbox.y - 1);
+                        hb.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
+                        hb.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
+
+                        // redraw circleSet
+                        hb.circleSet.remove();
+                        hb.circleSet = null;
+                        delete hb.circleSet;
+                        var circleSet = drawCircleSet(bbox.x, bbox.y, bboxWidth, bboxHeight);
+                        circleSet.attr(_self.config.attributes.circleSet);
+                        if (selectedObj != null && selectedObj.visibleSelect && selectedObj.uuid == hb.uuid) {
+                            circleSet.attr(_self.config.attributes.opacityVisible);
+
+                            // TODO transfer changes to dialog
+                        }
+                        hb.circleSet = circleSet;
+
+                        // rotate
+                        hb.element.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hb.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hb.circleSet.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hb.element.attr("rotation", props["rotation"]);
+
+                        // move element and helpers if needed
+                        if (typeof oldDim.x !== "undefined") {
+                            var diffX = newDim.x - oldDim.x;
+                            var diffY = newDim.y - oldDim.y;
+                            if (diffX != 0 || diffY != 0) {
+                                hb.element.translate(diffX, diffY);
+                                hb.translate(diffX, diffY);
+                                hb.circleSet.translate(diffX, diffY);
+                            }
+                        }
                         break;
                     default:
                 }
+
+                // show new message in the event monitoring pane
+                prependMessage(jsData.message);
             }
         }
     }
@@ -1428,14 +1592,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         helperRect.drag(ddMoveEl, ddStartEl, ddStopEl);
 
         // draw invisible circles for possible later selection
-        var c1 = paper.circle(bbox.x, bbox.y, 3);
-        var c2 = paper.circle(bbox.x + bboxWidth, bbox.y, 3);
-        var c3 = paper.circle(bbox.x, bbox.y + bboxHeight, 3);
-        var c4 = paper.circle(bbox.x + bboxWidth, bbox.y + bboxHeight, 3);
-
-        // build a set
-        var circleSet = paper.set();
-        circleSet.push(c1, c2, c3, c4);
+        var circleSet = drawCircleSet(bbox.x, bbox.y, bboxWidth, bboxHeight);
         circleSet.attr(_self.config.attributes.circleSet);
 
         // rotate
@@ -1530,6 +1687,19 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                 y += 40;
             }
         }
+    }
+
+    var drawCircleSet = function(x, y, width, height) {
+        var c1 = paper.circle(x, y, 3);
+        var c2 = paper.circle(x + width, y, 3);
+        var c3 = paper.circle(x, y + height, 3);
+        var c4 = paper.circle(x + width, y + height, 3);
+
+        // build a set
+        var circleSet = paper.set();
+        circleSet.push(c1, c2, c3, c4);
+
+        return circleSet;
     }
 
     var setElementProperties = function(el, propsObj) {

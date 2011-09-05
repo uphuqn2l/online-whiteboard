@@ -14,9 +14,9 @@
         <h:outputLabel for="ellipseCy" value="Y coordinate (centre)"/>
         <cc:numericInput id="ellipseCy" type="Ellipse"/>
         <h:outputLabel for="hRadius" value="Horizontal radius"/>
-        <p:spinner id="hRadius" min="1" max="999" maxlength="3" onchange="sendPropertiesChanges('Ellipse')"/>
+        <p:spinner id="hRadius" min="1" max="999" maxlength="3" onchange="sendPropertiesChanges('Ellipse', true)"/>
         <h:outputLabel for="vRadius" value="Vertical radius"/>
-        <p:spinner id="vRadius" min="1" max="999" maxlength="3" onchange="sendPropertiesChanges('Ellipse')"/>
+        <p:spinner id="vRadius" min="1" max="999" maxlength="3" onchange="sendPropertiesChanges('Ellipse', true)"/>
         <h:outputLabel for="ellipseBkgrColor" value="Background color"/>
         <cc:colorPicker id="ellipseBkgrColor" type="Ellipse"/>
         <h:outputLabel for="ellipseBorderColor" value="Border color"/>
@@ -35,7 +35,7 @@
         <p:spinner id="ellipseBorderOpacity" min="0" max="1" maxlength="1" stepFactor="0.1"
                    onchange="sendPropertiesChanges('Ellipse')"/>
         <h:outputLabel for="ellipseRotation" value="Rotate (0-360&deg;)"/>
-        <p:spinner id="ellipseRotation" min="0" max="360" maxlength="3" onchange="sendPropertiesChanges('Ellipse')"/>
+        <p:spinner id="ellipseRotation" min="0" max="360" maxlength="3" onchange="sendPropertiesChanges('Ellipse', false, true)"/>
         <ui:include src="/sections/defbutton.xhtml">
             <ui:param name="properties" value="ellipse"/>
         </ui:include>

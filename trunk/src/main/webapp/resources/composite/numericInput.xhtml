@@ -7,11 +7,12 @@
 <composite:interface>
     <composite:attribute name="allowNegative" required="false" default="true"/>
     <composite:attribute name="type" required="true" default="unknown"/>
+    <composite:attribute name="resize" required="false" default="false"/>
 </composite:interface>
 <composite:implementation>
     <h:outputScript library="js" name="jquery.numeric.js" target="head"/>
     <input id="#{cc.clientId}" name="#{cc.clientId}" type="text" maxlength="4"
-           onblur="sendPropertiesChanges('#{cc.attrs.type}')"/>
+           onchange="sendPropertiesChanges('#{cc.attrs.type}', '#{cc.attrs.resize}')"/>
     <script type="text/javascript">
         /* <![CDATA[ */
         jQuery("##{cc.clientId}").numeric({decimal: false, negative: #{cc.attrs.allowNegative}});

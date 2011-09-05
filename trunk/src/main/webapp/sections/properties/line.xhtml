@@ -13,7 +13,7 @@
         <cc:colorPicker id="#{lineMode}Color" type="#{lineMode}"/>
         <h:outputLabel for="#{lineMode}Width" value="Line width"/>
         <p:spinner id="#{lineMode}Width" min="1" max="100" maxlength="3"
-                   onchange="sendPropertiesChanges('#{lineMode}')"/>
+                   onchange="sendPropertiesChanges('#{lineMode}', true)"/>
         <h:outputLabel for="#{lineMode}Style" value="Line style"/>
         <h:selectOneMenu id="#{lineMode}Style" style="font-weight: bold; width: 60px;"
                          onchange="sendPropertiesChanges('#{lineMode}')">
@@ -24,7 +24,7 @@
                    onchange="sendPropertiesChanges('#{lineMode}')"/>
         <h:outputLabel for="#{lineMode}Rotation" value="Rotate (0-360&deg;)"/>
         <p:spinner id="#{lineMode}Rotation" min="0" max="360" maxlength="3"
-                   onchange="sendPropertiesChanges('#{lineMode}')"/>
+                   onchange="sendPropertiesChanges('#{lineMode}', false, true)"/>
         <ui:include src="/sections/defbutton.xhtml">
             <ui:param name="properties" value="#{lineMode}"/>
         </ui:include>

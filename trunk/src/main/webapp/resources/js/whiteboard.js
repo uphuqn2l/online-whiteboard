@@ -254,6 +254,6 @@ function colorToHex(color) {
     return digits[1] + '#' + rgb.toString(16);
 }
 
-function sendPropertiesChanges(type) {
-    whiteboardDesigner.sendPropertiesChanges(type);
+function sendPropertiesChanges(type, resize, rotate) {
+    whiteboardDesigner.sendPropertiesChanges(type, resize, rotate);
 }
