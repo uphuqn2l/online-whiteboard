@@ -10,7 +10,7 @@ import com.googlecode.whiteboard.json.JsonConverter;
 import com.googlecode.whiteboard.model.Whiteboard;
 import com.googlecode.whiteboard.model.attribute.StrokeStyle;
 import com.googlecode.whiteboard.model.base.AbstractElement;
-import com.googlecode.whiteboard.model.transfer.RestoredElements;
+import com.googlecode.whiteboard.model.transfer.RestoredWhiteboard;
 import com.googlecode.whiteboard.utils.FacesAccessor;
 import com.googlecode.whiteboard.utils.WhiteboardUtils;
 
@@ -172,18 +172,18 @@ public class DisplayWhiteboard implements Serializable
             return "{}";
         }
 
-        RestoredElements tre = new RestoredElements();
+        RestoredWhiteboard rw = new RestoredWhiteboard();
         for (AbstractElement ae : whiteboard.getElements().values()) {
-            tre.addElement(ae);
+            rw.addElement(ae);
         }
 
         if (whiteboard.getCount() == 1) {
-            tre.setMessage("1 whiteboard element has been restored");
+            rw.setMessage("1 whiteboard element has been restored");
         } else {
-            tre.setMessage(whiteboard.getCount() + " whiteboard elements have been restored");
+            rw.setMessage(whiteboard.getCount() + " whiteboard elements have been restored");
         }
 
-        return JsonConverter.getGson().toJson(tre);
+        return JsonConverter.getGson().toJson(rw);
     }
 
     public String getPubSubUrl() {

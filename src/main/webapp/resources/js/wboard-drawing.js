@@ -7,6 +7,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.user = user;
     this.pubSubUrl = pubSubUrl;
     this.pubSubTransport = pubSubTransport;
+    this.logging = false;
 
     // create jQuery objects for whiteboard container and dialogs
     var whiteboard = jQuery("#" + this.config.ids.whiteboard);
@@ -262,8 +263,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.showSelectedProperties = function(selObj) {
         // show and fill properties
         this.showProperties('edit' + selObj.classType);
-        var selectedProperties = getSelectedProperties(selObj.element, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
+        this.transferPropertiesToDialog(selObj);
+    }
 
+    this.transferPropertiesToDialog = function(selObj) {
+        var selectedProperties = getSelectedProperties(selObj.element, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
         switch (selObj.classType) {
             case this.config.classTypes.text :
                 this.transferTextPropertiesToDialog(selObj.element.attr("x"), selObj.element.attr("y"), selectedProperties);
@@ -298,6 +302,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         var eluuid = helperBox.uuid;
         var elclasstype = helperBox.classType;
 
+        var removeSelected = false;
+        if (selectedObj != null && selectedObj.uuid == eluuid) {
+            removeSelected = true;
+        }
+
         wbElements[eluuid] = null;
         delete wbElements[eluuid];
         helperBox.element.remove();
@@ -315,7 +324,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
             }
         });
 
-        if (selectedObj != null && selectedObj.uuid == eluuid) {
+        if (removeSelected) {
             // last selected object = this object ==> reset
             selectedObj = null;
             this.showProperties('editNoSelection');
@@ -1092,7 +1101,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 oldDim.y = hb.element.attr("cy");
                                 break;
                             case _self.config.classTypes.image :
-                                props["src"] = sentProps.url;
+                                //props["src"] = sentProps.url;
                                 props["width"] = sentProps.width;
                                 props["height"] = sentProps.height;
 
@@ -1107,8 +1116,6 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
                                 newDim.x = sentProps.x;
                                 newDim.y = sentProps.y;
-                                oldDim.x = Math.round(hb.attr("x") + 1);
-                                oldDim.y = Math.round(hb.attr("y") + 1);
                                 break;
                             default :
                         }
@@ -1117,15 +1124,6 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
                         // update element
                         setElementProperties(hb.element, props);
-
-                        /* TODO Fix scale bug
-                        hb.element.scale(props["scale"], props["scale"]);
-                        var iconBbox = hb.element.getBBox();
-                        // at first bring to 0,0 position after scale
-                        hb.element.translate(0 - iconBbox.x, 0 - iconBbox.y);
-                        // at second move to given position
-                        hb.element.translate(iconBbox.x, iconBbox.y);
-                        */
 
                         // resize helpers
                         var bbox = hb.element.getBBox();
@@ -1136,6 +1134,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                         hb.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
                         hb.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
 
+                        if (jsData.element.type == _self.config.classTypes.icon) {
+                            oldDim.x = Math.round(hb.attr("x") + 1);
+                            oldDim.y = Math.round(hb.attr("y") + 1);
+                        }
+
                         // redraw circleSet
                         hb.circleSet.remove();
                         hb.circleSet = null;
@@ -1144,8 +1147,6 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                         circleSet.attr(_self.config.attributes.circleSet);
                         if (selectedObj != null && selectedObj.visibleSelect && selectedObj.uuid == hb.uuid) {
                             circleSet.attr(_self.config.attributes.opacityVisible);
-
-                            // TODO transfer changes to dialog
                         }
                         hb.circleSet = circleSet;
 
@@ -1165,6 +1166,62 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 hb.circleSet.translate(diffX, diffY);
                             }
                         }
+
+                        if (selectedObj != null && selectedObj.uuid == hb.uuid) {
+                            // transfer changes to dialog
+                            _self.transferPropertiesToDialog(selectedObj);
+                        }
+                        break;
+                    case "remove" :
+                        // find element to be removed
+                        var hbr = wbElements[jsData.element.properties.uuid];
+                        if (hbr == null) {
+                            // not found ==> nothing to do
+                            break;
+                        }
+
+                        var eluuid = hbr.uuid;
+                        var removeSelected = false;
+                        if (selectedObj != null && selectedObj.uuid == eluuid) {
+                            removeSelected = true;
+                        }
+
+                        wbElements[eluuid] = null;
+                        delete wbElements[eluuid];
+                        hbr.element.remove();
+                        hbr.circleSet.remove();
+                        hbr.remove();
+
+                        if (removeSelected) {
+                            selectedObj = null;
+                            _self.showProperties('editNoSelection');
+                        }
+                        break;
+                    case "move" :
+
+
+                        break;
+                    case "toFront" :
+
+
+                        break;
+                    case "toBack" :
+
+
+                        break;
+                    case "clear" :
+                        paper.clear();
+                        _self.showProperties('editNoSelection');
+                        for (eluuid in wbElements) {
+                            wbElements[eluuid] = null;
+                            delete wbElements[eluuid];
+                        }
+                        break;
+                    case "resize" :
+                        var width = jsData.parameters.width;
+                        var height = jsData.parameters.height;
+                        whiteboard.css({width: width + 'px', height: height + 'px'});
+                        paper.setSize(parseInt(width), parseInt(height));
                         break;
                     default:
                 }
