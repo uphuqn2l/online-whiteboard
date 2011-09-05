@@ -10,7 +10,7 @@ import com.googlecode.whiteboard.model.base.AbstractElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestoredElements
+public class RestoredWhiteboard
 {
     private List<AbstractElement> elements = new ArrayList<AbstractElement>();
     private String message;

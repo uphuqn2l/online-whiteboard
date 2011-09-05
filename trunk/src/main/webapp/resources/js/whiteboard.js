@@ -257,3 +257,8 @@ function colorToHex(color) {
 function sendPropertiesChanges(type, resize, rotate) {
     whiteboardDesigner.sendPropertiesChanges(type, resize, rotate);
 }
+
+function toggleLogging() {
+    log.toggle();
+    whiteboardDesigner.logging = !whiteboardDesigner.logging;
+}

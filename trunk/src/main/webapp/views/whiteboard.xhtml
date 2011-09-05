@@ -10,8 +10,8 @@
     <ui:define name="body">
         <p:messages id="wbMessages"/>
         <h:form id="mainForm" prependId="false">
-            <h:panelGrid id="headline" columns="9" cellpadding="0" cellspacing="0"
-                         columnClasses="colTitle,colImg,colCreated,colImg,colUsers,colImg,colInvite,colImg,colPin">
+            <h:panelGrid id="headline" columns="11" cellpadding="0" cellspacing="0"
+                         columnClasses="colTitle,colImg,colCreated,colImg,colUsers,colImg,colInvite,colImg,colPin,colImg,colLog">
                 <h:outputText value="#{displayWhiteboard.title}"/>
                 <h:graphicImage library="img" name="calendar.png"/>
                 <h:outputText value="Created: #{displayWhiteboard.creationDate} by #{displayWhiteboard.creator}"/>
@@ -35,6 +35,9 @@
                                onstart="loadingDialogWidget.show();" oncomplete="unpinPanels();"
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels,pinnedState"
                                rendered="#{panelsState.pinned}"/>
+                <h:graphicImage library="img" name="log.png"/>
+                <p:commandLink value="Toggle logging (F2)" ajax="false" style="display: block;"
+                               onclick="toggleLogging(); return false;"/>
             </h:panelGrid>
             <h:inputHidden id="pinnedState" value="#{panelsState.pinned}"/>
 
@@ -133,6 +136,8 @@
         <h:outputScript library="js" name="jquery.validate.min.js" target="head"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
         <h:outputScript library="js" name="jquery.atmosphere.js" target="head"/>
+        <h:outputScript library="js" name="blackbird.js" target="head"/>
+        <h:outputStylesheet library="css" name="blackbird.css"/>
         <h:outputScript library="js" name="wboard-config.js" target="head"/>
         <h:outputScript library="js" name="wboard-drawing.js" target="body"/>
         <h:outputScript library="js" name="whiteboard.js" target="body"/>

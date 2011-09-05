@@ -27,13 +27,14 @@ td.colImg img {
 
 td.colCreated,
 td.colUsers,
-td.colInvite {
+td.colInvite,
+td.colPin {
     vertical-align: middle;
     padding-right: 15px;
     white-space: nowrap;
 }
 
-td.colPin {
+td.colLog {
     vertical-align: middle;
     white-space: nowrap;
 }
