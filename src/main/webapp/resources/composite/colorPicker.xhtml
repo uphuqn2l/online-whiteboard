@@ -10,6 +10,7 @@
 <composite:implementation>
     <h:outputScript library="js" name="colorpicker.js" target="head"/>
     <h:outputStylesheet library="css" name="colorpicker.css"/>
+
     <div id="#{cc.clientId}" class="colorSelector">
         <div style="background-color: #0000FF;"></div>
     </div>
@@ -17,7 +18,12 @@
         /* <![CDATA[ */
         jQuery("##{cc.clientId}").ColorPicker({
             onBeforeShow: function () {
-                jQuery(this).ColorPickerSetColor(colorToHex(jQuery('##{cc.clientId} div').css('backgroundColor')));
+                var divEl = jQuery('##{cc.clientId} div');
+                var originalColor = colorToHex(divEl.css('backgroundColor'));
+                jQuery(this).ColorPickerSetColor(originalColor);
+                
+                // buffer original color
+                divEl.data("colorpicker.originalColor", originalColor);
             },
             onShow: function (colpkr) {
                 jQuery(colpkr).fadeIn(500);
@@ -25,7 +31,10 @@
             },
             onHide: function (colpkr) {
                 jQuery(colpkr).fadeOut(500);
-                sendPropertiesChanges('#{cc.attrs.type}');
+                var divEl = jQuery('##{cc.clientId} div');
+                if (divEl.data("colorpicker.originalColor") != colorToHex(divEl.css('backgroundColor'))) {
+                    sendPropertiesChanges('#{cc.attrs.type}');
+                }
                 return false;
             },
             onChange: function (hsb, hex, rgb) {
@@ -33,7 +42,10 @@
             },
             onSubmit: function(hsb, hex, rgb, el) {
                 jQuery(el).ColorPickerHide();
-                sendPropertiesChanges('#{cc.attrs.type}');
+                var divEl = jQuery('##{cc.clientId} div');
+                if (divEl.data("colorpicker.originalColor") != colorToHex(divEl.css('backgroundColor'))) {
+                    sendPropertiesChanges('#{cc.attrs.type}');
+                }
             }
         });
         /* ]]> */

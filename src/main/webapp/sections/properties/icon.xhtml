@@ -14,10 +14,10 @@
         <h:outputLabel for="iconCy" value="Y coordinate (top left)"/>
         <cc:numericInput id="iconCy" type="Icon"/>
         <h:outputLabel for="iconRotation" value="Rotate (0-360&deg;)"/>
-        <p:spinner id="iconRotation" min="0" max="360" maxlength="3" onchange="sendPropertiesChanges('Icon')"/>
+        <p:spinner id="iconRotation" min="0" max="360" maxlength="3" onchange="sendPropertiesChanges('Icon', false, true)"/>
         <h:outputLabel for="iconScale" value="Scale factor"/>
         <p:spinner id="iconScale" min="0.1" max="10" maxlength="2" stepFactor="0.1"
-                   onchange="sendPropertiesChanges('Icon')"/>
+                   onchange="sendPropertiesChanges('Icon', true)"/>
         <ui:include src="/sections/defbutton.xhtml">
             <ui:param name="properties" value="icon"/>
         </ui:include>
