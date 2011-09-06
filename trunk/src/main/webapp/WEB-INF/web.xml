@@ -63,6 +63,10 @@
         <param-value>/WEB-INF/facelet.taglib.xml</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
+
     <!-- PrettyFaces Filter -->
     <filter>
         <filter-name>Pretty Filter</filter-name>
