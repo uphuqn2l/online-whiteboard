@@ -23,7 +23,7 @@ public class CreateWhiteboard implements Serializable
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
-    private String pubSubTransport = "long-polling";
+    private String pubSubTransport = "websocket";
     private List<SelectItem> pubSubTransports;
 
     @PostConstruct
