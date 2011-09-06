@@ -6,7 +6,7 @@
     <groupId>com.googlecode.online-whiteboard</groupId>
     <artifactId>whiteboard-showcase</artifactId>
     <packaging>war</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>Online-Whiteboard Showcase</name>
     <description>
         <![CDATA[Showcase to the collaborative Online-Whiteboard with Server-Push technologies.]]>
