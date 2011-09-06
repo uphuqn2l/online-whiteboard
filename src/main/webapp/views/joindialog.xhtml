@@ -19,9 +19,7 @@
                     <cc:requiredLabel for="wbUserName" value="User name"/>
                     <p:inputText id="wbUserName" value="#{joinWhiteboard.user}" required="true" label="User name"/>
                     <f:facet name="footer">
-                        <!--
                         <p:captcha label="Captcha"/>
-                        -->
                         <p:commandButton id="dialogButton" value="Join and Start Drawing!" ajax="false"
                                          action="#{joinWhiteboard.join}"/>
                     </f:facet>

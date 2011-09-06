@@ -747,7 +747,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                     "stroke-dasharray" : props.lineStyle,
                     "stroke-opacity" : props.opacity
                 });
-                hb = drawHelperBox(freeLine, this.config.classTypes.freeLine, props.rotation, null, false, props.uuid);
+                hb = drawHelperBox(freeLine, this.config.classTypes.freeLine, props.rotationDegree, null, false, props.uuid);
                 wbElements[hb.uuid] = hb;
 
                 break;
@@ -759,7 +759,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                     "stroke-dasharray" : props.lineStyle,
                     "stroke-opacity" : props.opacity
                 });
-                hb = drawHelperBox(straightLine, this.config.classTypes.straightLine, props.rotation, null, false, props.uuid);
+                hb = drawHelperBox(straightLine, this.config.classTypes.straightLine, props.rotationDegree, null, false, props.uuid);
                 wbElements[hb.uuid] = hb;
 
                 break;
@@ -1009,8 +1009,19 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         if (response.transport != 'polling' && response.state != 'connected' && response.state != 'closed' && response.status == 200) {
             var data = response.responseBody;
             if (data.length > 0) {
+                if (_self.logging) {
+                    logIncoming(data);
+                }
+
+                // convert to JavaScript object
                 var jsData = JSON.parse(data);
+
+                if (_self.logging) {
+                    logProfile(jsData.timestamp);
+                }
+
                 var action = jsData.action;
+                var sentProps = (jsData.element != null ? jsData.element.properties : null);
 
                 switch (action) {
                     case "join" :
@@ -1019,19 +1030,21 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                         break;
                     case "create" :
                     case "clone" :
-                        _self.createElement(jsData.element.properties, jsData.element.type);
+                        _self.createElement(sentProps, jsData.element.type);
 
                         break;
                     case "update" :
                         // find element to be updated
-                        var sentProps = jsData.element.properties;
-                        var hb = wbElements[sentProps.uuid];
-                        if (hb == null) {
+                        var hbu = wbElements[sentProps.uuid];
+                        if (hbu == null) {
                             // not found ==> nothing to do
+                            if (_self.logging) {
+                                logDebug("Element to be updated does not exist anymore in this Whiteboard");
+                            }
                             break;
                         }
 
-                        var props = {}, oldDim = {}, newDim = {};
+                        var props = {}, oldDimU = {}, newDimU = {};
 
                         switch (jsData.element.type) {
                             case _self.config.classTypes.text :
@@ -1042,10 +1055,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 props["font-style"] = sentProps.fontStyle;
                                 props["fill"] = sentProps.color;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
-                                oldDim.x = hb.element.attr("x");
-                                oldDim.y = hb.element.attr("y");
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
+                                oldDimU.x = hbu.element.attr("x");
+                                oldDimU.y = hbu.element.attr("y");
                                 break;
                             case _self.config.classTypes.freeLine :
                             case _self.config.classTypes.straightLine :
@@ -1066,10 +1079,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 props["fill-opacity"] = sentProps.backgroundOpacity;
                                 props["stroke-opacity"] = sentProps.borderOpacity;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
-                                oldDim.x = hb.element.attr("x");
-                                oldDim.y = hb.element.attr("y");
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
+                                oldDimU.x = hbu.element.attr("x");
+                                oldDimU.y = hbu.element.attr("y");
                                 break;
                             case _self.config.classTypes.circle :
                                 props["r"] = sentProps.radius;
@@ -1080,10 +1093,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 props["fill-opacity"] = sentProps.backgroundOpacity;
                                 props["stroke-opacity"] = sentProps.borderOpacity;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
-                                oldDim.x = hb.element.attr("cx");
-                                oldDim.y = hb.element.attr("cy");
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
+                                oldDimU.x = hbu.element.attr("cx");
+                                oldDimU.y = hbu.element.attr("cy");
                                 break;
                             case _self.config.classTypes.ellipse :
                                 props["rx"] = sentProps.hRadius;
@@ -1095,27 +1108,27 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                                 props["fill-opacity"] = sentProps.backgroundOpacity;
                                 props["stroke-opacity"] = sentProps.borderOpacity;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
-                                oldDim.x = hb.element.attr("cx");
-                                oldDim.y = hb.element.attr("cy");
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
+                                oldDimU.x = hbu.element.attr("cx");
+                                oldDimU.y = hbu.element.attr("cy");
                                 break;
                             case _self.config.classTypes.image :
                                 //props["src"] = sentProps.url;
                                 props["width"] = sentProps.width;
                                 props["height"] = sentProps.height;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
-                                oldDim.x = hb.element.attr("x");
-                                oldDim.y = hb.element.attr("y");
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
+                                oldDimU.x = hbu.element.attr("x");
+                                oldDimU.y = hbu.element.attr("y");
                                 break;
                             case _self.config.classTypes.icon :
                                 props["scale"] = sentProps.scaleFactor.toFixed(1);
-                                hb.iconName = sentProps.name;
+                                hbu.iconName = sentProps.name;
 
-                                newDim.x = sentProps.x;
-                                newDim.y = sentProps.y;
+                                newDimU.x = sentProps.x;
+                                newDimU.y = sentProps.y;
                                 break;
                             default :
                         }
@@ -1123,60 +1136,63 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                         props["rotation"] = sentProps.rotationDegree;
 
                         // update element
-                        setElementProperties(hb.element, props);
+                        setElementProperties(hbu.element, props);
 
                         // resize helpers
-                        var bbox = hb.element.getBBox();
+                        var bbox = hbu.element.getBBox();
                         var bboxWidth = parseFloat(bbox.width);
                         var bboxHeight = parseFloat(bbox.height);
-                        hb.attr("x", bbox.x - 1);
-                        hb.attr("y", bbox.y - 1);
-                        hb.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
-                        hb.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
+                        hbu.attr("x", bbox.x - 1);
+                        hbu.attr("y", bbox.y - 1);
+                        hbu.attr("width", (bboxWidth !== 0 ? bboxWidth + 2 : 3));
+                        hbu.attr("height", (bboxHeight !== 0 ? bboxHeight + 2 : 3));
 
                         if (jsData.element.type == _self.config.classTypes.icon) {
-                            oldDim.x = Math.round(hb.attr("x") + 1);
-                            oldDim.y = Math.round(hb.attr("y") + 1);
+                            oldDimU.x = Math.round(hbu.attr("x") + 1);
+                            oldDimU.y = Math.round(hbu.attr("y") + 1);
                         }
 
                         // redraw circleSet
-                        hb.circleSet.remove();
-                        hb.circleSet = null;
-                        delete hb.circleSet;
+                        hbu.circleSet.remove();
+                        hbu.circleSet = null;
+                        delete hbu.circleSet;
                         var circleSet = drawCircleSet(bbox.x, bbox.y, bboxWidth, bboxHeight);
                         circleSet.attr(_self.config.attributes.circleSet);
-                        if (selectedObj != null && selectedObj.visibleSelect && selectedObj.uuid == hb.uuid) {
+                        if (selectedObj != null && selectedObj.visibleSelect && selectedObj.uuid == hbu.uuid) {
                             circleSet.attr(_self.config.attributes.opacityVisible);
                         }
-                        hb.circleSet = circleSet;
+                        hbu.circleSet = circleSet;
 
                         // rotate
-                        hb.element.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
-                        hb.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
-                        hb.circleSet.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
-                        hb.element.attr("rotation", props["rotation"]);
+                        hbu.element.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hbu.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hbu.circleSet.rotate(props["rotation"], bbox.x + bboxWidth / 2, bbox.y + bboxHeight / 2, true);
+                        hbu.element.attr("rotation", props["rotation"]);
 
                         // move element and helpers if needed
-                        if (typeof oldDim.x !== "undefined") {
-                            var diffX = newDim.x - oldDim.x;
-                            var diffY = newDim.y - oldDim.y;
-                            if (diffX != 0 || diffY != 0) {
-                                hb.element.translate(diffX, diffY);
-                                hb.translate(diffX, diffY);
-                                hb.circleSet.translate(diffX, diffY);
+                        if (typeof oldDimU.x !== "undefined") {
+                            var diffXU = newDimU.x - oldDimU.x;
+                            var diffYU = newDimU.y - oldDimU.y;
+                            if (diffXU != 0 || diffYU != 0) {
+                                hbu.element.translate(diffXU, diffYU);
+                                hbu.translate(diffXU, diffYU);
+                                hbu.circleSet.translate(diffXU, diffYU);
                             }
                         }
 
-                        if (selectedObj != null && selectedObj.uuid == hb.uuid) {
+                        if (selectedObj != null && selectedObj.uuid == hbu.uuid) {
                             // transfer changes to dialog
                             _self.transferPropertiesToDialog(selectedObj);
                         }
                         break;
                     case "remove" :
                         // find element to be removed
-                        var hbr = wbElements[jsData.element.properties.uuid];
+                        var hbr = wbElements[sentProps.uuid];
                         if (hbr == null) {
                             // not found ==> nothing to do
+                            if (_self.logging) {
+                                logDebug("Element to be removed does not exist anymore in this Whiteboard");
+                            }
                             break;
                         }
 
@@ -1198,16 +1214,138 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
                         }
                         break;
                     case "move" :
+                        // find element to be updated
+                        var hbm = wbElements[sentProps.uuid];
+                        if (hbm == null) {
+                            // not found ==> nothing to do
+                            if (_self.logging) {
+                                logDebug("Element to be moved does not exist anymore in this Whiteboard");
+                            }
+                            break;
+                        }
 
+                        var oldDimM = {}, newDimM = {}, linePath = null;
 
+                        switch (jsData.element.type) {
+                            case _self.config.classTypes.text :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = hbm.element.attr("x");
+                                oldDimM.y = hbm.element.attr("y");
+                                break;
+                            case _self.config.classTypes.freeLine :
+                            case _self.config.classTypes.straightLine :
+                                linePath = sentProps.path;
+                                break;
+                            case _self.config.classTypes.rectangle :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = hbm.element.attr("x");
+                                oldDimM.y = hbm.element.attr("y");
+                                break;
+                            case _self.config.classTypes.circle :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = hbm.element.attr("cx");
+                                oldDimM.y = hbm.element.attr("cy");
+                                break;
+                            case _self.config.classTypes.ellipse :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = hbm.element.attr("cx");
+                                oldDimM.y = hbm.element.attr("cy");
+                                break;
+                            case _self.config.classTypes.image :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = hbm.element.attr("x");
+                                oldDimM.y = hbm.element.attr("y");
+                                break;
+                            case _self.config.classTypes.icon :
+                                newDimM.x = sentProps.x;
+                                newDimM.y = sentProps.y;
+                                oldDimM.x = Math.round(hbm.attr("x") + 1);
+                                oldDimM.y = Math.round(hbm.attr("y") + 1);
+                                break;
+                            default :
+                        }
+
+                        // move element and helpers if needed
+                        if (typeof oldDimM.x !== "undefined") {
+                            var diffXM = newDimM.x - oldDimM.x;
+                            var diffYM = newDimM.y - oldDimM.y;
+                            if (diffXM != 0 || diffYM != 0) {
+                                hbm.element.translate(diffXM, diffYM);
+                                hbm.translate(diffXM, diffYM);
+                                hbm.circleSet.translate(diffXM, diffYM);
+
+                                if (selectedObj != null && selectedObj.uuid == hbm.uuid) {
+                                    // transfer changes to dialog
+                                    _self.transferPropertiesToDialog(selectedObj);
+                                }
+                            }
+                        }
+
+                        // redraw line and helpers if line was moved
+                        if (linePath != null) {
+                            hbm.element.attr("path", linePath);
+
+                            var bboxM = hbm.element.getBBox();
+                            var bboxWidthM = parseFloat(bboxM.width);
+                            var bboxHeightM = parseFloat(bboxM.height);
+                            hbm.attr("x", bboxM.x - 1);
+                            hbm.attr("y", bboxM.y - 1);
+                            hbm.attr("width", (bboxWidthM !== 0 ? bboxWidthM + 2 : 3));
+                            hbm.attr("height", (bboxHeightM !== 0 ? bboxHeightM + 2 : 3));
+
+                            // redraw circleSet
+                            hbm.circleSet.remove();
+                            hbm.circleSet = null;
+                            delete hbm.circleSet;
+                            var circleSetM = drawCircleSet(bboxM.x, bboxM.y, bboxWidthM, bboxHeightM);
+                            circleSetM.attr(_self.config.attributes.circleSet);
+                            if (selectedObj != null && selectedObj.visibleSelect && selectedObj.uuid == hbm.uuid) {
+                                circleSetM.attr(_self.config.attributes.opacityVisible);
+                            }
+                            hbm.circleSet = circleSetM;
+
+                            // rotate
+                            var rotation = hbm.element.attr("rotation");
+                            hbm.rotate(rotation, bboxM.x + bboxWidthM / 2, bboxM.y + bboxHeightM / 2, true);
+                            hbm.circleSet.rotate(rotation, bboxM.x + bboxWidthM / 2, bboxM.y + bboxHeightM / 2, true);
+                        }
                         break;
                     case "toFront" :
+                        // find element to be brought to top
+                        var hbf = wbElements[sentProps.uuid];
+                        if (hbf == null) {
+                            // not found ==> nothing to do
+                            if (_self.logging) {
+                                logDebug("Element to be brought to front does not exist anymore in this Whiteboard");
+                            }
+                            break;
+                        }
 
-
+                        hbf.element.toFront();
+                        hbf.circleSet.toFront();
+                        hbf.toFront();
+                        hbf.attr(_self.config.attributes.opacityHidden);
                         break;
                     case "toBack" :
+                        // find element to be brought to back
+                        var hbb = wbElements[sentProps.uuid];
+                        if (hbb == null) {
+                            // not found ==> nothing to do
+                            if (_self.logging) {
+                                logDebug("Element to be brought to back does not exist anymore in this Whiteboard");
+                            }
+                            break;
+                        }
 
-
+                        hbb.toBack();
+                        hbb.circleSet.toBack();
+                        hbb.element.toBack();
+                        hbb.attr(_self.config.attributes.opacityHidden);
                         break;
                     case "clear" :
                         paper.clear();
@@ -1253,8 +1391,13 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         // set whiteboard Id
         jsObject.whiteboardId = this.whiteboardId;
 
+        var outgoingMessage = JSON.stringify(jsObject);
+        if (_self.logging) {
+            logOutgoing(outgoingMessage);
+        }
+
         // send changes to all subscribed clients
-        this.connectedEndpoint.push(this.pubSubUrl, null, jQuery.atmosphere.request = {data: 'message=' + JSON.stringify(jsObject)});
+        this.connectedEndpoint.push(this.pubSubUrl, null, jQuery.atmosphere.request = {data: 'message=' + outgoingMessage});
 
         // set data in hidden field
         //jQuery("#transferedJsonData").val(JSON.stringify(jsObject));
@@ -1796,6 +1939,23 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
 
     var prependMessage = function(msg) {
         jQuery("<p style='margin: 2px 0 2px 0'>" + msg + "</p>").prependTo(".monitoringGroup");
+    }
+
+    var logIncoming = function(data) {
+        log.info("INCOMING: " + data);
+    }
+
+    var logOutgoing = function(data) {
+        log.warn("OUTGOING: " + data);
+    }
+
+    var logProfile = function(timestamp) {
+        var curDate = new Date();
+        log.profile("TIME BETWEEN BROADCASTING AND RECEIVING: " + (curDate.getTime() + curDate.getTimezoneOffset() * 60000 - timestamp) + " ms");
+    }
+
+    var logDebug = function(msg) {
+        log.debug(msg);
     }
 
     // initialize whiteboard

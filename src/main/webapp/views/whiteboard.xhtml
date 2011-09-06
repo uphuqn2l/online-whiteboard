@@ -36,7 +36,7 @@
                                update="headline,monitorPanel,toolboxPanel,propertiesPanel,unpinnedPanels,pinnedState"
                                rendered="#{panelsState.pinned}"/>
                 <h:graphicImage library="img" name="log.png"/>
-                <p:commandLink value="Toggle logging (F2)" ajax="false" style="display: block;"
+                <p:commandLink value="Toggle logging" ajax="false" style="display: block;"
                                onclick="toggleLogging(); return false;"/>
             </h:panelGrid>
             <h:inputHidden id="pinnedState" value="#{panelsState.pinned}"/>
@@ -133,7 +133,7 @@
         <h:outputScript library="js" name="css-browser-selector.js" target="head"/>
         <h:outputScript library="js" name="json2-min.js" target="head"/>
         <h:outputScript library="js" name="uuid.js" target="head"/>
-        <h:outputScript library="js" name="jquery.validate.min.js" target="head"/>
+        <h:outputScript library="js" name="jquery.validate.js" target="head"/>
         <h:outputScript library="js" name="raphael-min.js" target="head"/>
         <h:outputScript library="js" name="jquery.atmosphere.js" target="head"/>
         <h:outputScript library="js" name="blackbird.js" target="head"/>
