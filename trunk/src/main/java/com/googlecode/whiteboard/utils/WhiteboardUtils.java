@@ -107,6 +107,8 @@ public class WhiteboardUtils
             return "";
         }
 
+        scd.setTimestamp(ccd.getTimestamp());
+
         // generate output JSON for subscribed clients
         return JsonConverter.getGson().toJson(scd);
     }

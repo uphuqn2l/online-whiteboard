@@ -15,6 +15,7 @@ public class ServerChangedData
     private ClientAction action;
     private AbstractElement element;
     private String message;
+    private long timestamp;
     private Map<String, String> parameters;
 
     public ClientAction getAction() {
@@ -39,6 +40,14 @@ public class ServerChangedData
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Map<String, String> getParameters() {

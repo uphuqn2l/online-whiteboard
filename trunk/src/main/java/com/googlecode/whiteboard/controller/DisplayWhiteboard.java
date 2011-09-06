@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -104,7 +103,11 @@ public class DisplayWhiteboard implements Serializable
     }
 
     public String getCreationDate() {
-        return WhiteboardUtils.formatDate(new Date(), true);
+        if (whiteboard == null) {
+            return "";
+        }
+
+        return WhiteboardUtils.formatDate(whiteboard.getCreationDate(), true);
     }
 
     public int getWidth() {
