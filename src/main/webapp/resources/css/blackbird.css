@@ -121,7 +121,7 @@
     height: 16px;
     margin: 0 4px;
     float: left;
-    background-image: url("#{resource['img:blackbird_icons.png']}");
+    background-image: url(/javax.faces.resource/blackbird_icons.png.jsf?ln=img);
     background-repeat: no-repeat;
 }
 
@@ -182,7 +182,7 @@
 }
 
 #blackbird .header > div, #blackbird .main > div, #blackbird .footer > div {
-    background-image: url("#{resource['img:blackbird_panel.png']}");
+    background-image: url(/javax.faces.resource/blackbird_panel.png.jsf?ln=img);
     background-repeat: no-repeat;
 }
 
@@ -261,7 +261,7 @@
 }
 
 #blackbird .main .mainBody ol li span {
-    background: url("#{resource['img:blackbird_icons.png']}") no-repeat 0 0;
+    background: url(/javax.faces.resource/blackbird_icons.png.jsf?ln=img) no-repeat 0 0;
     border: 1px solid #333;
     height: 16px;
     width: 16px;
@@ -301,7 +301,7 @@
 }
 
 #blackbird .main div.right {
-    background: url("#{resource['img:blackbird_panel.png']}") no-repeat 100% -30px;
+    background: url(/javax.faces.resource/blackbird_panel.png.jsf?ln=img) no-repeat 100% -30px;
     width: 17px;
     _width: 0;
 }
