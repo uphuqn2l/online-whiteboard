@@ -61,5 +61,13 @@
             <h:outputText value="Please wait, data are processing..."/>
         </h:panelGroup>
     </p:dialog>
+
+    <p:confirmDialog message="Are you sure you want to clear this Whiteboard?"
+                     header="Confirmation Dialog" severity="alert" widgetVar="clearWbWidget">
+        <p:commandButton value="Yes Sure" 
+                         onclick="whiteboardDesigner.switchToMode('clearMode', 'default'); whiteboardDesigner.clearWhiteboard(); clearWbWidget.hide(); "
+                         type="button"/>
+        <p:commandButton value="Not Sure" onclick="clearWbWidget.hide();" type="button"/>
+    </p:confirmDialog>
 </ui:composition>
 </html>

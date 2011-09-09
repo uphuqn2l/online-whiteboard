@@ -46,3 +46,7 @@ input.ui-button {
     padding: .3em 1em;
 }
 
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: right;
+}
+
