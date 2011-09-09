@@ -143,8 +143,10 @@
                 <artifactId>maven-idea-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
+                    <exclude>target</exclude>
                     <downloadSources>true</downloadSources>
                     <jdkLevel>1.6</jdkLevel>
+                    <jdkName>1.6</jdkName>
                 </configuration>
             </plugin>
             <plugin>
@@ -260,7 +262,7 @@
         <dependency>
             <groupId>org.atmosphere</groupId>
             <artifactId>atmosphere-jersey</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.7.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.atmosphere</groupId>

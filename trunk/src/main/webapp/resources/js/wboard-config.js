@@ -26,6 +26,7 @@ WhiteboardConfig = function() {
     // default properties for all elements
     this.properties = {
         text: {
+            "text": "",
             "font-family": "Verdana",
             "font-size": 18,
             "font-weight": "normal",
