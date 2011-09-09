@@ -232,7 +232,7 @@
 
         var expiration = new Date();
         expiration.setDate(expiration.getDate() + 14);
-        document.cookie = [ 'blackbird={', props, '}; expires=', expiration.toUTCString() ,';' ].join('');
+        //document.cookie = [ 'blackbird={', props, '}; expires=', expiration.toUTCString() ,';' ].join('');
 
         var newClass = [];
         for (word in classes) {
