@@ -88,7 +88,8 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.drawText = function(inputText) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
-            setElementProperties(textElement, this.config.properties.text);
+            var realTextProps = jQuery.extend({}, this.config.properties.text, {"text": inputText});
+            setElementProperties(textElement, realTextProps);
             var hb = drawHelperBox(textElement, this.config.classTypes.text, this.config.properties.text.rotation, null, true, null);
             wbElements[hb.uuid] = hb;
 
@@ -113,7 +114,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
             });
 
             this.showProperties('editText');
-            this.transferTextPropertiesToDialog(whiteboard.textEl.cx, whiteboard.textEl.cy, this.config.properties.text);
+            this.transferTextPropertiesToDialog(whiteboard.textEl.cx, whiteboard.textEl.cy, realTextProps);
         }
     }
 
@@ -555,6 +556,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.transferTextPropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_textCx").val(cx);
         jQuery(idSubviewProperties + "_textCy").val(cy);
+        jQuery(idSubviewProperties + "_textArea").val(props["text"]);        
         jQuery(idSubviewProperties + "_fontFamily option[value='" + props["font-family"] + "']").attr('selected', true);
         jQuery(idSubviewProperties + "_fontSize").val(props["font-size"]);
         jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontWeight'][value='" + props["font-weight"] + "']").attr('checked', 'checked');
@@ -644,6 +646,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
     this.propagateProperties = function(classType, props) {
         switch (classType) {
             case this.config.classTypes.text :
+                props["text"] = jQuery(idSubviewProperties + "_textArea").val();   
                 props["font-family"] = jQuery(idSubviewProperties + "_fontFamily option:selected").val();
                 props["font-size"] = parseInt(jQuery(idSubviewProperties + "_fontSize").val());
                 props["font-weight"] = jQuery("input[name='" + idSubviewProperties.substring(1) + "_fontWeight']:checked").val();
@@ -883,7 +886,7 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         // extend properties to coordinates
         switch (classType) {
             case this.config.classTypes.text :
-                sendProps.text = selectedObj.element.attr("text");
+                sendProps.text = props["text"];
                 sendProps.fontFamily = props["font-family"];
                 sendProps.fontSize = props["font-size"];
                 sendProps.fontWeight = props["font-weight"];

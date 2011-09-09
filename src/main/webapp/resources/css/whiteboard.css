@@ -128,67 +128,67 @@ td.colLog {
 }
 
 .btn-inputText {
-    background-image: url(/javax.faces.resource/inputText.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:inputText.png']}") !important;
 }
 
 .btn-drawFreeLine {
-    background-image: url(/javax.faces.resource/drawFreeLine.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:drawFreeLine.png']}") !important;
 }
 
 .btn-drawStraightLine {
-    background-image: url(/javax.faces.resource/drawStraightLine.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:drawStraightLine.png']}") !important;
 }
 
 .btn-drawRectangle {
-    background-image: url(/javax.faces.resource/drawRectangle.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:drawRectangle.png']}") !important;
 }
 
 .btn-drawCircle {
-    background-image: url(/javax.faces.resource/drawCircle.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:drawCircle.png']}") !important;
 }
 
 .btn-drawEllipse {
-    background-image: url(/javax.faces.resource/drawEllipse.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:drawEllipse.png']}") !important;
 }
 
 .btn-pasteImage {
-    background-image: url(/javax.faces.resource/pasteImage.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:pasteImage.png']}") !important;
 }
 
 .btn-pasteIcon {
-    background-image: url(/javax.faces.resource/pasteIcon.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:pasteIcon.png']}") !important;
 }
 
 .btn-selectElement {
-    background-image: url(/javax.faces.resource/selectElement.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:selectElement.png']}") !important;
 }
 
 .btn-moveElement {
-    background-image: url(/javax.faces.resource/moveElement.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:moveElement.png']}") !important;
 }
 
 .btn-bringFrontElement {
-    background-image: url(/javax.faces.resource/bringFront.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:bringFront.png']}") !important;
 }
 
 .btn-bringBackElement {
-    background-image: url(/javax.faces.resource/bringBack.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:bringBack.png']}") !important;
 }
 
 .btn-cloneElement {
-    background-image: url(/javax.faces.resource/cloneElement.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:cloneElement.png']}") !important;
 }
 
 .btn-removeElement {
-    background-image: url(/javax.faces.resource/removeElement.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:removeElement.png']}") !important;
 }
 
 .btn-clearWhiteboard {
-    background-image: url(/javax.faces.resource/clearWhiteboard.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:clearWhiteboard.png']}") !important;
 }
 
 .btn-resizeWhiteboard {
-    background-image: url(/javax.faces.resource/resizeWhiteboard.png.jsf?ln=img) !important;
+    background-image: url("#{resource['img:resizeWhiteboard.png']}") !important;
 }
 
 #iconsArea {
@@ -357,7 +357,7 @@ td.colLog {
 }
 
 .editPropsCol2 .colorSelector div {
-    background: url(/javax.faces.resource/colorpicker_icon.png.jsf?ln=img) repeat scroll center center transparent;
+    background: url("#{resource['img:colorpicker_icon.png']}") repeat scroll center center transparent;
     height: 28px;
     width: 28px;
     cursor: pointer;
