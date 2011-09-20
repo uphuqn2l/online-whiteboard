@@ -46,6 +46,11 @@ public class WhiteboardPubSub
             Object req = ar.getRequest();
             if (req instanceof HttpServletRequest) {
                 String pathInfo = ((HttpServletRequest) req).getPathInfo();
+                if (pathInfo == null) {
+                   arsSubset.add(ar);
+                    continue;
+                }
+
                 String resSender = pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
                 if (!sender.equals(resSender)) {
                     arsSubset.add(ar);
