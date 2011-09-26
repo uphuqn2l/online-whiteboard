@@ -1,12 +1,48 @@
 /**
- * Whiteboard designer class for element drawing.
- */
+* Whiteboard designer class for element drawing.
+* @class
+* @param witeboardConfig whiteboard's configuration
+* @param whiteboardId whiteboard's id
+* @param user user (user name) working with this whiteboard
+* @param pubSubUrl URL for bidirectional communication
+* @param pubSubTransport transport protocol "long-polling" | "streaming" | "websocket"
+*/
 WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pubSubTransport) {
+    /**
+     * Whiteboard's configuration.
+     * @public
+     * @type WhiteboardConfig
+     */
     this.config = witeboardConfig;
+    /**
+     * Whiteboard's id.
+     * @public
+     * @type uuid
+     */    
     this.whiteboardId = whiteboardId;
+    /**
+     * User which works with this whiteboard.
+     * @public
+     * @type string
+     */    
     this.user = user;
+    /**
+     * URL for bidirectional communication.
+     * @public
+     * @type string
+     */    
     this.pubSubUrl = pubSubUrl;
+    /**
+     * Transport protocol "long-polling" | "streaming" | "websocket".
+     * @public
+     * @type string
+     */    
     this.pubSubTransport = pubSubTransport;
+    /**
+     * Logging flag, true - logging is visible, false - otherwise.
+     * @public
+     * @type boolean
+     */    
     this.logging = false;
 
     // create jQuery objects for whiteboard container and dialogs
@@ -33,6 +69,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         "textEl": {"cx": 0, "cy": 0}
     });
 
+    /**
+     * Action mode.
+     * @private
+     * @type object
+     */
     var modeSwitcher = {
         "textMode": false,
         "freeLineMode": false,
@@ -52,11 +93,20 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         "resizeMode": false
     };
 
-    // create raphael canvas
+    /**
+     * Raphael's canvas.
+     * @private
+     * @type Raphael's paper
+     */    
     var paper = Raphael(this.config.ids.whiteboard, whiteboard.width(), whiteboard.height());
 
     // public access =======================
 
+    /** Switches the mode if user selects any action (like "Input Text" or "Draw Circle").
+    * @public
+    * @param mode mode defined in the variable modeSwitcher.
+    * @param cursor cursor type, e.g. "default", "move", "wait".
+    */
     this.switchToMode = function(mode, cursor) {
         for (var name in modeSwitcher) {
             modeSwitcher[name] = false;
@@ -65,10 +115,19 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         whiteboard.css("cursor", cursor);
     }
 
+    /** Gets currently selected whiteboard element.
+    * @public
+    * @returns {Raphael's element} currently selected element
+    */
     this.getSelectedObject = function() {
         return selectedObj;
     }
 
+    /** Draws begin point of the free line and registers mouse handlers.
+    * @public
+    * @param x X-coordinate.
+    * @param y Y-coordinate.
+    */    
     this.drawFreeLineBegin = function(x, y) {
         whiteboard.lineEl.path = paper.path("M" + (x - offsetLeft) + "," + (y - offsetTop));
         setElementProperties(whiteboard.lineEl.path, this.config.properties.freeLine);
@@ -76,6 +135,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
 
+    /** Draws begin point of the straight line and registers mouse handlers.
+    * @public
+    * @param x X-coordinate.
+    * @param y Y-coordinate.
+    */    
     this.drawStraightLineBegin = function(x, y) {
         whiteboard.lineEl.pathArray = [];
         whiteboard.lineEl.pathArray[0] = ["M", x - offsetLeft, y - offsetTop];
@@ -85,6 +149,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         whiteboard.one("mouseup.mmu", mouseupHandler);
     }
 
+    /** Draws text with default properties.
+    * @public
+    * @param x text message.
+    */
     this.drawText = function(inputText) {
         if (inputText !== "") {
             var textElement = paper.text(whiteboard.textEl.cx, whiteboard.textEl.cy, inputText);
@@ -118,6 +186,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Draws image with default properties.
+    * @public
+    * @param inputUrl image URL.
+    * @param width image width.
+    * @param height image height.
+    */    
     this.drawImage = function(inputUrl, width, height) {
         if (inputUrl !== "") {
             var imageElement = paper.image(inputUrl, whiteboard.imageEl.cx, whiteboard.imageEl.cy, width, height);
@@ -150,6 +224,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Draws rectangle with default properties.
+    * @public
+    * @param x X-coordinate.
+    * @param y Y-coordinate.
+    */    
     this.drawRectangle = function(x, y) {
         var rectElement = paper.rect(x - offsetLeft, y - offsetTop, 160, 100, 0);
         rectElement.scale(1, 1);  // workaround for webkit based browsers
@@ -184,6 +263,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.transferRectanglePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.rectangle);
     }
 
+    /** Draws circle with default properties.
+    * @public
+    * @param x X-coordinate.
+    * @param y Y-coordinate.
+    */      
     this.drawCircle = function(x, y) {
         var circleElement = paper.circle(x - offsetLeft, y - offsetTop, 70);
         circleElement.scale(1, 1);  // workaround for webkit based browsers
@@ -216,6 +300,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.transferCirclePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.circle);
     }
 
+    /** Draws ellipse with default properties.
+    * @public
+    * @param x X-coordinate.
+    * @param y Y-coordinate.
+    */      
     this.drawEllipse = function(x, y) {
         var ellipseElement = paper.ellipse(x - offsetLeft, y - offsetTop, 80, 50);
         ellipseElement.scale(1, 1);  // workaround for webkit based browsers
@@ -249,6 +338,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.transferEllipsePropertiesToDialog(x - offsetLeft, y - offsetTop, this.config.properties.ellipse);
     }
 
+    /** Selects an element if user clicks on it.
+    * @public
+    * @param helperBox helper rectangle around element to be selected.
+    */      
     this.selectElement = function(helperBox) {
         helperBox.circleSet.attr(this.config.attributes.opacityVisible);
         if (selectedObj != null && selectedObj.uuid != helperBox.uuid) {
@@ -261,12 +354,20 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.showSelectedProperties(selectedObj);
     }
 
+    /** Shows properties of the selected element in the panel "Edit Properties".
+    * @public
+    * @param selObj selected element.
+    */    
     this.showSelectedProperties = function(selObj) {
         // show and fill properties
         this.showProperties('edit' + selObj.classType);
         this.transferPropertiesToDialog(selObj);
     }
 
+    /** Transfer properties of the selected element to the panel "Edit Properties". Called from showSelectedProperties().
+    * @public
+    * @param selObj selected element.
+    */    
     this.transferPropertiesToDialog = function(selObj) {
         var selectedProperties = getSelectedProperties(selObj.element, this.config.properties[selObj.classType.charAt(0).toLowerCase() + selObj.classType.slice(1)]);
         switch (selObj.classType) {
@@ -299,6 +400,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Removes element.
+    * @public
+    * @param helperBox helper rectangle around element to be removed.
+    */    
     this.removeElement = function(helperBox) {
         var eluuid = helperBox.uuid;
         var elclasstype = helperBox.classType;
@@ -332,6 +437,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Brings element to front (over all other elements).
+    * @public
+    * @param helperBox helper rectangle around element.
+    */     
     this.bringFrontElement = function(helperBox) {
         helperBox.element.toFront();
         helperBox.circleSet.toFront();
@@ -350,6 +459,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
+    /** Brings element to back (behind all other elements).
+    * @public
+    * @param helperBox helper rectangle around element.
+    */     
     this.bringBackElement = function(helperBox) {
         helperBox.toBack();
         helperBox.circleSet.toBack();
@@ -368,6 +481,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
+    /** Clones element to back.
+    * @public
+    * @param helperBox helper rectangle around element to be cloned.
+    */    
     this.cloneElement = function(helperBox) {
         var cloneEl, scaleFactor;
         if (helperBox.classType == this.config.classTypes.icon) {
@@ -493,6 +610,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.sendChanges(objChanges);
     }
 
+    /** Resizes this whiteboard.
+    * @public
+    * @param width new whiteboard width.
+    * @param height new whiteboard height. 
+    */    
     this.resizeWhiteboard = function(width, height) {
         whiteboard.css({width: width + 'px', height: height + 'px'});
         paper.setSize(width, height);
@@ -507,28 +629,49 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
+    /** Open dialog to input a text.
+    * @public
+    * @param x X-coordinate where the text has to be input.
+    * @param y Y-coordinate where the text has to be input.
+    */    
     this.openTextDialog = function(x, y) {
         whiteboard.textEl.cx = x - offsetLeft;
         whiteboard.textEl.cy = y - offsetTop;
         dialogInputText.dialog("open");
     }
 
+    /** Open dialog to paste an image.
+    * @public
+    * @param x X-coordinate where the image has to be pasted.
+    * @param y Y-coordinate where the image has to be pasted.
+    */    
     this.openImageDialog = function(x, y) {
         whiteboard.imageEl.cx = x - offsetLeft;
         whiteboard.imageEl.cy = y - offsetTop;
         dialogInputImage.dialog("open");
     }
 
+    /** Open dialog to paste an icon.
+    * @public
+    * @param x X-coordinate where the icon has to be pasted.
+    * @param y Y-coordinate where the icon has to be pasted.
+    */    
     this.openIconsDialog = function(x, y) {
         whiteboard.iconEl.cx = x - offsetLeft;
         whiteboard.iconEl.cy = y - offsetTop;
         dialogIcons.dialog("open");
     }
 
+    /** Opens dialog to resize the whiteboard.
+    * @public
+    */     
     this.openResizeDialog = function() {
         dialogResize.dialog("open");
     }
 
+    /** Clears the whiteboard.
+    * @public
+    */     
     this.clearWhiteboard = function() {
         paper.clear();
         this.showProperties('editNoSelection');
@@ -543,16 +686,30 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
+    /** Enables / disables properties in the panel "Edit Properties" depends on action.
+    * @public
+    * @param showClass CSS class of the property block to be enabled. 
+    */    
     this.showProperties = function(showClass) {
         var propsDialog = jQuery(".propertiesPanel");
         propsDialog.find(".editPanel").hide();
         propsDialog.find("." + showClass).show();
     }
 
+    /** Sets Id of the subview - where pinned or unpinned panels are placed.
+    * @public
+    * @param id subview Id. 
+    */    
     this.setIdSubviewProperties = function(id) {
         idSubviewProperties = id;
     }
 
+    /** Transfers given text properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the text.
+    * @param cy Y-coordinate of the text.
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferTextPropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_textCx").val(cx);
         jQuery(idSubviewProperties + "_textCy").val(cy);
@@ -565,6 +722,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_textRotation").val(props["rotation"]);
     }
 
+    /** Transfers free line properties to the panel "Edit properties".
+    * @public
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferFreeLinePropertiesToDialog = function(props) {
         jQuery(idSubviewProperties + "_freeLineColor div").css('backgroundColor', props["stroke"]);
         jQuery(idSubviewProperties + "_freeLineWidth").val(props["stroke-width"]);
@@ -573,6 +734,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_freeLineRotation").val(props["rotation"]);
     }
 
+    /** Transfers straight line properties to the panel "Edit properties".
+    * @public
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferStraightLinePropertiesToDialog = function(props) {
         jQuery(idSubviewProperties + "_straightLineColor div").css('backgroundColor', props["stroke"]);
         jQuery(idSubviewProperties + "_straightLineWidth").val(props["stroke-width"]);
@@ -581,6 +746,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_straightLineRotation").val(props["rotation"]);
     }
 
+    /** Transfers rectangle properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the rectangle.
+    * @param cy Y-coordinate of the rectangle.
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferRectanglePropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_rectCx").val(cx);
         jQuery(idSubviewProperties + "_rectCy").val(cy);
@@ -596,6 +767,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_rectRotation").val(props["rotation"]);
     }
 
+    /** Transfers circle properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the circle.
+    * @param cy Y-coordinate of the circle.
+    * @param props property JavaScript object as key, value. 
+    */     
     this.transferCirclePropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_circleCx").val(cx);
         jQuery(idSubviewProperties + "_circleCy").val(cy);
@@ -609,6 +786,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_circleRotation").val(props["rotation"]);
     }
 
+    /** Transfers ellipse properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the ellipse.
+    * @param cy Y-coordinate of the ellipse.
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferEllipsePropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_ellipseCx").val(cx);
         jQuery(idSubviewProperties + "_ellipseCy").val(cy);
@@ -623,6 +806,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_ellipseRotation").val(props["rotation"]);
     }
 
+    /** Transfers image properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the image.
+    * @param cy Y-coordinate of the image.
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferImagePropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_imageCx").val(cx);
         jQuery(idSubviewProperties + "_imageCy").val(cy);
@@ -631,6 +820,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_imageRotation").val(props["rotation"]);
     }
 
+    /** Transfers icon properties to the panel "Edit properties".
+    * @public
+    * @param cx X-coordinate of the icon.
+    * @param cy Y-coordinate of the icon.
+    * @param props property JavaScript object as key, value. 
+    */    
     this.transferIconPropertiesToDialog = function(cx, cy, props) {
         jQuery(idSubviewProperties + "_iconCx").val(cx);
         jQuery(idSubviewProperties + "_iconCy").val(cy);
@@ -638,11 +833,21 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         jQuery(idSubviewProperties + "_iconScale").val(props["scale"].toFixed(1));
     }
 
+    /** Makes given properties as default (user push the button "Make as default").
+    * @public
+    * @param properties property JavaScript object as key, value. 
+    */    
     this.makeAsDefault = function(properties) {
         var classType = properties.charAt(0).toUpperCase() + properties.slice(1);
         this.propagateProperties(classType, this.config.properties[properties]);
     }
 
+    /** Gets properties from the panel "Edit Properties".
+    * @public
+    * @param classType element type.
+    * @param props empty property JavaScript object as key, value.
+    * @returns {object} filled property JavaScript object as key, value.
+    */    
     this.propagateProperties = function(classType, props) {
         switch (classType) {
             case this.config.classTypes.text :
@@ -716,6 +921,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         return props;
     }
 
+    /** Restores the whiteboard if user has joined this whiteboard. All elements and a proper message gets restored.
+    * @public
+    * @param jsWhiteboard whiteboard in JSON format from backend (server side).
+    */     
     this.restoreWhiteboard = function(jsWhiteboard) {
         var arrElements = jsWhiteboard["elements"];
         for (var i = 0; i < arrElements.length; i++) {
@@ -726,6 +935,11 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         prependMessage(jsWhiteboard["message"]);
     }
 
+    /** Creates element.
+    * @public
+    * @param props element properties as JavaScript object (key, value). 
+    * @param classType element type.
+    */    
     this.createElement = function(props, classType) {
         var hb;
         switch (classType) {
@@ -835,6 +1049,12 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Sends changed properties of the currently selected element to the server (use case: user changes properties in the panel "Edit Properties").
+    * @public
+    * @param type element type. 
+    * @param resize boolean flag, true - resize element, false - otherwise.
+    * @param resize boolean flag, true - rotate element, false - otherwise. 
+    */    
     this.sendPropertiesChanges = function(type, resize, rotate) {
         if (selectedObj == null) {
             return;
@@ -999,7 +1219,9 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
-    // subscribe to bidirectional channel
+    /** Subscribes to bidirectional channel. This method will be called once the web-application is ready to use.
+    * @public
+    */     
     this.subscribePubSub = function() {
         jQuery.atmosphere.subscribe(this.pubSubUrl, this.pubSubCallback, jQuery.atmosphere.request = {
             transport: this.pubSubTransport,
@@ -1008,6 +1230,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         this.connectedEndpoint = jQuery.atmosphere.response;
     }
 
+    /** Callback method defined in subscribePubSub(). This method is always called when new data (updates) are available on server side. 
+    * @public
+    * @param response response object having state, status and sent data.
+    */    
     this.pubSubCallback = function(response) {
         if (response.transport != 'polling' && response.state != 'connected' && response.state != 'closed' && response.status == 200) {
             var data = response.responseBody;
@@ -1373,6 +1599,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         }
     }
 
+    /** Sends a message if user has been joined the whiteboard. 
+    * @public
+    * @param usersCount current user count.
+    */     
     this.joinUser = function(usersCount) {
         // send changes to server
         this.sendChanges({
@@ -1383,6 +1613,10 @@ WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pu
         });
     }
 
+    /** Sends any changes on client side to the server (see actions). 
+    * @public
+    * @param jsObject changes as JavaScript object.
+    */    
     this.sendChanges = function(jsObject) {
         // set timestamp
         var curDate = new Date();
