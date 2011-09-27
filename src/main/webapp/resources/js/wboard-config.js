@@ -1,8 +1,19 @@
 /**
- * Whiteboard configuration.
- */
+* @fileOverview 
+* @author <a href="mailto:ovaraksin@googlemail.com">Oleg Varaksin</a>
+* @version 0.2
+*/
+
+/**
+* Whiteboard configuration class.
+* @class
+*/
 WhiteboardConfig = function() {
-    // ids to external objects
+    /**
+     * Ids to external objects.
+     * @public
+     * @type object
+     */    
     this.ids = {
         whiteboard: "whiteboard",
         dialogInputText: "dialogInputText",
@@ -11,7 +22,11 @@ WhiteboardConfig = function() {
         dialogResize: "dialogResize"
     };
 
-    // java classes for JSON serialization / deserialization
+    /**
+     * Java classes for JSON serialization / deserialization.
+     * @public
+     * @type object
+     */    
     this.classTypes = {
         text: "Text",
         freeLine: "FreeLine",
@@ -23,7 +38,11 @@ WhiteboardConfig = function() {
         icon: "Icon"
     };
 
-    // default properties for all elements
+    /**
+     * Default properties for all elements.
+     * @public
+     * @type object
+     */    
     this.properties = {
         text: {
             "text": "",
@@ -92,7 +111,11 @@ WhiteboardConfig = function() {
         }
     };
 
-    // dasharray mapping
+    /**
+     * Dasharray mapping.
+     * @public
+     * @type object
+     */    
     this.dasharrayMapping = {
         "No": "",
         "Dash": "-",
@@ -107,7 +130,11 @@ WhiteboardConfig = function() {
         "DashDashDotDot": "--.."
     }
 
-    // attributes for various helper objects
+    /**
+     * Attributes for various helper objects around element - e.g. selected, moving, to be removed, etc. element.
+     * @public
+     * @type object
+     */    
     this.attributes = {
         helperRect: {"stroke-width": 2, "stroke-opacity": 0, "fill": "#0D0BF5", "fill-opacity": 0},
         circleSet: {"stroke": "#0D0BF5", "stroke-width": 1, "stroke-opacity": 0, "fill": "#0D0BF5", "fill-opacity": 0},
@@ -115,18 +142,51 @@ WhiteboardConfig = function() {
         opacityVisible: {"stroke-opacity": 0.8, "fill-opacity": 0.8}
     };
 
+    /**
+     * Attributes for helper object around selected element.
+     * @public
+     * @type object
+     */    
     this.attributes.selectBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": ".", "fill-opacity": 0});
+    
+    /**
+     * Attributes for helper object around moving element.
+     * @public
+     * @type object
+     */    
     this.attributes.moveBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#0D0BF5", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#0276FD", "fill-opacity": 0.2});
+    
+    /**
+     * Attributes for helper object around element to be brought to front or to back.
+     * @public
+     * @type object
+     */    
     this.attributes.bringFrontBackBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#71AA24", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#A5DC5B", "fill-opacity": 0.2});
+    
+    /**
+     * Attributes for helper object around element to be removed.
+     * @public
+     * @type object
+     */    
     this.attributes.removeBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#FF0000", "stroke-opacity": 0.8, "stroke-dasharray": "-", "fill": "#FF0000", "fill-opacity": 0.2});
+    
+    /**
+     * Attributes for helper object around element to be cloned.
+     * @public
+     * @type object
+     */    
     this.attributes.cloneBoxVisible = jQuery.extend({}, this.attributes.helperRect, {
         "stroke": "#8B4513", "stroke-opacity": 0.8, "stroke-dasharray": "-.", "fill": "#F4A460", "fill-opacity": 0.2});
 
-    // icons definitions (paths)
+    /**
+     * Icons definitions (SVG paths).
+     * @public
+     * @type object
+     */    
     this.svgIconSet = {
         "?": "M16,1.466C7.973,1.466,1.466,7.973,1.466,16c0,8.027,6.507,14.534,14.534,14.534c8.027,0,14.534-6.507,14.534-14.534C30.534,7.973,24.027,1.466,16,1.466z M17.328,24.371h-2.707v-2.596h2.707V24.371zM17.328,19.003v0.858h-2.707v-1.057c0-3.19,3.63-3.696,3.63-5.963c0-1.034-0.924-1.826-2.134-1.826c-1.254,0-2.354,0.924-2.354,0.924l-1.541-1.915c0,0,1.519-1.584,4.137-1.584c2.487,0,4.796,1.54,4.796,4.136C21.156,16.208,17.328,16.627,17.328,19.003z",
         i: "M16,1.466C7.973,1.466,1.466,7.973,1.466,16c0,8.027,6.507,14.534,14.534,14.534c8.027,0,14.534-6.507,14.534-14.534C30.534,7.973,24.027,1.466,16,1.466z M14.757,8h2.42v2.574h-2.42V8z M18.762,23.622H16.1c-1.034,0-1.475-0.44-1.475-1.496v-6.865c0-0.33-0.176-0.484-0.484-0.484h-0.88V12.4h2.662c1.035,0,1.474,0.462,1.474,1.496v6.887c0,0.309,0.176,0.484,0.484,0.484h0.88V23.622z",
