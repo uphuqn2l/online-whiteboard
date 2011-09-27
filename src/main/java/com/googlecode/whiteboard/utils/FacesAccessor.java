@@ -9,8 +9,20 @@ import javax.el.ELContext;
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 
+/**
+ * Utility class for JSF environment.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class FacesAccessor
 {
+    /**
+     * Gets any managed bean by name.
+     *
+     * @param beanName bean name
+     * @return managed bean
+     */
     public static Object getManagedBean(final String beanName) {
         FacesContext fc = FacesContext.getCurrentInstance();
 

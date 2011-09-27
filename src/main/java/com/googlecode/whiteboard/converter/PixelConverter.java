@@ -13,6 +13,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
+/**
+ * Converter for pixel conversion in the login dialog.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class PixelConverter implements Converter
 {
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

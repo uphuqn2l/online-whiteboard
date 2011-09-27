@@ -7,6 +7,9 @@ package com.googlecode.whiteboard.model.attribute;
 
 /**
  * Enum for font weights "normal" and "bold".
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
  */
 public enum FontWeight
 {

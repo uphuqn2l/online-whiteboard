@@ -17,6 +17,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Iterator;
 
+/**
+ * JSF exception handler.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class DefaultExceptionHandler extends ExceptionHandlerWrapper
 {
     public static final String MESSAGE_DETAIL_KEY = "com.googlecode.whiteboard.messageDetail";
@@ -31,8 +37,13 @@ public class DefaultExceptionHandler extends ExceptionHandlerWrapper
         return this.wrapped;
     }
 
+    /**
+     * Handles all unchecked ang unexpected exceptions.
+     *
+     * @throws FacesException
+     */
     public void handle() throws FacesException {
-        for (Iterator<ExceptionQueuedEvent> i = getUnhandledExceptionQueuedEvents().iterator(); i.hasNext();) {
+        for (Iterator<ExceptionQueuedEvent> i = getUnhandledExceptionQueuedEvents().iterator(); i.hasNext(); ) {
             ExceptionQueuedEvent event = i.next();
             ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
 

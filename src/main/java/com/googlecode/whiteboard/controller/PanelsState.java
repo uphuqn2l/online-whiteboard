@@ -7,6 +7,12 @@ package com.googlecode.whiteboard.controller;
 
 import javax.faces.event.ActionEvent;
 
+/**
+ * Managed bean keeping panels "pin" / "unpin" states.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class PanelsState
 {
     private boolean pinned = true;

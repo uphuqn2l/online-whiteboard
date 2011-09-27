@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.model.transfer;
 
+/**
+ * Container keeping only coordinates.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class TruncatedPositionable extends TruncatedElement
 {
     private int x;

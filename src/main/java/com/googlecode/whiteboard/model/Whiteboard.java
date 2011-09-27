@@ -10,6 +10,12 @@ import com.googlecode.whiteboard.model.base.AbstractElement;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Whiteboard model.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class Whiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110506L;

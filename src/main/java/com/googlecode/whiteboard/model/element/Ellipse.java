@@ -9,6 +9,12 @@ import com.googlecode.whiteboard.model.base.Positionable;
 
 import java.io.Serializable;
 
+/**
+ * Model class for ellipse element.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class Ellipse extends Positionable implements Serializable
 {
     private static final long serialVersionUID = 20110506L;

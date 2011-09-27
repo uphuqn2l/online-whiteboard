@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Managed bean for the main page with whiteboard.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class DisplayWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110501L;
@@ -36,6 +42,9 @@ public class DisplayWhiteboard implements Serializable
     private List<SelectItem> lineStyles;
 
     @PostConstruct
+    /**
+     * Initialize this bean. This method is called automatically by JSF facility.
+     */
     protected void initialize() {
         String whiteboardId = FacesAccessor.getRequestParameter("whiteboardId");
 
@@ -134,10 +143,20 @@ public class DisplayWhiteboard implements Serializable
         return whiteboard.getUserData().size();
     }
 
+    /**
+     * Generates e-mail text for invitation.
+     *
+     * @return String e-mail text
+     */
     public String getMailto() {
         return "mailto:?subject=Invitation%20to%20Whiteboard&amp;body=Hello,%0A%0AI%20would%20like%20to%20invite%20you%20to%20join%20my%20collaborative%20whiteboard.%0A%0AFollow%20this%20link%20please%20" + getInvitationLink() + "%0A%0ARegards.%20" + getCreator() + ".";
     }
 
+    /**
+     * Generates invitation link.
+     *
+     * @return String invitation link
+     */
     public String getInvitationLink() {
         if (whiteboard == null) {
             return "";
@@ -169,6 +188,11 @@ public class DisplayWhiteboard implements Serializable
         }
     }
 
+    /**
+     * Gets all whiteboard elements in JSON format.
+     *
+     * @return String elements as JSON
+     */
     public String getElementsAsJson() {
         if (whiteboard == null || whiteboard.getCount() < 1) {
             // empty whiteboard
@@ -189,6 +213,11 @@ public class DisplayWhiteboard implements Serializable
         return JsonConverter.getGson().toJson(rw);
     }
 
+    /**
+     * Gets URL for bidirectional comminication.
+     *
+     * @return String URL for bidirectional comminication
+     */
     public String getPubSubUrl() {
         if (whiteboard == null) {
             return "";
@@ -208,6 +237,11 @@ public class DisplayWhiteboard implements Serializable
         return ec.encodeResourceURL(scheme + "://" + ec.getRequestServerName() + serverPort + ec.getRequestContextPath() + "/pubsub/" + whiteboard.getUuid() + "/" + senderId + ".topic");
     }
 
+    /**
+     * Gets available font families.
+     *
+     * @return List font families
+     */
     public List getFontFamilies() {
         if (fontFamilies == null) {
             fontFamilies = new ArrayList<SelectItem>();
@@ -236,6 +270,11 @@ public class DisplayWhiteboard implements Serializable
         return fontFamilies;
     }
 
+    /**
+     * Gets available line styles.
+     *
+     * @return List line styles
+     */
     public List getLineStyles() {
         if (lineStyles == null) {
             lineStyles = new ArrayList<SelectItem>();

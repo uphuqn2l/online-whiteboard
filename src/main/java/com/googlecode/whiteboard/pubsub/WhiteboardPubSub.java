@@ -18,6 +18,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class to handle subscribe() and publish() requests from clients. It uses Jersey annotations.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 @Path("/pubsub/{topic}/{sender}")
 @Produces("text/html;charset=ISO-8859-1")
 public class WhiteboardPubSub
@@ -47,7 +53,7 @@ public class WhiteboardPubSub
             if (req instanceof HttpServletRequest) {
                 String pathInfo = ((HttpServletRequest) req).getPathInfo();
                 if (pathInfo == null) {
-                   arsSubset.add(ar);
+                    arsSubset.add(ar);
                     continue;
                 }
 

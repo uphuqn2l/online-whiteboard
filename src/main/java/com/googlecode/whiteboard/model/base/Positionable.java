@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.model.base;
 
+/**
+ * Base class of all positionable elements (such elements have coordinates).
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public abstract class Positionable extends Rotatable
 {
     private int x;

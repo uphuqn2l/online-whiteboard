@@ -7,6 +7,12 @@ package com.googlecode.whiteboard.model.transfer;
 
 import com.googlecode.whiteboard.model.base.AbstractElement;
 
+/**
+ * Base container for all truncated informations.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class TruncatedElement extends AbstractElement
 {
     private String className;

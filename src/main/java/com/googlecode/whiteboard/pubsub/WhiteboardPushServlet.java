@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletConfig;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Extends AtmosphereServlet in order to fix JSF issues.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class WhiteboardPushServlet extends AtmosphereServlet
 {
     private static final Logger logger = LoggerFactory.getLogger(AtmosphereServlet.class);
