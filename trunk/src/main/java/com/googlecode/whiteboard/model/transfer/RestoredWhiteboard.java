@@ -10,6 +10,12 @@ import com.googlecode.whiteboard.model.base.AbstractElement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Container for current whiteboard elements passing to new joint user.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class RestoredWhiteboard
 {
     private List<AbstractElement> elements = new ArrayList<AbstractElement>();

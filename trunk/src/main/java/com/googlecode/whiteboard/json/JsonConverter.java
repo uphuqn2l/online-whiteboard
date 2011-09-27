@@ -12,6 +12,9 @@ import com.googlecode.whiteboard.model.transfer.ClientAction;
 
 /*
 * Singleton instance of Gson {@link http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/Gson.html}.
+* 
+ * @author ova / last modified by $Author$
+ * @version $Revision$ 
 */
 public class JsonConverter
 {

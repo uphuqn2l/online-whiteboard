@@ -10,6 +10,12 @@ import com.googlecode.whiteboard.model.transfer.ClientAction;
 
 import java.lang.reflect.Type;
 
+/**
+ * Adapter class to convert {@link ClientAction} to JSON and back to Java enum.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class ClientActionEnumAdapter implements JsonSerializer<ClientAction>, JsonDeserializer<ClientAction>
 {
     @Override

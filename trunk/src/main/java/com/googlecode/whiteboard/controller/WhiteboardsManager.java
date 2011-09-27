@@ -11,6 +11,13 @@ import org.apache.commons.configuration.ConfigurationException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Managed bean for whiteboard management.
+ * This bean is application scoped because whiteboards are session wide.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class WhiteboardsManager
 {
     private Map<String, Whiteboard> whiteboards = new HashMap<String, Whiteboard>();

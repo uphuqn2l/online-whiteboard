@@ -10,6 +10,12 @@ import com.googlecode.whiteboard.model.base.AbstractElement;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Container for changed data which are broadcasted to all subscribers.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class ServerChangedData
 {
     private ClientAction action;

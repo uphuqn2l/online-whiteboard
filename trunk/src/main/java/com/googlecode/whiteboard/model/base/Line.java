@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.model.base;
 
+/**
+ * Base class for free line {@link com.googlecode.whiteboard.model.element.FreeLine} and straight line {@link com.googlecode.whiteboard.model.element.StraightLine}.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public abstract class Line extends Rotatable
 {
     private String path;

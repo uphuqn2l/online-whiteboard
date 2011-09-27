@@ -1,7 +1,7 @@
 /*
-* @author  Oleg Varaksin (ovaraksin@googlemail.com)
-* $$Id$$
-*/
+ * @author  Oleg Varaksin (ovaraksin@googlemail.com)
+ * $$Id$$
+ */
 
 package com.googlecode.whiteboard.controller;
 
@@ -17,18 +17,34 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Managed bean for the login dialog if a new whiteboard is created.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class CreateWhiteboard implements Serializable
 {
+
+    //~ Static fields/initializers ---------------------------------------------
+
     private static final long serialVersionUID = 20110501L;
+
+    //~ Instance fields --------------------------------------------------------
 
     private Whiteboard whiteboard;
     private WhiteboardsManager whiteboardsManager;
     private String pubSubTransport = "websocket";
     private List<SelectItem> pubSubTransports;
 
+    //~ Methods ----------------------------------------------------------------
+
     @PostConstruct
+    /**
+     * Creates and initialize a new whiteboard. This method is called automatically by JSF facility.
+     */
     protected void initialize() {
-        // create an empty whiteboard and uuid container of the current whiteboard 
+        // create an empty whiteboard and uuid container of the current whiteboard
         whiteboard = new Whiteboard();
     }
 
@@ -84,6 +100,11 @@ public class CreateWhiteboard implements Serializable
         this.whiteboard.setUuid(whiteboardId);
     }
 
+    /**
+     * Creates a new whiteboard
+     *
+     * @return string outcome for navigation
+     */
     public String create() {
         String senderId = UUID.randomUUID().toString();
 

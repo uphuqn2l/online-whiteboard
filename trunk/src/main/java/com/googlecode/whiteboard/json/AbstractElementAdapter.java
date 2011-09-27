@@ -11,6 +11,12 @@ import com.googlecode.whiteboard.model.transfer.TruncatedElement;
 
 import java.lang.reflect.Type;
 
+/**
+ * Adapter class to convert any whiteboard elements to JSON and back to Java model.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class AbstractElementAdapter implements JsonSerializer<AbstractElement>, JsonDeserializer<AbstractElement>
 {
     @Override

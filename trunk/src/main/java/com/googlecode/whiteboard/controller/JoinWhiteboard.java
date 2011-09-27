@@ -15,6 +15,12 @@ import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * Managed bean for the join whiteboard dialog if a new user joins the whiteboard.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class JoinWhiteboard implements Serializable
 {
     private static final long serialVersionUID = 20110506L;
@@ -24,6 +30,9 @@ public class JoinWhiteboard implements Serializable
     private WhiteboardsManager whiteboardsManager;
 
     @PostConstruct
+    /**
+     * Finds the existing whiteboard. This method is called automatically by JSF facility.
+     */    
     protected void initialize() {
         String uuid = FacesAccessor.getRequestParameter("whiteboardId");
 
@@ -59,6 +68,11 @@ public class JoinWhiteboard implements Serializable
         this.whiteboardsManager = whiteboardsManager;
     }
 
+    /**
+     * Joins the existing whiteboard
+     *
+     * @return string outcome for navigation
+     */    
     public String join() {
         String senderId = UUID.randomUUID().toString();
 

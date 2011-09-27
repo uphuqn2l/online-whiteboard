@@ -26,10 +26,23 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
+/**
+ * Utility class for whiteboard application.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class WhiteboardUtils
 {
     private static final Logger LOG = Logger.getLogger(WhiteboardUtils.class.getName());
 
+    /**
+     * Formates given date for front-end.
+     *
+     * @param date    Java date
+     * @param isLocal boolean flag if the given date is in local time
+     * @return String formatted date
+     */
     public static String formatDate(Date date, boolean isLocal) {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
         if (isLocal) {
@@ -39,6 +52,13 @@ public class WhiteboardUtils
         return dateFormatGmt.format(date) + " (GMT)";
     }
 
+    /**
+     * Updates whiteboard for any changes from subscribers. This method is called by {@link com.googlecode.whiteboard.pubsub.WhiteboardPubSub}
+     *
+     * @param request            current request
+     * @param transferedJsonData changes in JSON format
+     * @return String transformed changes in JSON format to be broadcasted to subscribers
+     */
     public static synchronized String updateWhiteboardFromJson(HttpServletRequest request, String transferedJsonData) {
         if (request == null) {
             LOG.severe("Current HTTP request not found (null) ==> no whiteboard update!");

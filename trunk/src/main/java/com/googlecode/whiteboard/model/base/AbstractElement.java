@@ -8,6 +8,12 @@ package com.googlecode.whiteboard.model.base;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+/**
+ * Base class of all whiteboard elements.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public abstract class AbstractElement
 {
     private String uuid;

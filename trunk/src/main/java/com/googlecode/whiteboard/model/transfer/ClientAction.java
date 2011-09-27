@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.model.transfer;
 
+/**
+ * Enum for client actions.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public enum ClientAction
 {
     Join("join"), Create("create"), Update("update"), Remove("remove"), Clone("clone"), Move("move"), BringToFront("toFront"), BringToBack("toBack"), Clear("clear"), Resize("resize");

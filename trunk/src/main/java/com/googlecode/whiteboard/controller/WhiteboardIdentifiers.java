@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.controller;
 
+/**
+ * Managed bean keeping identifiers: whiteboard id and sender id.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class WhiteboardIdentifiers
 {
     private String whiteboardId;

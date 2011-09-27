@@ -5,6 +5,12 @@
 
 package com.googlecode.whiteboard.model.transfer;
 
+/**
+ * Container keeping only line path.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class TruncatedLine extends TruncatedElement
 {
     private String path;

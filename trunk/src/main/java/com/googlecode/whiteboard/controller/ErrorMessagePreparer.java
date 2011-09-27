@@ -12,6 +12,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+/**
+ * Managed bean for preparing error messages.
+ *
+ * @author ova / last modified by $Author$
+ * @version $Revision$
+ */
 public class ErrorMessagePreparer
 {
     public void prepareErrorMessage(ComponentSystemEvent event) {
