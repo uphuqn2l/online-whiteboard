@@ -1,3 +1,19 @@
+/**
+* @fileOverview 
+* @author <a href="mailto:ovaraksin@googlemail.com">Oleg Varaksin</a>
+* @version 0.2
+*/
+
+/**
+* Initialization function for the entire whiteboard application.
+* @function
+* @param jsWhiteboard current whiteboard in JSON format
+* @param whiteboardId whiteboard's id
+* @param user user (user name) working with this whiteboard
+* @param usersCount number of users working with this whiteboard 
+* @param pubSubUrl URL for bidirectional communication
+* @param pubSubTransport transport protocol "long-polling" | "streaming" | "websocket" 
+*/
 function initWhiteboard(jsWhiteboard, whiteboardId, user, usersCount, pubSubUrl, pubSubTransport) {
     // bind onclick handler for toolbox items
     bindOnclickToolboxItems();
@@ -145,6 +161,11 @@ function initWhiteboard(jsWhiteboard, whiteboardId, user, usersCount, pubSubUrl,
     }
 }
 
+/**
+* Checks whether an JavaScript object is null or empty.
+* @function
+* @param obj any JavaScript object  
+*/
 function isBlankObject(obj) {
     if (obj == null) {
         return true;
@@ -159,6 +180,11 @@ function isBlankObject(obj) {
     return true;
 }
 
+/**
+* Sets auto width of the given dialog on dialog's show event.
+* @function
+* @param jqDialog jQuery object for dialog  
+*/
 function onShowAutoWidthDialog(jqDialog) {
     // fix for auto width in IE
     var parent = jqDialog.parent();
@@ -175,6 +201,11 @@ function onShowAutoWidthDialog(jqDialog) {
     jQuery('.ui-widget-overlay').css('width', '100%');
 }
 
+/**
+* Sets auto width of the given dialog on dialog's hide event.
+* @function
+* @param jqDialog jQuery object for dialog  
+*/
 function onHideAutoWidthDialog(jqDialog) {
     // fix for auto width in IE
     var parent = jqDialog.parent();
@@ -188,6 +219,11 @@ function onHideAutoWidthDialog(jqDialog) {
     jQuery('body').css('overflow', 'auto');
 }
 
+/**
+* Adjusts width of the given dialog on dialog's show event.
+* @function
+* @param jqDialog jQuery object for dialog  
+*/
 function adjustOpenAutoWidthDialog(dialogId) {
     var jqDialog = jQuery('#' + dialogId);
     var parent = jqDialog.parent();
@@ -199,12 +235,20 @@ function adjustOpenAutoWidthDialog(dialogId) {
     onShowAutoWidthDialog(jqDialog);
 }
 
+/**
+* Removes unused panels after "pin panels".
+* @function
+*/
 function removeUnusedDialogs() {
     jQuery('#toolboxDialog').remove();
     jQuery('#propertiesDialog').remove();
     jQuery('#monitoringDialog').remove();
 }
 
+/**
+* Binds onlick event handlers to all items in the "Toolbox" panel.
+* @function
+*/
 function bindOnclickToolboxItems() {
     var toolboxItems = jQuery('.toolboxItem');
     toolboxItems.bind('click', function() {
@@ -213,6 +257,10 @@ function bindOnclickToolboxItems() {
     });
 }
 
+/**
+* Pins panels.
+* @function
+*/
 function pinPanels() {
     removeUnusedDialogs();
     bindOnclickToolboxItems();
@@ -227,6 +275,10 @@ function pinPanels() {
     loadingDialogWidget.hide();
 }
 
+/**
+* Unpins panels.
+* @function
+*/
 function unpinPanels() {
     bindOnclickToolboxItems();
     whiteboardDesigner.setIdSubviewProperties('#unpinnedSubview');
@@ -240,6 +292,11 @@ function unpinPanels() {
     loadingDialogWidget.hide();
 }
 
+/**
+* Converts RGB color to Hex color. This is an utility function for Color Picker.
+* @function
+* @param color color as RGB 
+*/
 function colorToHex(color) {
     if (color.substr(0, 1) === '#') {
         return color;
@@ -254,10 +311,21 @@ function colorToHex(color) {
     return digits[1] + '#' + rgb.toString(16);
 }
 
+/**
+* Sends changed properties to {@link WhiteboardDesigner} which sends them to the server.
+* @function
+* @param type element type
+* @param resize boolean flag, true - resize element, false - otherwise.
+* @param resize boolean flag, true - rotate element, false - otherwise. 
+*/
 function sendPropertiesChanges(type, resize, rotate) {
     whiteboardDesigner.sendPropertiesChanges(type, resize, rotate);
 }
 
+/**
+* Toggles logging component.
+* @function
+*/
 function toggleLogging() {
     log.toggle();
     whiteboardDesigner.logging = !whiteboardDesigner.logging;

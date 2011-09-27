@@ -1,7 +1,13 @@
 /**
+* @fileOverview
+* @author <a href="mailto:ovaraksin@googlemail.com">Oleg Varaksin</a>
+* @version 0.2
+*/
+
+/**
 * Whiteboard designer class for element drawing.
 * @class
-* @param witeboardConfig whiteboard's configuration
+* @param witeboardConfig whiteboard's configuration {@link WhiteboardConfig}
 * @param whiteboardId whiteboard's id
 * @param user user (user name) working with this whiteboard
 * @param pubSubUrl URL for bidirectional communication
@@ -9,7 +15,7 @@
 */
 WhiteboardDesigner = function(witeboardConfig, whiteboardId, user, pubSubUrl, pubSubTransport) {
     /**
-     * Whiteboard's configuration.
+     * Whiteboard's configuration {@link WhiteboardConfig}.
      * @public
      * @type WhiteboardConfig
      */
